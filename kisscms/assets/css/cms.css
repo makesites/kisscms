@@ -1,0 +1,102 @@
+#cms-topbar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	padding: 6px 0;
+	background: #eee;
+	border-bottom: solid 1px #999;
+	font-family: Helvetica,Verdana,Arial,Tahoma;
+	z-index: 1000;
+}
+
+#cms-topbar h3{
+	float: left;
+	margin: 0;
+	padding: 0 4px;
+	font-size: 16px;
+	color: #666;
+}
+
+#cms-topbar a{
+	color: #444499;
+	text-decoration: none;
+}
+
+#cms-topbar a:hover{
+	text-decoration: underline;
+}
+
+#cms-topbar ul{
+	margin: 0;
+	padding: 0 6px;
+	list-style-type: none;
+	float: right;
+	font-size: 14px;
+}
+
+#cms-topbar li{
+	display: inline;
+	margin: 0;
+	padding: 0 6px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+}
+
+.cms-form {
+	
+}
+
+.cms-form label{
+	display: block;
+	margin-bottom: 8px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.cms-form  input, .cms-form  textarea{
+	width: 96%;
+	margin: 0 auto 8px auto;
+	font-size: 16px;
+}
+
+.cms-form  input{
+}
+
+.cms-form  textarea{
+	height: 200px;
+}
+
+.cms-form  .button {
+	font-size: 24px;
+}
+
+.cms-form  .button {
+	font-weight: bold;
+}
+
+.cms-form  #edit-button {
+	width: 60%;
+	margin-left: 40%;
+}
+
+
+/* CLEARFIX Method */
+/* for compliant browsers */
+.clearfix:after {
+    clear: both; 
+    content:".";
+    display: block;
+    height: 0;
+    visibility: hidden
+    }
+/* affects only IE7 */
+.clearfix {
+    min-width: 0;
+    }
+/* targets only IE5-6 and hidden from lowly IEmac \*/
+    * html .clearfix { height: 1%; } 
+/* end hide IEmac */
+/* What? You want to get crazy and do IEmac too? Okay. \*//*/
+    .clearfix { display: inline-table; } 
+/* end IEmac only */

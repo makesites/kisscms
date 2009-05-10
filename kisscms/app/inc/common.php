@@ -39,7 +39,7 @@ function requestParserCustom(&$controller,&$action,&$params) {
     if (isset($matches[3]) && $matches[3]){
 	  // the "main" controller will combine the 2nd & 3rd pars and pass them as the path of our page
 	  if( $controller== "main" ){
-		$params= $matches[2] . '/ ' . $matches[3];
+		$params= $matches[2] . '/' . $matches[3];
 	  } else {
 	    $params=explode('/',$matches[3]);
 	  }

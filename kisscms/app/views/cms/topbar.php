@@ -1,6 +1,6 @@
 <style>
 body{
-	padding: 24px;
+	padding-top: 24px;
 }
 </style>
 <div id="cms-topbar">

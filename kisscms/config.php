@@ -7,7 +7,7 @@ define('APP_PATH','app/'); //with trailing slash pls
 define('ASSETS_PATH','assets/'); //with trailing slash pls
 define('WEB_DOMAIN','http://localhost'); //with http:// and NO trailing slash pls
 //define('WEB_FOLDER','/'); //with trailing slash pls
-define('WEB_FOLDER','/kisscms/KISSCMS/kisscms/index.php/'); //use this if you do not have mod_rewrite enabled
+define('WEB_FOLDER','/index.php/'); //use this if you do not have mod_rewrite enabled
 
 define('DEFAULT_ROUTE','main');
 define('DEFAULT_ACTION','index');

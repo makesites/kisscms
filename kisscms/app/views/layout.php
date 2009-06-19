@@ -33,7 +33,7 @@ if (isset($head) && is_array($head))
   <div id="header"><h1><a href="http://www.makesites.cc/projects/kisscms" title="The Simple PHP MVC Framework">KISSCMS</a> - Simple CMS Based On <a href="http://kissmvc.com" title="The Simple PHP MVC Framework">KISSMVC</a> </h1></div>
   <div id="nav">
     <ul>
-      <li><a href="<?=myUrl('main')?>">Main</a></li>
+      <li><a href="<?=myUrl('')?>">Main</a></li>
 <?php
   if ($authuid)
     echo '<li><a href="'.myUrl('cms/logout').'">Logout</a></li>'."\n";

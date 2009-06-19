@@ -1,6 +1,9 @@
 <?php
 /*****************************************************************
-Copyright (c) 2008 
+KISSCMS - Copyright (c) 2009 
+Makis Tracend (makis@makesites.cc) http://kisscms.com
+
+Based on the KISSMVC
 Eric Koh <erickoh75@gmail.com> http://kissmvc.com
 
 Permission is hereby granted, free of charge, to any person
@@ -24,11 +27,7 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 *****************************************************************/
-//===============================================
-// Debug
-//===============================================
-ini_set('display_errors','On');
-error_reporting(E_ALL);
+
 
 //===============================================
 // mod_rewrite
@@ -36,27 +35,10 @@ error_reporting(E_ALL);
 //Please configure via .htaccess or httpd.conf
 
 //===============================================
-// KISSMVC Settings (please configure)
-//===============================================
-define('APP_PATH','app/'); //with trailing slash pls
-define('ASSETS_PATH','assets/'); //with trailing slash pls
-define('WEB_DOMAIN','http://localhost'); //with http:// and NO trailing slash pls
-//define('WEB_FOLDER','/'); //with trailing slash pls
-define('WEB_FOLDER','/kisscms/index.php/'); //use this if you do not have mod_rewrite enabled
-
-define('DEFAULT_ROUTE','main');
-define('DEFAULT_ACTION','index');
-
-define('DATABASE_FILE','data/db/kisscms.sqlite');
-
-//===============================================
 // Includes
 //===============================================
 require('kissmvc.php');
-require(APP_PATH.'inc/common.php');
-require(APP_PATH.'inc/language.php');
-require(APP_PATH.'inc/modules.php');
-require_once(APP_PATH.'models/cms.php');
+require('config.php');
 
 //===============================================
 // Session

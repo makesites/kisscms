@@ -1,0 +1,16 @@
+AddHandler application/x-httpd-php5 .php
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+#
+#If you are editing httpd.conf use something like the below
+#
+#<Directory "/path/to/your/folder">
+#RewriteEngine On
+#RewriteCond $1 !^(index\.php|css|img|js|favicon\.ico|robots\.txt)
+#RewriteRule ^(.*)$ /index.php/$1 [L]
+#</Directory>

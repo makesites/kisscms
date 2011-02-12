@@ -16,7 +16,11 @@
 
 	  // load the fragment for the page content
 	  $data['body'][]= viewFetch($data['fragment'], $data);
-	  viewDump('layout.php',$data);
+	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
+
+	   $data['pagename']='Welcome to KISSMVC';
+	   $data['body'][]=View::do_fetch(VIEW_PATH.'main/index.php');
+		
 	}
 	
 	function parsePath( &$data ) {

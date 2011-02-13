@@ -12,11 +12,13 @@ $data = array();
 // Functions
 //===============================================
 
+/*
 function myUrl($url='',$fullurl=false) {
   $s=$fullurl ? WEB_DOMAIN : '';
   $s.=WEB_FOLDER.$url;
   return $s;
 }
+*/
 
 // Custom parser for KISSCMS 
 // the "main" controller is used for all URLs except the once's that match existing controllers
@@ -55,12 +57,14 @@ function requestParserCustom(&$controller,&$action,&$params) {
   }
 }
 
+/*
 function require_login() {
   if (!isset($_SESSION['kisscms_admin'])) {
     header('Location: '.myUrl('cms/login'));
     exit;
   }
 }
+*/
 
 function getGlobals() {
     $dbh = getdbh();
@@ -74,6 +78,8 @@ function getGlobals() {
 //===============================================
 // Database
 //===============================================
+
+/*
 function getdbh() {
 
   if (!isset($GLOBALS['dbh']))
@@ -84,5 +90,6 @@ function getdbh() {
     }
   return $GLOBALS['dbh'];
 }
+*/
 
 ?>

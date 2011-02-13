@@ -21,9 +21,9 @@ error_reporting(E_ALL);
 //===============================================
 // Includes
 //===============================================
+require('kissmvc.php');
 require('../app/inc/config.php');
-require(BACKEND.'kissmvc.php');
-require(APP_PATH.'inc/functions.php');
+require('../app/inc/functions.php');
 
 //===============================================
 // Session

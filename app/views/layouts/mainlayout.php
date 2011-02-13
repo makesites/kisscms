@@ -6,12 +6,7 @@ $authuid=isset($_SESSION['kisscms_admin']) ? $_SESSION['kisscms_admin'] : 0;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <base href="<?=str_replace('/index.php','',myUrl('',true))?>" />
-<title><?=$GLOBALS['config']['sitename']?></title>
-<style type="text/css">
-  @import "assets/css/reset.css";
-  @import "assets/css/text.css";
-  @import "assets/css/2col.css";
-</style>
+<title><?=WEBSITE_NAME?></title>
 
 <?php if(isset($cms_styles)){ ?>
 	<link rel="stylesheet" type="text/css" media="screen"  href="<?=ASSETS_PATH?>css/cms.css" />
@@ -34,12 +29,6 @@ if (isset($head) && is_array($head))
   <div id="nav">
     <ul>
       <li><a href="<?=myUrl('')?>">Main</a></li>
-<?php
-  if ($authuid)
-    echo '<li><a href="'.myUrl('cms/logout').'">Logout</a></li>'."\n";
-  else
-    echo '<li><a href="'.myUrl('cms/login').'">Login</a></li>'."\n";  
-?>
     </ul>
   </div>
   <div id="main">

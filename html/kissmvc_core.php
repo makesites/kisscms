@@ -63,7 +63,8 @@ class KISS_Controller {
 		if (isset($p[0]) && $p[0])
 			$controller=$p[0];
 		if (isset($p[1]) && $p[1])
-			$function=$p[1];
+			// this shouldn't be here - if you pass a function name it shouln't be overwritten
+			//$function=$p[1];
 		if (isset($p[2]))
 			$params=array_slice($p,2);
 

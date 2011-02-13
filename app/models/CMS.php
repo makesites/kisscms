@@ -1,8 +1,8 @@
 <?php
-class CMS extends crude {
+class CMS extends Model {
 
-  function CMS($id='') {
-    parent::crude('id','pages'); //primary key = id; tablename = pages
+  function __construct($id='') {
+    parent::__construct('id','pages'); //primary key = id; tablename = pages
     $this->rs['id'] = '';
     $this->rs['title'] = '';
     $this->rs['content'] = '';
@@ -24,7 +24,7 @@ class CMS extends crude {
 
   function get_page_from_path( $uri ) {
     $dbh=getdbh();
-    $sql = 'SELECT * FROM "'.$this->tablename().'" WHERE "path"="'. $uri . '" LIMIT 1';
+    $sql = 'SELECT * FROM "pages" WHERE "path"="'. $uri . '" LIMIT 1';
     $results = $dbh->prepare($sql);
     //$results->bindValue(1,$username);
     $results->execute();

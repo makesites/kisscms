@@ -1,6 +1,6 @@
 <?php
 
-	function index($path='') {
+	function _index($path='') {
 	  global $data;
 
 	  $data['path'] = $path;
@@ -15,7 +15,7 @@
 	  checkLogin();
 
 	  // load the fragment for the page content
-	  $data['body'][]= viewFetch($data['fragment'], $data);
+	  $data['body'][]= View::do_fetch($data['fragment'], $data);
 	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
 
 	   $data['pagename']='Welcome to KISSMVC';
@@ -30,7 +30,7 @@
 		$data['fragment'] =  str_replace("/", "_", $data['path']);
 		$fragment_file=APP_PATH.'views/fragments/'.$data['fragment'].'.php';
 		// use the default fragment if the custom file is not available
-		$data['fragment'] = ( file_exists($fragment_file) ) ? 'fragments/'.$data['fragment'].'.php' : 'fragments/main.php';
+		$data['fragment'] = ( file_exists($fragment_file) ) ? $fragment_file : APP_PATH.'views/fragments/main.php';
 	}
 
 	function requestPage( &$data ) {
@@ -57,7 +57,7 @@
 	  // check if admin is logged in and apply interface updates
 	  if (isset($_SESSION['kisscms_admin'])) {
 		$data['cms_styles']= true;
-		$data['cms_topbar']= viewFetch('cms/topbar.php', $data);
+		$data['cms_topbar']= View::do_fetch('cms/topbar.php', $data);
 	  }
 	}
 

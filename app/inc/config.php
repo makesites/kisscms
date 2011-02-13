@@ -3,8 +3,12 @@
 //===============================================
 // KISSCMS Settings (please configure)
 //===============================================
+define('BACKEND','/nfs/c06/h04/mnt/96197/etc/backend/');
 define('APP_PATH','app/'); //with trailing slash pls
+define('VIEW_PATH',realpath("../").'/app/views/'); //with trailing slash pls
 define('ASSETS_PATH','assets/'); //with trailing slash pls
+define('DB_PATH', realpath("../").'/app/db/pages.sqlite'); //with trailing slash pls
+
 define('WEB_DOMAIN','http://localhost'); //with http:// and NO trailing slash pls
 //define('WEB_FOLDER','/'); //with trailing slash pls
 define('WEB_FOLDER','/index.php/'); //use this if you do not have mod_rewrite enabled

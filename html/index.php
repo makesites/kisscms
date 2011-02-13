@@ -1,10 +1,10 @@
 <?php
 /*****************************************************************
-KISSCMS - Copyright (c) 2009 
-Makis Tracend (makis@makesites.cc) http://kisscms.com
+KISSCMS -  http://kisscms.com
+Copyright 2011 - Makis Tracend (makis@makesit.es)
 
-Based on the KISSMVC
-Eric Koh <erickoh75@gmail.com> http://kissmvc.com
+Based on the KISSMVC -  http://kissmvc.com
+Copyright 2009 -Eric Koh (erickoh75@gmail.com)
 *****************************************************************/
 
 //===============================================

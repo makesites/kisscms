@@ -60,7 +60,7 @@ function requestParserCustom(&$controller,&$action,&$params) {
 /*
 function require_login() {
   if (!isset($_SESSION['kisscms_admin'])) {
-    header('Location: '.myUrl('cms/login'));
+    header('Location: '.myUrl('admin/login'));
     exit;
   }
 }

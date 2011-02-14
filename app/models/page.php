@@ -1,5 +1,5 @@
 <?php
-class CMS extends Model {
+class Page extends Model {
 
   function __construct($id='') {
     parent::__construct('id','pages'); //primary key = id; tablename = pages

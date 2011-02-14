@@ -8,21 +8,18 @@ Copyright 2009 -Eric Koh (erickoh75@gmail.com)
 *****************************************************************/
 
 //===============================================
-// Debug
+// Config
 //===============================================
-ini_set('display_errors','On');
-error_reporting(E_ALL);
-
-//===============================================
-// mod_rewrite
-//===============================================
-//Please configure via .htaccess or httpd.conf
+require('../app/inc/config.php');
 
 //===============================================
 // Includes
 //===============================================
-require('kissmvc.php');
-require('../app/inc/config.php');
+require(APP_PATH.'inc/mvc.php');
+require(APP_PATH.'inc/common.php');
+require(APP_PATH.'inc/language.php');
+require(APP_PATH.'inc/modules.php');
+require_once(APP_PATH.'models/Page.php');
 require('../app/inc/functions.php');
 
 //===============================================

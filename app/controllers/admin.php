@@ -1,6 +1,6 @@
 <?php
 	function index() {
-    header('Location: '.myUrl('cms/login'));
+    header('Location: '.myUrl('admin/login'));
 	}
 
 	/*
@@ -10,9 +10,9 @@
 	global $data;
 	  $login = false;
 	  
-	  if( isset($_POST['cms_username']) && $_POST['cms_password']){
-		$username=trim($_POST['cms_username']);
-		$password=$_POST['cms_password'];
+	  if( isset($_POST['admin_username']) && $_POST['admin_password']){
+		$username=trim($_POST['admin_username']);
+		$password=$_POST['admin_password'];
 		// check for the entered data
 		if($username == $GLOBALS['config']['username'] && $password == $GLOBALS['config']['password']){
 			$login = true;
@@ -26,8 +26,8 @@
 	  } else {
 		// display login form
 		cmsHTML();
-		$data['body'][]= View::do_fetch(VIEW_PATH.'cms/login.php', $data);
-		View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
+		$data['body'][]= View::do_fetch(VIEW_PATH.'admin/login.php', $data);
+		View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	  }
 
 	}
@@ -55,8 +55,8 @@
 		header('Location: '.myUrl('main'));
 	  } else {
 	  // show the configuration
-	  $data['body'][]=View::do_fetch(VIEW_PATH.'cms/config.php',$data);
-	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
+	  $data['body'][]=View::do_fetch(VIEW_PATH.'admin/config.php',$data);
+	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	  }
 	}
 
@@ -70,15 +70,15 @@
 	  $data['status']="create";
 	  $data['path']= ( isset($path) ) ? $path : $_POST['path'];
 	  cmsHTML();
-	  $data['body'][]= View::do_fetch(VIEW_PATH.'cms/edit_page.php', $data);
-	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
+	  $data['body'][]= View::do_fetch(VIEW_PATH.'admin/edit_page.php', $data);
+	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	}
 	
 	function edit($id=null) {
 	global $data;
 	    require_login();
 		
-		$page=new CMS($id);
+		$page=new Page($id);
 
 		// see if we have found a page
 		if( $page->get('id') ){
@@ -89,15 +89,15 @@
 			$data['path'] = $page->get('path');
 			// presentation variables
 			$data['status']="edit";
-			$data['view'] = "cms/edit_page.php";
+			$data['view'] = "admin/edit_page.php";
 		} else {
 			$data['status']="error";
-			$data['view']="cms/error.php";
+			$data['view']="admin/error.php";
 		}
 		// Now render the output
 	  cmsHTML();
 	  $data['body'][]= View::do_fetch(VIEW_PATH.$data['view'], $data);
-	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
+	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	}
 
 	function update($id=null) {
@@ -120,13 +120,13 @@
 	    require_login();
 		if( $id ){
 			// Update existing page 
-			$page=new CMS($id);
+			$page=new Page($id);
 			$page->set('title', $_POST['title']);
 			$page->set('content', $_POST['content']);
 			$page->update();
 		} else {
 			// Create new page 
-			$page=new CMS();
+			$page=new Page();
 			$page->set('title', $_POST['title']);
 			$page->set('content', $_POST['content']);
 			$page->set('path', $_POST['path']);
@@ -137,7 +137,7 @@
 	function delete($id=null) {
 	    require_login();
 		if( $id ){
-			$page=new CMS($id);
+			$page=new Page($id);
 			$page->delete();
 		} 
 		header('Location: '.myUrl('main'));
@@ -148,7 +148,7 @@
 	  // these additional variables add the CMS interface in our website
 		$data['cms_styles']= true;
 	  if (isset($_SESSION['kisscms_admin'])) {
-		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'cms/topbar.php', $data);
+		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'admin/topbar.php', $data);
 	  }
 	}
 

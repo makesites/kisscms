@@ -16,9 +16,9 @@
 
 	  // load the view for the page content
 	  $data['body'][]= View::do_fetch($data['view'], $data);
-	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
+	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 
-	   $data['pagename']='Welcome to KISSMVC';
+	   $data['pagename']='Welcome to KISSCMS';
 	   $data['body'][]=View::do_fetch(VIEW_PATH.'main.php');
 		
 	}
@@ -35,7 +35,7 @@
 
 	function requestPage( &$data ) {
 
-		$page=new CMS();
+		$page=new Page();
 		$page->get_page_from_path($data['path']);
 
 		// see if we have found a page
@@ -47,7 +47,7 @@
 		} else {
 			// forward to create a new page
 			$data['status']="new";
-			$data['view']=VIEW_PATH."cms/confirm_new.php";
+			$data['view']=VIEW_PATH."admin/confirm_new.php";
 		}
 
 	}
@@ -57,7 +57,7 @@
 	  // check if admin is logged in and apply interface updates
 	  if (isset($_SESSION['kisscms_admin'])) {
 		$data['cms_styles']= true;
-		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'cms/topbar.php', $data);
+		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'admin/topbar.php', $data);
 	  }
 	}
 

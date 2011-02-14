@@ -26,7 +26,7 @@
 	  } else {
 		// display login form
 		cmsHTML();
-		$data['body'][]= View::do_fetch(VIEW_PATH.'admin/login.php', $data);
+		$data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $data);
 		View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	  }
 
@@ -55,7 +55,7 @@
 		header('Location: '.myUrl('main'));
 	  } else {
 	  // show the configuration
-	  $data['body'][]=View::do_fetch(VIEW_PATH.'admin/config.php',$data);
+	  $data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$data);
 	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	  }
 	}
@@ -70,7 +70,7 @@
 	  $data['status']="create";
 	  $data['path']= ( isset($path) ) ? $path : $_POST['path'];
 	  cmsHTML();
-	  $data['body'][]= View::do_fetch(VIEW_PATH.'admin/edit_page.php', $data);
+	  $data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $data);
 	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	}
 	
@@ -96,7 +96,7 @@
 		}
 		// Now render the output
 	  cmsHTML();
-	  $data['body'][]= View::do_fetch(VIEW_PATH.$data['view'], $data);
+	  $data['body'][]= View::do_fetch( getPath('views/'.$data['view']), $data);
 	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 	}
 
@@ -148,7 +148,7 @@
 	  // these additional variables add the CMS interface in our website
 		$data['cms_styles']= true;
 	  if (isset($_SESSION['kisscms_admin'])) {
-		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'admin/topbar.php', $data);
+		$data['cms_topbar']= View::do_fetch( getPath('views/admin/topbar.php'), $data);
 	  }
 	}
 

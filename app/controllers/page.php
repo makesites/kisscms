@@ -19,7 +19,7 @@
 	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
 
 	   $data['pagename']='Welcome to KISSCMS';
-	   $data['body'][]=View::do_fetch(VIEW_PATH.'main.php');
+	   $data['body'][]=View::do_fetch(  getPath('views/main.php') );
 		
 	}
 	
@@ -28,9 +28,9 @@
 		$data['path'] = ( substr($data['path'], -1) == "/" ) ? substr($data['path'], 0, -1) : $data['path'];
 		// create a view name out of the path
 		$data['view'] =  str_replace("/", "_", $data['path']);
-		$view_file= VIEW_PATH.$data['view'].'.php';
+		$view_file=  getPath('views/' . $data['view'].'.php');
 		// use the default view if the custom file is not available
-		$data['view'] = ( file_exists($view_file) ) ? $view_file : VIEW_PATH.'main.php';
+		$data['view'] = ( file_exists($view_file) ) ? $view_file :  getPath('views/main.php');
 	}
 
 	function requestPage( &$data ) {
@@ -47,7 +47,7 @@
 		} else {
 			// forward to create a new page
 			$data['status']="new";
-			$data['view']=VIEW_PATH."admin/confirm_new.php";
+			$data['view']= getPath('views/admin/confirm_new.php');
 		}
 
 	}
@@ -57,7 +57,7 @@
 	  // check if admin is logged in and apply interface updates
 	  if (isset($_SESSION['kisscms_admin'])) {
 		$data['cms_styles']= true;
-		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'admin/topbar.php', $data);
+		$data['cms_topbar']= View::do_fetch(  getPath('views/admin/topbar.php'), $data);
 	  }
 	}
 

@@ -38,7 +38,7 @@ function requestParserCustom(&$controller,&$action,&$params) {
 	$matches[2] = substr($matches[2], 0, $params_pos);
   }
   // check if the controller exists
-  $controllerfile=APP_PATH.'controllers/'.$controller.'.php';
+  $controllerfile= getPath('controllers/'.$controller.'.php');
   if (preg_match('#^[A-Za-z0-9_-]+$#',$controller) && file_exists($controllerfile)){
 	// we split the path to seperate parameters
 	$action= (isset($matches[2])) ? $matches[2] : DEFAULT_ACTION;

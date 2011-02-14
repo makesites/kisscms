@@ -46,10 +46,14 @@ class KISS_Controller {
 
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {
-		$requri = $_SERVER['REQUEST_URI'];
+		// remove the first slash from the URI so the controller is always the first item in the array (later)
+		$requri = substr($_SERVER['REQUEST_URI'], 1);
 		if (strpos($requri,$this->web_folder)===0)
 			$requri=substr($requri,strlen($this->web_folder));
-		$this->request_uri_parts = $requri ? explode('/',$requri) : array();
+		$request_uri_parts = $requri ? explode('/',$requri) : array();
+		// remove the "index.php" the request;
+		if( $request_uri_parts[0] == "index.php" ){ array_shift( $request_uri_parts ); }
+		$this->request_uri_parts = $request_uri_parts;
 		return $this;
 	}
 
@@ -63,16 +67,19 @@ class KISS_Controller {
 		if (isset($p[0]) && $p[0])
 			$controller=$p[0];
 		if (isset($p[1]) && $p[1])
-			// this shouldn't be here - if you pass a function name it shouln't be overwritten
-			//$function=$p[1];
+			$function=$p[1];
 		if (isset($p[2]))
 			$params=array_slice($p,2);
 
-		$controllerfile=$this->controller_path.$controller.'/'.$function.'.php';
-		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile))
-			$this->request_not_found();
+		$controllerfile=$this->controller_path.$controller.'.php';
+		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile)){
+			// revert to the main controller
+			$params= $controller . "/" . $function;
+			$path = "index";
+			$controller = "main";
+			$controllerfile=$this->controller_path.$controller.'.php';
+		}
 
-		$function='_'.$function;
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || function_exists($function))
 			$this->request_not_found();
 		require($controllerfile);

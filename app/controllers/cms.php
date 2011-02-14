@@ -21,20 +21,20 @@
 
 	  if($login == true) {
 		$_SESSION['kisscms_admin']="true";
-		header('Location: '.myUrl('main'));
+		header('Location: '.myUrl(''));
 		exit();
 	  } else {
 		// display login form
 		cmsHTML();
-		$data['body'][]= viewFetch('cms/login.php', $data);
-		viewDump('layout.php',$data);
+		$data['body'][]= View::do_fetch(VIEW_PATH.'cms/login.php', $data);
+		View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
 	  }
 
 	}
 
 	function logout() {
 	  unset($_SESSION['kisscms_admin']);
-	  header('Location: '.myUrl('main'));
+	  header('Location: '.myUrl(''));
 	  exit();
 	}
 
@@ -55,8 +55,8 @@
 		header('Location: '.myUrl('main'));
 	  } else {
 	  // show the configuration
-	  $data['body'][]=viewFetch('cms/config.php',$data);
-	  viewDump('layout.php',$data);
+	  $data['body'][]=View::do_fetch(VIEW_PATH.'cms/config.php',$data);
+	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
 	  }
 	}
 
@@ -70,8 +70,8 @@
 	  $data['status']="create";
 	  $data['path']= ( isset($path) ) ? $path : $_POST['path'];
 	  cmsHTML();
-	  $data['body'][]= viewFetch('cms/edit_page.php', $data);
-	  viewDump('layout.php',$data);
+	  $data['body'][]= View::do_fetch(VIEW_PATH.'cms/edit_page.php', $data);
+	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
 	}
 	
 	function edit($id=null) {
@@ -89,15 +89,15 @@
 			$data['path'] = $page->get('path');
 			// presentation variables
 			$data['status']="edit";
-			$data['fragment'] = "cms/edit_page.php";
+			$data['view'] = "cms/edit_page.php";
 		} else {
 			$data['status']="error";
-			$data['fragment']="cms/error.php";
+			$data['view']="cms/error.php";
 		}
 		// Now render the output
 	  cmsHTML();
-	  $data['body'][]= viewFetch($data['fragment'], $data);
-	  viewDump('layout.php',$data);
+	  $data['body'][]= View::do_fetch(VIEW_PATH.$data['view'], $data);
+	  View::do_dump(VIEW_PATH.'layouts/mainlayout.php',$data);
 	}
 
 	function update($id=null) {
@@ -108,7 +108,7 @@
 		if( $validate == true ){
 			save($id);
 		}
-		header('Location: '.myUrl('main/' . $_POST['path']));
+		header('Location: '.myUrl($_POST['path']));
 
 	}
 	
@@ -148,7 +148,7 @@
 	  // these additional variables add the CMS interface in our website
 		$data['cms_styles']= true;
 	  if (isset($_SESSION['kisscms_admin'])) {
-		$data['cms_topbar']= viewFetch('cms/topbar.php', $data);
+		$data['cms_topbar']= View::do_fetch(VIEW_PATH.'cms/topbar.php', $data);
 	  }
 	}
 

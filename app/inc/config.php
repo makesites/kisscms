@@ -9,7 +9,7 @@ define('VIEW_PATH',realpath("../").'/app/views/'); //with trailing slash pls
 define('ASSETS_PATH','assets/'); //with trailing slash pls
 define('DB_PATH', realpath("../").'/app/db/kisscms.sqlite'); //with trailing slash pls
 
-define('WEB_DOMAIN','http://localhost'); //with http:// and NO trailing slash pls
+define('WEB_DOMAIN','http://'.$_SERVER['SERVER_NAME']); //with http:// and NO trailing slash pls
 //define('WEB_FOLDER','/'); //with trailing slash pls
 define('WEB_FOLDER','/index.php/'); //use this if you do not have mod_rewrite enabled
 
@@ -22,9 +22,9 @@ define('DATABASE_FILE', DB_PATH);
 //===============================================
 // Website Info
 //===============================================
-define('WEBSITE_NAME','KISSCMS');
-define('WEBSITE_ADMIN','admin');
-define('WEBSITE_PASSWORD','admin');
+$GLOBALS['config']['sitename']="KISSCMS";
+$GLOBALS['config']['username']="admin";
+$GLOBALS['config']['password']="admin";
 
 
 //===============================================

@@ -6,7 +6,7 @@ $authuid=isset($_SESSION['kisscms_admin']) ? $_SESSION['kisscms_admin'] : 0;
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <base href="<?=str_replace('/index.php','',myUrl('',true))?>" />
-<title><?=WEBSITE_NAME?></title>
+<title><?=$GLOBALS['config']['sitename']?></title>
 
 <?php if(isset($cms_styles)){ ?>
 	<link rel="stylesheet" type="text/css" media="screen"  href="<?=ASSETS_PATH?>css/cms.css" />

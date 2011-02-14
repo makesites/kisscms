@@ -8,7 +8,7 @@ function mainMenu(){
 	while ($variable = $results->fetch(PDO::FETCH_ASSOC)) {
 		$data['modules']['latest_updates'][] = array("title"=>$variable['title'], "path"=>$variable['path']);
 	};  
-	View::do_dump(VIEW_PATH."fragments/modules/main_menu.php", $data);
+	View::do_dump(VIEW_PATH."modules/main_menu.php", $data);
 }
 
 

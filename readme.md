@@ -1,4 +1,4 @@
-﻿KISCMS - Content Management made Simple
+﻿KISSCMS - Content Management made Simple
 =======================================
 
 Created by: Makis Tracend (makis@makesites.cc)

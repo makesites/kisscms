@@ -9,7 +9,8 @@ $authuid=isset($_SESSION['kisscms_admin']) ? $_SESSION['kisscms_admin'] : 0;
 <title><?=$GLOBALS['config']['sitename']?></title>
 
 <?php if(isset($cms_styles)){ ?>
-	<link rel="stylesheet" type="text/css" media="screen"  href="<?=ASSETS_PATH?>css/cms.css" />
+	<link href="<?=ASSETS_PATH?>css/admin/main.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?=ASSETS_PATH?>css/admin/jquery.ui.autocomplete.custom.css" rel="stylesheet" type="text/css"  />
 <?php } ?>
 
 <?php

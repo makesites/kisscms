@@ -4,7 +4,7 @@ body{
 }
 </style>
 <div id="cms-topbar">
-	<h3>KISSCMS</h3>
+	<h3><a href="http://kisscms.com/" title="Visit the website for helpful tips and plugins...">KISSCMS</a></h3>
 	<ul>
 <?php if( isset( $status ) && $status == "new"){ ?>
 		<!-- <li><a href="<?=myUrl("admin/create")?>">Create page</a></li> -->

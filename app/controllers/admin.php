@@ -87,6 +87,8 @@
 			$data['title'] = stripslashes( $page->get('title') );
 			$data['content'] = stripslashes( $page->get('content') );
 			$data['path'] = $page->get('path');
+			$data['tags'] = $page->get('tags');
+			$data['template'] = $page->get('template');
 			// presentation variables
 			$data['status']="edit";
 			$data['view'] = "admin/edit_page.php";
@@ -123,12 +125,16 @@
 			$page=new Page($id);
 			$page->set('title', $_POST['title']);
 			$page->set('content', $_POST['content']);
+			$page->set('tags', $_POST['tags']);
+			$page->set('template', "default");
 			$page->update();
 		} else {
 			// Create new page 
 			$page=new Page();
 			$page->set('title', $_POST['title']);
 			$page->set('content', $_POST['content']);
+			$page->set('tags', $_POST['tags']);
+			$page->set('template', "default");
 			$page->set('path', $_POST['path']);
 			$page->create();
 		}

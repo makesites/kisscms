@@ -8,6 +8,8 @@ class Page extends Model {
     $this->rs['content'] = '';
     $this->rs['path'] = '';
     $this->rs['date']= '';
+    $this->rs['tags']= '';
+    $this->rs['template']= '';
     if ($id)
       $this->retrieve($id);
   }

@@ -22,12 +22,12 @@ class Controller extends KISS_Controller {
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
-		$requri = substr($_SERVER['REQUEST_URI'], 1);
+		$requri = $_SERVER['REQUEST_URI'];
 		if (strpos($requri,$this->web_folder)===0)
 			$requri=substr($requri,strlen($this->web_folder));
 		$request_uri_parts = $requri ? explode('/',$requri) : array();
-		// remove the "index.php" the request;
-		if( $request_uri_parts[0] == "index.php" ){ array_shift( $request_uri_parts ); }
+		// remove the "index.php" from the request
+		if( array_key_exists(0, $request_uri_parts) && $request_uri_parts[0] == "index.php" ){ array_shift( $request_uri_parts ); }
 		$this->request_uri_parts = $request_uri_parts;
 		return $this;
 	}

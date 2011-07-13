@@ -20,9 +20,9 @@ define('ASSETS', 'http://' . $_SERVER['SERVER_NAME'] . '/assets/');
 define('DATA', realpath("../").'/data/');
 
 // the location of the website in relation with the domain root
-define('WEB_ROOT','/');
+define('WEB_FOLDER','/');
 // alternatively use this if you do not have mod_rewrite enabled
-//define('WEB_ROOT','/index.php/'); 
+//define('WEB_FOLDER','/index.php/'); 
 
 //===============================================
 // Global Variables

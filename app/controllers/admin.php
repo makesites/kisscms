@@ -27,7 +27,7 @@
 		// display login form
 		cmsHTML();
 		$data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $data);
-		View::do_dump(TEMPLATE_PATH.'default.php',$data);
+		View::do_dump(TEMPLATES.'default.php',$data);
 	  }
 
 	}
@@ -56,7 +56,7 @@
 	  } else {
 	  // show the configuration
 	  $data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$data);
-	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
+	  View::do_dump(TEMPLATES.'default.php',$data);
 	  }
 	}
 
@@ -71,7 +71,7 @@
 	  $data['path']= ( isset($path) ) ? $path : $_POST['path'];
 	  cmsHTML();
 	  $data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $data);
-	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
+	  View::do_dump(TEMPLATES.'default.php',$data);
 	}
 	
 	function edit($id=null) {
@@ -99,7 +99,7 @@
 		// Now render the output
 	  cmsHTML();
 	  $data['body'][]= View::do_fetch( getPath('views/'.$data['view']), $data);
-	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
+	  View::do_dump(TEMPLATES.'default.php',$data);
 	}
 
 	function update($id=null) {

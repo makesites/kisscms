@@ -13,7 +13,7 @@ Licensed under the GNU - http://www.gnu.org/licenses/gpl-2.0.txt
 define('APP', realpath("../").'/app/'); //with trailing slash pls
 // the location of the website in relation with the domain root
 
-define('WEB_FOLDER','/kisscms/html/');
+define('WEB_FOLDER','/');
 // alternatively use this if you do not have mod_rewrite enabled
 //define('WEB_FOLDER','/index.php/'); 
 

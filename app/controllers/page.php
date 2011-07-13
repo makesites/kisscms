@@ -3,10 +3,10 @@
 	// Definitions
 	define('DB_PAGES', "pages.sqlite"); 
 	
-	function index($path='') {
+	function index($params=array()) {
 	  global $data;
 
-	  $data['path'] = $path;
+	  $data['path'] = (array_key_exists('path', $params)) ? $params['path'] : "";
 	  
 	  // evaluate the path to get the page we are looking for 
 	  parsePath( $data );

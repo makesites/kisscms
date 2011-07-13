@@ -8,7 +8,7 @@ class Model extends KISS_Model  {
 
 	public $db;
 	
-	function __construct($pkname='',$tablename='',$dbhfnname='getdbh',$quote_style='MYSQL',$compress_array=true, $db='pages.sqlite') {
+	function __construct($db='pages.sqlite', $pkname='',$tablename='',$dbhfnname='getdbh',$quote_style='MYSQL',$compress_array=true) {
 		$this->db=$db; //Name of auto-incremented Primary Key
 		$this->pkname=$pkname; //Name of auto-incremented Primary Key
 		$this->tablename=$tablename; //Corresponding table in database
@@ -64,7 +64,7 @@ class Controller extends KISS_Controller {
 		$controllerfile=$this->controller_path.$controller.'.php';
 		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile)){
 			// revert to the main controller
-			$params= $controller . "/" . $function;
+			$params["path"] = $controller . "/" . $function;
 			$controller = "page";
 			$controllerfile=$this->controller_path.$controller.'.php';
 		}
@@ -75,7 +75,8 @@ class Controller extends KISS_Controller {
 		if (!function_exists($function))
 			$this->request_not_found();
 
-		call_user_func_array($function,$params);
+		// FIX: return an empty string is the array is 
+		call_user_func_array($function, $params );
 		return $this;
 	}
 

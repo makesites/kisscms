@@ -8,46 +8,31 @@ $authuid=isset($_SESSION['kisscms_admin']) ? $_SESSION['kisscms_admin'] : 0;
 <base href="<?=str_replace('/index.php','',myUrl('',true))?>" />
 <title><?=$GLOBALS['config']['sitename']?></title>
 
-<?php if(isset($cms_styles)){ ?>
-	<link href="<?=ASSETS_PATH?>css/admin/main.css" rel="stylesheet" type="text/css" media="screen" />
-    <link href="<?=ASSETS_PATH?>css/admin/jquery.ui.autocomplete.custom.css" rel="stylesheet" type="text/css"  />
-<?php } ?>
+<? head(); ?>
 
-<?php
-if (isset($head) && is_array($head))
-  foreach ($head as $blockhtml)
-    echo "$blockhtml\n";
-?>
 </head>
 <body>
 
-<?php if(isset($cms_topbar)){
-    echo "$cms_topbar\n";
-} ?>
+<?php if(isset($cms_topbar)){ echo "$cms_topbar\n"; } ?>
 
 <div id="wrap">
-  <div id="header"><h1><a href="http://www.makesites.cc/projects/kisscms" title="The Simple PHP MVC Framework">KISSCMS</a> - Simple CMS Based On <a href="http://kissmvc.com" title="The Simple PHP MVC Framework">KISSMVC</a> </h1></div>
+  <div id="header"><h1><a href="http://www.kisscms.com/" title="The Simple PHP MVC Framework">KISSCMS</a> - Simple CMS Based On <a href="http://kissmvc.com/" title="The Simple PHP MVC Framework">KISSMVC</a> </h1></div>
   <div id="nav">
     <ul>
       <li><a href="<?=myUrl('')?>">Main</a></li>
     </ul>
   </div>
   <div id="main">
-<?php
-if (isset($body) && is_array($body))
-  foreach ($body as $blockhtml)
-    echo "$blockhtml\n";
-?>
+  
+<? content(); ?>
+
   </div>
   <div id="sidebar">
 
-<? mainMenu(); ?>
+<? if($authuid){ mainMenu(); } ?>
 
-<?php
-if (isset($leftnav) && is_array($leftnav))
-  foreach ($leftnav as $blockhtml)
-    echo "$blockhtml\n";
-?>
+<? aside(); ?>
+
   </div>
   <div id="footer">
     <p>Footer</p>

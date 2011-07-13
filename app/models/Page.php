@@ -2,7 +2,7 @@
 class Page extends Model {
 
   function __construct($id='') {
-    parent::__construct('id','pages'); //primary key = id; tablename = pages
+    parent::__construct('pages.sqlite','id','pages'); //primary key = id; tablename = pages
     $this->rs['id'] = '';
     $this->rs['title'] = '';
     $this->rs['content'] = '';

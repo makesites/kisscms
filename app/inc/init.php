@@ -59,15 +59,17 @@ function custom_error($msg='') {
 //===============================================
 // Database
 //===============================================
-function getdbh( $db ) {
-  if (!isset($GLOBALS['dbh']))
+function getdbh( $db=null ) {
+  // generate the name prefix
+  $db_name = "db_" . substr( $db, 0, stripos($db, ".") );
+  if (!isset($GLOBALS[ $db_name ]))
     try {
-      $GLOBALS['dbh'] = new PDO('sqlite:'. DATA . $db);
+      $GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $db);
       //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
     } catch (PDOException $e) {
       die('Connection failed: '.$e->getMessage());
     }
-  return $GLOBALS['dbh'];
+  return $GLOBALS[ $db_name ];
 }
 
 //===============================================

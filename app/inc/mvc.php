@@ -6,10 +6,25 @@ require('core.php');
 //===============================================================
 class Model extends KISS_Model  {
 
-  //Example of adding your own method to the core class
-  function gethtmlsafe($key) {
-    return htmlspecialchars($this->get($key));
-  }
+	public $db;
+	
+	function __construct($pkname='',$tablename='',$dbhfnname='getdbh',$quote_style='MYSQL',$compress_array=true, $db='pages.sqlite') {
+		$this->db=$db; //Name of auto-incremented Primary Key
+		$this->pkname=$pkname; //Name of auto-incremented Primary Key
+		$this->tablename=$tablename; //Corresponding table in database
+		$this->dbhfnname=$dbhfnname; //dbh function name
+		$this->QUOTE_STYLE=$quote_style;
+		$this->COMPRESS_ARRAY=$compress_array;
+	}
+	
+	protected function getdbh() {
+		return call_user_func($this->dbhfnname, $this->db);
+	}
+	
+	//Example of adding your own method to the core class
+	function gethtmlsafe($key) {
+		return htmlspecialchars($this->get($key));
+	}
 
 }
 

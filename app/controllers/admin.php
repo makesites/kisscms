@@ -45,7 +45,7 @@
 	  cmsHTML();
 	  
 	  if($action == "save"){
-	    $dbh = getdbh();
+	    $dbh = getdbh( DB_PAGES );
 		$s='';
 		foreach($_POST as $k=>$v){
 			$sql = 'UPDATE "config" SET "value"="' . $v . '" WHERE "name"="' . $k . '"';

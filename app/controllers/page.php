@@ -1,10 +1,13 @@
 <?php
 
+	// Definitions
+	define('DB_PAGES', "pages.sqlite"); 
+	
 	function index($path='') {
 	  global $data;
 
 	  $data['path'] = $path;
-
+	  
 	  // evaluate the path to get the page we are looking for 
 	  parsePath( $data );
 
@@ -16,7 +19,7 @@
 
 	  // load the view for the page content
 	  $data['body'][]= View::do_fetch($data['view'], $data);
-	  View::do_dump(TEMPLATE_PATH.'default.php',$data);
+	  View::do_dump(TEMPLATES.'default.php',$data);
 
 	   $data['pagename']='Welcome to KISSCMS';
 	   $data['body'][]=View::do_fetch(  getPath('views/main.php') );

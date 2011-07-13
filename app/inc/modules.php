@@ -2,7 +2,7 @@
 
 function mainMenu(){
 	global $data;
-    $dbh = getdbh();
+    $dbh = getdbh( DB_PAGES );
 	$sql = 'SELECT * FROM "pages" ORDER BY "date" LIMIT 5';
     $results = $dbh->query($sql);
 	while ($variable = $results->fetch(PDO::FETCH_ASSOC)) {

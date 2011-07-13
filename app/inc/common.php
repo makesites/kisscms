@@ -66,6 +66,11 @@ function require_login() {
 }
 */
 
+//===============================================
+// Database Actions
+//===============================================
+
+/*
 function getGlobals() {
     $dbh = getdbh();
     $sql = 'SELECT * FROM "config"';
@@ -74,22 +79,7 @@ function getGlobals() {
 		$GLOBALS['config'][$variable['name']]=$variable['value'];
 	};  
 }
-
-//===============================================
-// Database
-//===============================================
-
-/*
-function getdbh() {
-
-  if (!isset($GLOBALS['dbh']))
-    try {
-      $GLOBALS['dbh'] = new PDO('sqlite:'.DATABASE_FILE);
-    } catch (PDOException $e) {
-      die('Connection failed: '.$e->getMessage());
-    }
-  return $GLOBALS['dbh'];
-}
 */
+
 
 ?>

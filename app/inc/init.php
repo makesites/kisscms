@@ -59,10 +59,10 @@ function custom_error($msg='') {
 //===============================================
 // Database
 //===============================================
-function getdbh() {
+function getdbh( $db ) {
   if (!isset($GLOBALS['dbh']))
     try {
-      $GLOBALS['dbh'] = new PDO('sqlite:'.DB_PATH);
+      $GLOBALS['dbh'] = new PDO('sqlite:'. DATA . $db);
       //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
     } catch (PDOException $e) {
       die('Connection failed: '.$e->getMessage());
@@ -83,14 +83,14 @@ function __autoload($classname) {
 }
 
 function getPath( $file ) {
-	if (file_exists(APP_PATH.$file)){ 
+	if (defined("APP") && file_exists(APP.$file)){ 
 		// find the clone file first
-		return APP_PATH.$file;
-	} elseif (file_exists(CORE_PATH.$file)) {
+		return APP.$file;
+	} elseif (defined("BASE") && file_exists(BASE.$file)) {
 		// find the core file second
-		return CORE_PATH.$file;
+		return BASE.$file;
 	} else {
-	   // nothing checks out - output the same
+	   // nothing checks out - output the same...
 	   return $file;
 	}
 }

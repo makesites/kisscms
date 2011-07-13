@@ -1,6 +1,6 @@
 <?php
 	function index() {
-    header('Location: '.myUrl('admin/login'));
+    	header('Location: '.myUrl('admin/login'));
 	}
 
 	/*

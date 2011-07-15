@@ -1,39 +1,15 @@
 <?php
 
-//===============================================
-// KISSCMS Settings (please configure)
-//===============================================
-
-define('WEB_DOMAIN','http://'.$_SERVER['SERVER_NAME']); //with http:// and NO trailing slash pls
-
-define('DEFAULT_ROUTE','page');
-define('DEFAULT_ACTION','index');
-
-
-//===============================================
-// Website Info
-//===============================================
-$GLOBALS['config']['sitename']="KISSCMS";
-$GLOBALS['config']['username']="admin";
-$GLOBALS['config']['password']="admin";
-
-
-//===============================================
-// Debug
-//===============================================
-ini_set('display_errors','On');
-error_reporting(E_ALL);
-
+include("config.php");
+include("mvc.php");
 
 //===============================================
 // Includes
 //===============================================
-require( getPath('inc/mvc.php') );
-require( getPath('inc/common.php') );
-require( getPath('inc/language.php') );
+require( getPath('helpers/common.php') );
+require( getPath('helpers/language.php') );
 require( getPath('inc/modules.php') );
 require( getPath('inc/functions.php') );
-require( getPath('models/Page.php') );
 
 //===============================================
 // Session

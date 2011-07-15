@@ -9,7 +9,7 @@ Licensed under the GNU - http://www.gnu.org/licenses/gpl-2.0.txt
 // Constants
 //===============================================
 
-// main constants that define the core/clone model - include a BASE constant to where the core files live
+// where the app is located - include a BASE constant here if this is a clone site
 define('APP', realpath("../").'/app/'); //with trailing slash pls
 // the location of the website in relation with the domain root
 
@@ -17,7 +17,7 @@ define('WEB_FOLDER','/');
 // alternatively use this if you do not have mod_rewrite enabled
 //define('WEB_FOLDER','/index.php/'); 
 
-// the location of the SQLite database
+// the location where the SQLite databases will be saved
 define('DATA', realpath("../").'/data/');
 
 // full path of where the templates reside
@@ -38,10 +38,10 @@ $GLOBALS['sitename']='KISSCMS - Lightweight CMS based on the KISSMVC Framework';
 //===============================================
 if (defined("BASE")){ 
 	// find the clone file first
-	require(BASE.'inc/init.php');
+	require(BASE.'/init.php');
 } elseif (defined("APP")) {
 	// find the core file second
-	require(APP.'inc/init.php');
+	require(APP.'/init.php');
 } else {
 	quit("Please define the app path in your index file");
 }

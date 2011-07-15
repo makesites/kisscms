@@ -1,5 +1,8 @@
 <?php
 
+	// Includes
+	require( getPath('models/Page.php') );
+
 	// Definitions
 	define('DB_PAGES', "pages.sqlite"); 
 	

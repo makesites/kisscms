@@ -1,5 +1,5 @@
 <?php
-require('core.php');
+require('../lib/kissmvc.php');
 
 //===============================================================
 // Model/ORM

@@ -1,4 +1,5 @@
 <?php
+
 	function index() {
     	header('Location: '.myUrl('admin/login'));
 	}
@@ -14,13 +15,13 @@
 		$username=trim($_POST['admin_username']);
 		$password=$_POST['admin_password'];
 		// check for the entered data
-		if($username == $GLOBALS['config']['username'] && $password == $GLOBALS['config']['password']){
+		if($username == $GLOBALS['admin']['username'] && $password == $GLOBALS['admin']['password']){
 			$login = true;
 		}
 	  }
 
 	  if($login == true) {
-		$_SESSION['kisscms_admin']="true";
+		$_SESSION['admin']="true";
 		header('Location: '.myUrl(''));
 		exit();
 	  } else {
@@ -33,7 +34,7 @@
 	}
 
 	function logout() {
-	  unset($_SESSION['kisscms_admin']);
+	  unset($_SESSION['admin']);
 	  header('Location: '.myUrl(''));
 	  exit();
 	}
@@ -98,7 +99,10 @@
 		}
 		// Now render the output
 	  cmsHTML();
+	  $data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
 	  $data['body'][]= View::do_fetch( getPath('views/'.$data['view']), $data);
+	  $data['head'] = array();
+	  $data['aside'] = array();
 	  View::do_dump(TEMPLATES.'default.php',$data);
 	}
 

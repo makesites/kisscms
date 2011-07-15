@@ -4,10 +4,20 @@
 // KISSCMS Settings (please configure)
 //===============================================
 
-define('WEB_DOMAIN','http://'.$_SERVER['SERVER_NAME']); //with http:// and NO trailing slash pls
+// Definitions
+define('WEB_DOMAIN', getDomain() ); //with http:// and NO trailing slash pls
 
 define('DEFAULT_ROUTE','page');
 define('DEFAULT_ACTION','index');
+
+define('DB_PAGES', "pages.sqlite"); 
+
+
+//===============================================
+// Website Info
+//===============================================
+$GLOBALS['admin']['username']="admin";
+$GLOBALS['admin']['password']="admin";
 
 
 //===============================================

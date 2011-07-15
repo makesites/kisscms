@@ -1,15 +1,20 @@
 <?php
 
-include("config.php");
-include("mvc.php");
+require( getPath('bin/config.php') );
+require( getPath('bin/mvc.php') );
+
+	
+// Includes
+require( getPath('models/Page.php') );
 
 //===============================================
 // Includes
 //===============================================
 require( getPath('helpers/common.php') );
 require( getPath('helpers/language.php') );
-require( getPath('inc/modules.php') );
-require( getPath('inc/functions.php') );
+require( getPath('helpers/main_menu.php') );
+
+
 
 //===============================================
 // Session
@@ -72,5 +77,15 @@ function getPath( $file ) {
 	   return $file;
 	}
 }
+
+function getDomain(){
+	$domain = 'http://'.$_SERVER['SERVER_NAME'];
+	if( $_SERVER['SERVER_PORT'] != 80 ){ 
+		// add server port to the domain
+		$domain .= ":".$_SERVER['SERVER_PORT'];
+	}
+	return $domain;
+}
+
 
 ?>

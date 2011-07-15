@@ -1,11 +1,5 @@
 <?php
 
-	// Includes
-	require( getPath('models/Page.php') );
-
-	// Definitions
-	define('DB_PAGES', "pages.sqlite"); 
-	
 	function index($params=array()) {
 	  global $data;
 
@@ -19,9 +13,13 @@
 	
 	  // add aditional information if this is the admin
 	  checkLogin();
+	  
+	  $data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
 
 	  // load the view for the page content
 	  $data['body'][]= View::do_fetch($data['view'], $data);
+	  $data['head'] = array();
+	  $data['aside'] = array();
 	  View::do_dump(TEMPLATES.'default.php',$data);
 
 	   $data['pagename']='Welcome to KISSCMS';
@@ -61,9 +59,11 @@
 	function checkLogin() {
 	  global $data;
 	  // check if admin is logged in and apply interface updates
-	  if (isset($_SESSION['kisscms_admin'])) {
+	  if (isset($_SESSION['admin'])) {
 		$data['cms_styles']= true;
 		$data['cms_topbar']= View::do_fetch(  getPath('views/admin/topbar.php'), $data);
+	  } else {
+		$data['cms_styles']= false;  
 	  }
 	}
 

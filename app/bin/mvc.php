@@ -1,5 +1,5 @@
 <?php
-require('../lib/kissmvc.php');
+require(  getPath('lib/kissmvc.php') );
 
 //===============================================================
 // Model/ORM
@@ -59,12 +59,13 @@ class Controller extends KISS_Controller {
 		if (isset($p[1]) && $p[1])
 			$function=$p[1];
 		if (isset($p[2]))
-			$params=array_slice($p,2);
+			$params["path"] = array_slice($p,2);
 
 		$controllerfile=$this->controller_path.$controller.'.php';
 		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile)){
 			// revert to the main controller
-			$params["path"] = $controller . "/" . $function;
+			$params["path"] = $controller;
+			if( $function != $this->default_function){ $params["path"] .=  "/" . $function; }
 			$controller = "page";
 			$controllerfile=$this->controller_path.$controller.'.php';
 		}
@@ -75,8 +76,7 @@ class Controller extends KISS_Controller {
 		if (!function_exists($function))
 			$this->request_not_found();
 
-		// FIX: return an empty string is the array is 
-		call_user_func_array($function, $params );
+		call_user_func($function, $params );
 		return $this;
 	}
 

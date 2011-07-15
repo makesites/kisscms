@@ -38,10 +38,10 @@ $GLOBALS['sitename']='KISSCMS - Lightweight CMS based on the KISSMVC Framework';
 //===============================================
 if (defined("BASE")){ 
 	// find the clone file first
-	require(BASE.'/init.php');
+	require(BASE.'bin/init.php');
 } elseif (defined("APP")) {
 	// find the core file second
-	require(APP.'/init.php');
+	require(APP.'bin/init.php');
 } else {
 	quit("Please define the app path in your index file");
 }

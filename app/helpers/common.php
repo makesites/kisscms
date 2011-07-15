@@ -96,7 +96,7 @@ function redirect($url,$alertmsg='') {
 }
 
 function require_login() {
-  if (!isset($_SESSION['kisscms_admin']))
+  if (!isset($_SESSION['admin']))
     redirect('admin/login');
 }
 

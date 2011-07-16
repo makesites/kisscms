@@ -46,6 +46,4 @@ if (defined("BASE")){
 	quit("Please define the app path in your index file");
 }
 
-$controller = new Controller( getPath('controllers/'),WEB_FOLDER,'page','index');
-
 ?>

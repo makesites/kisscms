@@ -1,5 +1,4 @@
 <?php
-require(  getPath('lib/kissmvc.php') );
 
 //===============================================================
 // Model/ORM
@@ -9,7 +8,7 @@ class Model extends KISS_Model  {
 	public $db;
 	
 	function __construct($db='pages.sqlite', $pkname='',$tablename='',$dbhfnname='getdbh',$quote_style='MYSQL',$compress_array=true) {
-		$this->db=$db; //Name of auto-incremented Primary Key
+		$this->db=$db; //Name of the database
 		$this->pkname=$pkname; //Name of auto-incremented Primary Key
 		$this->tablename=$tablename; //Corresponding table in database
 		$this->dbhfnname=$dbhfnname; //dbh function name
@@ -17,10 +16,26 @@ class Model extends KISS_Model  {
 		$this->COMPRESS_ARRAY=$compress_array;
 	}
 	
+//===============================================
+// Database Connection
+//===============================================
+
 	protected function getdbh() {
-		return call_user_func($this->dbhfnname, $this->db);
+		// generate the name prefix
+		$db_name = "db_" . substr( $this->db, 0, stripos($this->db, ".") );
+		if (!isset($GLOBALS[ $db_name ])) {
+			try {
+			  $GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $this->db);
+			  //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
+			} catch (PDOException $e) {
+			  die('Connection failed: '.$e->getMessage());
+			}
+		}
+		return $GLOBALS[ $db_name ];
+		//return call_user_func($this->dbhfnname, $this->db);
 	}
-	
+
+
 	//Example of adding your own method to the core class
 	function gethtmlsafe($key) {
 		return htmlspecialchars($this->get($key));
@@ -59,9 +74,22 @@ class Controller extends KISS_Controller {
 		if (isset($p[1]) && $p[1])
 			$function=$p[1];
 		if (isset($p[2]))
-			$params["path"] = array_slice($p,2);
+			$params = array_slice($p,2);
+print_r($params);
 
-		$controllerfile=$this->controller_path.$controller.'.php';
+// set default routes for the public assets
+
+// get the url parts
+
+// load the right controller
+
+// fallback to the main controller 
+
+// call the right function
+
+// pass the parameters
+
+		$controllerfile= getPath($this->controller_path.$controller.'.php');
 		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile)){
 			// revert to the main controller
 			$params["path"] = $controller;

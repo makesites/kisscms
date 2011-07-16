@@ -8,8 +8,9 @@
 	*  CMS Access
 	*/
 	function login() {
-	global $data;
+
 	  $login = false;
+	  $data = $GLOBALS("data");
 	  
 	  if( isset($_POST['admin_username']) && $_POST['admin_password']){
 		$username=trim($_POST['admin_username']);
@@ -41,17 +42,20 @@
 
 	
 	function config( $action=null) {
-	global $data;
+
 	  require_login();
 	  cmsHTML();
 	  
-	  if($action == "save"){
-	    $dbh = getdbh( DB_PAGES );
+	  $data = $GLOBALS("data");
+	  
+	  if($action == "save" && $GLOBALS['db_pages']){
+
+		$dbh = $GLOBALS['db_pages'];
 		$s='';
 		foreach($_POST as $k=>$v){
 			$sql = 'UPDATE "config" SET "value"="' . $v . '" WHERE "name"="' . $k . '"';
 			$results = $dbh->query($sql);
-	    //echo $sql . "<br />\n";
+		//echo $sql . "<br />\n";
 		}
 		header('Location: '.myUrl('main'));
 	  } else {

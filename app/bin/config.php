@@ -5,13 +5,10 @@
 //===============================================
 
 // Definitions
-define('WEB_DOMAIN', getDomain() ); //with http:// and NO trailing slash pls
-
 define('DEFAULT_ROUTE','page');
 define('DEFAULT_ACTION','index');
 
 define('DB_PAGES', "pages.sqlite"); 
-
 
 //===============================================
 // Website Info

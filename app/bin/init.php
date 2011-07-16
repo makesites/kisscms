@@ -1,18 +1,40 @@
 <?php
 
-require( getPath('bin/config.php') );
-require( getPath('bin/mvc.php') );
-
-	
-// Includes
-require( getPath('models/Page.php') );
-
 //===============================================
 // Includes
 //===============================================
-require( getPath('helpers/common.php') );
-require( getPath('helpers/language.php') );
-require( getPath('helpers/main_menu.php') );
+// follows this order: 
+//- libs,helpers in the app folder
+//- libs,helpers in the base folder
+//- files in this dir
+//- models in the app folder
+//- models in the base folder
+//- plugins init.php in the app folder
+//- plugins init.php in the base folder
+
+if( defined("APP") ){
+	requireAll( APP."lib/" );
+	requireAll( APP."helpers/" );
+}
+if( defined("BASE") ){
+	requireAll( BASE."lib/" );
+	requireAll( BASE."helpers/" );
+}
+
+requireAll( dirname(__FILE__)."/", null, array("init.php") );
+
+if( defined("APP") ){
+	requireAll( APP."models/" );
+}
+if( defined("BASE") ){
+	requireAll( BASE."models/" );
+}
+if( defined("APP") ){
+	requireAll( APP."plugins/", array("/bin/init.php"));
+}
+if( defined("BASE") ){
+	requireAll( BASE."plugins/", array("/bin/init.php"));
+}
 
 
 
@@ -20,6 +42,57 @@ require( getPath('helpers/main_menu.php') );
 // Session
 //===============================================
 session_start();
+
+
+//===============================================
+// Routes
+//===============================================
+// first check if this is a "static" asset
+if ($output = isStatic($_SERVER['REQUEST_URI'])) {
+	echo $output;
+	exit;
+} else {
+	$controller = getController($_SERVER['REQUEST_URI']);
+	
+}
+//requestParserCustom($controller,$action,$params);
+
+//===============================================
+// Including Files
+//===============================================
+function requireAll($folder='', $only=array(), $exclude=array()) {
+if ($handle = opendir($folder)) {
+    
+	// include everything unless explicitly specified
+	while (false !== ($file = readdir($handle))) {
+		if ($file == '.' || $file == '..') { 
+		  continue; 
+		} 	
+		if( count( $only ) > 0 ){ 
+			// include only the files in the $only array
+			foreach( $only as $target ){
+				if(file_exists($folder.$file.$target)){
+					require_once( $folder.$file.$target );
+				}
+			}
+		} elseif( count( $exclude ) > 0 ){
+			// exclude all the files in the $exclude array
+			foreach( $exclude as $target ){
+				if ($file != $target && file_exists($folder.$file)) {				
+		  			require_once( $folder.$file );
+				}
+			}
+		} else {
+			if(file_exists($folder.$file)){
+				require_once( $folder.$file );
+			}	
+		}
+	}
+	
+    closedir($handle);
+}  
+}
+
 
 //===============================================
 // Uncaught Exception Handling
@@ -37,55 +110,13 @@ function custom_error($msg='') {
   die(View::do_fetch( getPath('views/errors/custom_error.php'),$vars));
 }
 
-//===============================================
-// Database
-//===============================================
-function getdbh( $db=null ) {
-  // generate the name prefix
-  $db_name = "db_" . substr( $db, 0, stripos($db, ".") );
-  if (!isset($GLOBALS[ $db_name ]))
-    try {
-      $GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $db);
-      //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
-    } catch (PDOException $e) {
-      die('Connection failed: '.$e->getMessage());
-    }
-  return $GLOBALS[ $db_name ];
-}
 
 //===============================================
-// Autoloading for Business Classes
-//===============================================
-// Assumes Model Classes start with capital letters and Helpers start with lower case letters
-function __autoload($classname) {
-  $a=$classname[0];
-  if ($a >= 'A' && $a <='Z')
-    require_once( getPath('models/'.$classname.'.php') );
-  else
-    require_once( getPath('helpers/'.$classname.'.php') );  
-}
+// Srart the controller
+//===============================================s
 
-function getPath( $file ) {
-	if (defined("APP") && file_exists(APP.$file)){ 
-		// find the clone file first
-		return APP.$file;
-	} elseif (defined("BASE") && file_exists(BASE.$file)) {
-		// find the core file second
-		return BASE.$file;
-	} else {
-	   // nothing checks out - output the same...
-	   return $file;
-	}
-}
+$output = new $controller( getPath('controllers/'),WEB_FOLDER,'page','index');
 
-function getDomain(){
-	$domain = 'http://'.$_SERVER['SERVER_NAME'];
-	if( $_SERVER['SERVER_PORT'] != 80 ){ 
-		// add server port to the domain
-		$domain .= ":".$_SERVER['SERVER_PORT'];
-	}
-	return $domain;
-}
-
+echo $output;
 
 ?>

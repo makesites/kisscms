@@ -5,20 +5,11 @@
 // Global Variables
 //===============================================
 
-// establish the container for all our page content
-$data = array();
 
 //===============================================
 // Functions
 //===============================================
 
-/*
-function myUrl($url='',$fullurl=false) {
-  $s=$fullurl ? WEB_DOMAIN : '';
-  $s.=WEB_FOLDER.$url;
-  return $s;
-}
-*/
 
 // Custom parser for KISSCMS 
 // the "main" controller is used for all URLs except the once's that match existing controllers
@@ -57,35 +48,84 @@ function requestParserCustom(&$controller,&$action,&$params) {
   }
 }
 
-/*
-function require_login() {
-  if (!isset($_SESSION['kisscms_admin'])) {
-    header('Location: '.myUrl('admin/login'));
-    exit;
-  }
+// Get the output from the file in the public folders
+function isStatic( $file ) {
+	// check in the base public folders
+	if( defined("BASE") ){
+		if ( file_exists( BASE."public".$_SERVER['REQUEST_URI'] ) ) {
+			$target = BASE."public/".$_SERVER['REQUEST_URI'];
+		}
+		if ($handle = opendir(BASE."plugins/")) {
+			while (false !== ($plugin = readdir($handle))) {
+				if ($plugin == '.' || $plugin == '..') { 
+				  continue; 
+				} 
+				if ( is_dir($plugin) && file_exists( BASE."plugins/".$plugin."/public".file ) ) {
+					$target = BASE."plugins/".$plugin."/public".file;
+				}
+			}
+		}
+	}
+	// check in the app public folders
+	if( defined("APP") ){
+		if ( file_exists( APP."public".$_SERVER['REQUEST_URI'] ) ) {
+			$target = APP."public/".$_SERVER['REQUEST_URI'];
+		}
+		if ($handle = opendir(APP."plugins/")) {
+			while (false !== ($plugin = readdir($handle))) {
+				if ($plugin == '.' || $plugin == '..') { 
+				  continue; 
+				} 
+				if ( is_dir($plugin) && file_exists( APP."plugins/".$plugin."/public".file ) ) {
+					$target = APP."plugins/".$plugin."/public".file;
+				}
+			}
+		}
+	}
+	// check in the document root
+	if ( file_exists( $_SERVER['DOCUMENT_ROOT'].$file ) ) {
+		$target = $_SERVER['DOCUMENT_ROOT'].$file;
+	}
+	
+	// output the results
+	if( isset($target) ){
+		return file_get_contents( $target );
+	}else {
+		return false;
+	}
 }
-*/
 
-//===============================================
-// Database Actions
-//===============================================
 
-/*
-function getGlobals() {
-    $dbh = getdbh();
-    $sql = 'SELECT * FROM "config"';
-    $results = $dbh->query($sql);
-	while ($variable = $results->fetch(PDO::FETCH_ASSOC)) {
-		$GLOBALS['config'][$variable['name']]=$variable['value'];
-	};  
+function getPath( $file ) {
+	if (defined("APP") && file_exists(APP.$file)){ 
+		// find the clone file first
+		return APP.$file;
+	} elseif (defined("BASE") && file_exists(BASE.$file)) {
+		// find the core file second
+		return BASE.$file;
+	} else {
+	   // nothing checks out - output the same...
+	   return $file;
+	}
 }
-*/
 
-
-function myUrl($url='',$fullurl=false) {
-  $s=$fullurl ? WEB_DOMAIN : '';
-  $s.=WEB_FOLDER.$url;
-  return $s;
+function getURL($path='',$fullurl=false){
+	$url = '';
+	// first check if we want the full url
+	if( $fullurl ){ 
+		$url = 'http://'.$_SERVER['SERVER_NAME'];
+		// add server port to the domain if not the default one
+		if( $_SERVER['SERVER_PORT'] != 80 ){ 
+			$url .= ":".$_SERVER['SERVER_PORT'];
+		}
+	}
+	// add trailing slash
+	$url .= '/';
+	// add path if available
+	if( $path != '' ){ 
+		$url .= WEB_FOLDER.$path;
+	}
+  	return $url;
 }
 
 function redirect($url,$alertmsg='') {

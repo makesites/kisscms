@@ -75,36 +75,16 @@ class Controller extends KISS_Controller {
 			$function=$p[1];
 		if (isset($p[2]))
 			$params = array_slice($p,2);
-print_r($params);
 
-// set default routes for the public assets
-
-// get the url parts
-
-// load the right controller
-
-// fallback to the main controller 
-
-// call the right function
-
-// pass the parameters
-
-		$controllerfile= getPath($this->controller_path.$controller.'.php');
-		if (!preg_match('#^[A-Za-z0-9_-]+$#',$controller) || !file_exists($controllerfile)){
-			// revert to the main controller
-			$params["path"] = $controller;
-			if( $function != $this->default_function){ $params["path"] .=  "/" . $function; }
-			$controller = "page";
-			$controllerfile=$this->controller_path.$controller.'.php';
-		}
-
-		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || function_exists($function))
+		// finally convert the params to a string if they are only one element
+		if( count($params)==1 ) $params = implode($params);
+		
+		// if the method doesn't exist rever to a generic 404 page
+		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
 			$this->request_not_found();
-		require($controllerfile);
-		if (!function_exists($function))
-			$this->request_not_found();
-
-		call_user_func($function, $params );
+		
+		// call the method
+		$this->$function($params);
 		return $this;
 	}
 

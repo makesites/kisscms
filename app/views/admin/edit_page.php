@@ -2,7 +2,7 @@
 // create a fallback for the variables we are using
 $title = (!isset($title)) ? '' : $title; 
 $content = (!isset($content)) ? '' : $content; 
-$action = ( $status == "create" ) ? myUrl("admin/update") : myUrl("admin/update/$id"); 
+$action = ( $status == "create" ) ? getURL("admin/update", true) : getURL("admin/update/$id", true); 
 ?>
 
 <h2><?=$GLOBALS['language'][$status.'_title']?></h2>
@@ -21,14 +21,16 @@ $action = ( $status == "create" ) ? myUrl("admin/update") : myUrl("admin/update/
 	<label>Tags</label>
     
 	<input type="text" name="tags" id="tags" value="<?=$tags?>" />
-
+	
+    <?=listTemplates( $template );?>
+    
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>
 
 <script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=WEB_DOMAIN?>assets/js/admin/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=WEB_DOMAIN?>assets/js/admin/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=WEB_DOMAIN?>assets/js/admin/tag-it.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=getURL('',true)?>/js/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=getURL('',true)?>/js/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=getURL('',true)?>/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
 	$(document).ready(function(){

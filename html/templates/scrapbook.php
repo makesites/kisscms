@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
   <base href="<?=str_replace('/index.php','',getURL('',true))?>" />
-  <title><?=$GLOBALS['sitename']?></title>
+  <title>Scrap <?=$GLOBALS['sitename']?></title>
 
   <? head($head, $admin); ?>
   <meta name="description" content="">
@@ -40,8 +40,6 @@
 
 
 <? showContent( $body ); ?>
-
-<? mainMenu(); ?>
 
 <? showContent( $aside ); ?>
 

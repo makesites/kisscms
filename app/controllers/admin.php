@@ -1,7 +1,11 @@
 <?php
 
+class Admin extends Controller {
+
+	public $data;
+	
 	function index() {
-    	header('Location: '.myUrl('admin/login'));
+    	header('Location: '.getURL('admin/login', true));
 	}
 
 	/*
@@ -10,8 +14,7 @@
 	function login() {
 
 	  $login = false;
-	  $data = $GLOBALS("data");
-	  
+
 	  if( isset($_POST['admin_username']) && $_POST['admin_password']){
 		$username=trim($_POST['admin_username']);
 		$password=$_POST['admin_password'];
@@ -23,20 +26,20 @@
 
 	  if($login == true) {
 		$_SESSION['admin']="true";
-		header('Location: '.myUrl(''));
+		header('Location: '.getURL('', true));
 		exit();
 	  } else {
 		// display login form
-		cmsHTML();
-		$data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $data);
-		View::do_dump(TEMPLATES.'default.php',$data);
+		$this->cmsHTML();
+		$this->data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $this->data);
+		View::do_dump(TEMPLATES.'default.php',$this->data);
 	  }
 
 	}
 
 	function logout() {
 	  unset($_SESSION['admin']);
-	  header('Location: '.myUrl(''));
+	  header('Location: '.getURL('', true));
 	  exit();
 	}
 
@@ -44,9 +47,7 @@
 	function config( $action=null) {
 
 	  require_login();
-	  cmsHTML();
-	  
-	  $data = $GLOBALS("data");
+	  $this->cmsHTML();
 	  
 	  if($action == "save" && $GLOBALS['db_pages']){
 
@@ -57,11 +58,11 @@
 			$results = $dbh->query($sql);
 		//echo $sql . "<br />\n";
 		}
-		header('Location: '.myUrl('main'));
+		header('Location: '.getURL('main', true));
 	  } else {
 	  // show the configuration
-	  $data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$data);
-	  View::do_dump(TEMPLATES.'default.php',$data);
+	  $this->data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$this->data);
+	  View::do_dump(TEMPLATES.'default.php',$this->data);
 	  }
 	}
 
@@ -69,18 +70,18 @@
 	*  CMS Actions
 	*/
 	function create($path=null) {
-	global $data;
+
 	  require_login();
 	  
-	  $data['status']="create";
-	  $data['path']= ( isset($path) ) ? $path : $_POST['path'];
-	  cmsHTML();
-	  $data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $data);
-	  View::do_dump(TEMPLATES.'default.php',$data);
+	  $this->data['status']="create";
+	  $this->data['path']= ( isset($path) ) ? $path : $_POST['path'];
+	  $this->cmsHTML();
+	  $this->data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
+	  View::do_dump(TEMPLATES.'default.php',$this->data);
 	}
 	
 	function edit($id=null) {
-	global $data;
+
 	    require_login();
 		
 		$page=new Page($id);
@@ -88,37 +89,37 @@
 		// see if we have found a page
 		if( $page->get('id') ){
 			// store the information of the page
-			$data['id'] = $page->get('id');
-			$data['title'] = stripslashes( $page->get('title') );
-			$data['content'] = stripslashes( $page->get('content') );
-			$data['path'] = $page->get('path');
-			$data['tags'] = $page->get('tags');
-			$data['template'] = $page->get('template');
+			$this->data['id'] = $page->get('id');
+			$this->data['title'] = stripslashes( $page->get('title') );
+			$this->data['content'] = stripslashes( $page->get('content') );
+			$this->data['path'] = $page->get('path');
+			$this->data['tags'] = $page->get('tags');
+			$this->data['template'] = $page->get('template');
 			// presentation variables
-			$data['status']="edit";
-			$data['view'] = "admin/edit_page.php";
+			$this->data['status']="edit";
+			$this->data['view'] = "admin/edit_page.php";
 		} else {
-			$data['status']="error";
-			$data['view']="admin/error.php";
+			$this->data['status']="error";
+			$this->data['view']="admin/error.php";
 		}
 		// Now render the output
-	  cmsHTML();
-	  $data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
-	  $data['body'][]= View::do_fetch( getPath('views/'.$data['view']), $data);
-	  $data['head'] = array();
-	  $data['aside'] = array();
-	  View::do_dump(TEMPLATES.'default.php',$data);
+	  $this->cmsHTML();
+	  $this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
+	  $this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
+	  $this->data['head'] = array();
+	  $this->data['aside'] = array();
+	  View::do_dump(TEMPLATES.$this->data['template'],$this->data);
 	}
 
 	function update($id=null) {
 	    require_login();
 		
-		$validate = validate();
+		$validate = $this->validate();
 		// see if we have found a page
 		if( $validate == true ){
-			save($id);
+			$this->save($id);
 		}
-		header('Location: '.myUrl($_POST['path']));
+		header('Location: '.getURL($_POST['path'], true));
 
 	}
 	
@@ -134,7 +135,7 @@
 			$page->set('title', $_POST['title']);
 			$page->set('content', $_POST['content']);
 			$page->set('tags', $_POST['tags']);
-			$page->set('template', "default");
+			$page->set('template', $_POST['template']);
 			$page->update();
 		} else {
 			// Create new page 
@@ -142,7 +143,7 @@
 			$page->set('title', $_POST['title']);
 			$page->set('content', $_POST['content']);
 			$page->set('tags', $_POST['tags']);
-			$page->set('template', "default");
+			$page->set('template', $_POST['template']);
 			$page->set('path', $_POST['path']);
 			$page->create();
 		}
@@ -154,16 +155,17 @@
 			$page=new Page($id);
 			$page->delete();
 		} 
-		header('Location: '.myUrl('main'));
+		header('Location: '.getURL('', true));
 	}
 
 	function cmsHTML() {
-	  global $data;
+
 	  // these additional variables add the CMS interface in our website
-		$data['cms_styles']= true;
+		$this->data['cms_styles']= true;
 	  if (isset($_SESSION['kisscms_admin'])) {
-		$data['cms_topbar']= View::do_fetch( getPath('views/admin/topbar.php'), $data);
+		$this->data['cms_topbar']= View::do_fetch( getPath('views/admin/topbar.php'), $this->data);
 	  }
 	}
 
+}
 ?>

@@ -49,10 +49,10 @@ session_start();
 //===============================================
 // first check if this is a "static" asset
 if ($output = isStatic($_SERVER['REQUEST_URI'])) {
-	echo $output;
+	echo getFile( $output );
 	exit;
 } else {
-	$controller = getController($_SERVER['REQUEST_URI']);
+	$controller = findController($_SERVER['REQUEST_URI']);
 	
 }
 //requestParserCustom($controller,$action,$params);
@@ -115,8 +115,6 @@ function custom_error($msg='') {
 // Srart the controller
 //===============================================s
 
-$output = new $controller( getPath('controllers/'),WEB_FOLDER,'page','index');
-
-echo $output;
+$output = new $controller( 'controllers/',WEB_FOLDER,'main','index');
 
 ?>

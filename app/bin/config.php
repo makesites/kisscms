@@ -5,7 +5,7 @@
 //===============================================
 
 // Definitions
-define('DEFAULT_ROUTE','page');
+define('DEFAULT_ROUTE','Main');
 define('DEFAULT_ACTION','index');
 
 define('DB_PAGES', "pages.sqlite"); 

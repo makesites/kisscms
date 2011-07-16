@@ -21,10 +21,10 @@ define('WEB_FOLDER','/');
 define('DATA', realpath("../").'/data/');
 
 // full path of where the templates reside
-define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . '/templates/'); 
+define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
 // the url of your cdn, if you're using one
-define('ASSETS', 'http://' . $_SERVER['SERVER_NAME'] . '/assets/'); 
+define('CDN', 'http://' . $_SERVER['SERVER_NAME'] . '/'); 
 
 
 //===============================================

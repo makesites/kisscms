@@ -108,7 +108,9 @@ class Admin extends Controller {
 	  $this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
 	  $this->data['head'] = array();
 	  $this->data['aside'] = array();
-	  View::do_dump(TEMPLATES.$this->data['template'],$this->data);
+	  // fallback to the default template if the template isn't available
+	  $template =(is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES."default.php";
+	  View::do_dump($template,$this->data);
 	}
 
 	function update($id=null) {

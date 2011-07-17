@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <base href="<?=str_replace('/index.php','',getURL('',true))?>" />
+  <base href="<?=str_replace('/index.php','',myUrl('',true))?>" />
   <title>Scrap <?=$GLOBALS['sitename']?></title>
 
   <? head($head, $admin); ?>
@@ -32,7 +32,7 @@
     <h1><a href="/"><?=$GLOBALS['sitename']?></a></h1>
 <div id="nav">
     <ul>
-      <li><a href="<?=getURL()?>">Main</a></li>
+      <li><a href="<?=myUrl()?>">Main</a></li>
     </ul>
   </div>
     </header>

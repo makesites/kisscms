@@ -31,7 +31,8 @@ function findController($url) {
 		$controller= DEFAULT_ROUTE;
 		$controllerfile= getPath('controllers/'. DEFAULT_ROUTE .'.php');;
 	}
-   	// ultimately include the controller file 
+	
+	// ultimately include the controller file 
 	require( $controllerfile );
 	// return the controller name with the first letter uppercase
 	return ucfirst( $controller );
@@ -151,7 +152,7 @@ function getPath( $file ) {
 	}
 }
 
-function getURL($path='',$fullurl=true){
+function myUrl($path='',$fullurl=true){
 	$url = '';
 	// first check if we want the full url
 	if( $fullurl ){ 
@@ -171,7 +172,7 @@ function getURL($path='',$fullurl=true){
 function redirect($url,$alertmsg='') {
   if ($alertmsg)
     addjAlert($alertmsg,$url);
-  header('Location: '.getURL($url));
+  header('Location: '.myUrl($url));
   exit;
 }
 

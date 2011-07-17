@@ -5,7 +5,7 @@ class Admin extends Controller {
 	public $data;
 	
 	function index() {
-    	header('Location: '.getURL('admin/login', true));
+    	header('Location: '.myUrl('admin/login', true));
 	}
 
 	/*
@@ -26,7 +26,7 @@ class Admin extends Controller {
 
 	  if($login == true) {
 		$_SESSION['admin']="true";
-		header('Location: '.getURL('', true));
+		header('Location: '.myUrl('', true));
 		exit();
 	  } else {
 		// display login form
@@ -39,7 +39,7 @@ class Admin extends Controller {
 
 	function logout() {
 	  unset($_SESSION['admin']);
-	  header('Location: '.getURL('', true));
+	  header('Location: '.myUrl('', true));
 	  exit();
 	}
 
@@ -58,7 +58,7 @@ class Admin extends Controller {
 			$results = $dbh->query($sql);
 		//echo $sql . "<br />\n";
 		}
-		header('Location: '.getURL('main', true));
+		header('Location: '.myUrl('main', true));
 	  } else {
 	  // show the configuration
 	  $this->data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$this->data);
@@ -121,7 +121,7 @@ class Admin extends Controller {
 		if( $validate == true ){
 			$this->save($id);
 		}
-		header('Location: '.getURL($_POST['path'], true));
+		header('Location: '.myUrl($_POST['path'], true));
 
 	}
 	
@@ -157,7 +157,7 @@ class Admin extends Controller {
 			$page=new Page($id);
 			$page->delete();
 		} 
-		header('Location: '.getURL('', true));
+		header('Location: '.myUrl('', true));
 	}
 
 	function cmsHTML() {

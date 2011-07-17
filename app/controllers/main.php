@@ -36,6 +36,7 @@ class Main extends Controller {
 		$this->data['aside'] = array();
 		// fallback to the default template if the template isn't available
 		$template =(is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES."default.php";
+		
 		View::do_dump($template,$this->data);
 	}
 	
@@ -50,6 +51,7 @@ class Main extends Controller {
 			$this->data['id'] = $page->get('id');
 			$this->data['title'] = stripslashes( $page->get('title') );
 			$this->data['content'] = stripslashes( $page->get('content') );
+			$this->data['tags'] = stripslashes( $page->get('tags') );
 			$this->data['template'] = stripslashes( $page->get('template') );
 		} else {
 			// forward to create a new page

@@ -2,7 +2,7 @@
 // create a fallback for the variables we are using
 $title = (!isset($title)) ? '' : $title; 
 $content = (!isset($content)) ? '' : $content; 
-$action = ( $status == "create" ) ? getURL("admin/update", true) : getURL("admin/update/$id", true); 
+$action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/update/$id", true); 
 ?>
 
 <h2><?=$GLOBALS['language'][$status.'_title']?></h2>
@@ -28,9 +28,9 @@ $action = ( $status == "create" ) ? getURL("admin/update", true) : getURL("admin
 </form>
 
 <script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=getURL('',true)?>/js/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=getURL('',true)?>/js/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=getURL('',true)?>/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=myUrl('',true)?>/js/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=myUrl('',true)?>/js/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=myUrl('',true)?>/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
 	$(document).ready(function(){

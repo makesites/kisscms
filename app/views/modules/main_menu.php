@@ -2,7 +2,7 @@
       <ul>
 <?php 
 foreach ($modules['main_menu'] as $v){
-	echo '<li><a href="' . getURL( $v['path'], true ) . '">' . $v['title'] . '</a></li>';
+	echo '<li><a href="' . myUrl( $v['path'], true ) . '">' . $v['title'] . '</a></li>';
 }
 ?>
 	  </ul>

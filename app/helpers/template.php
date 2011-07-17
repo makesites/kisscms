@@ -24,8 +24,8 @@ function showContent( $content ){
 function head($head, $cms_styles){
 
 	if(isset($cms_styles)){ ?>
-		<link href="<?=getURL('')?>/css/admin.css" rel="stylesheet" type="text/css" media="screen" />
-		<link href="<?=getURL('')?>/css/jquery.ui.autocomplete.custom.css" rel="stylesheet" type="text/css"  />
+		<link href="<?=myUrl('')?>/css/admin.css" rel="stylesheet" type="text/css" media="screen" />
+		<link href="<?=myUrl('')?>/css/jquery.ui.autocomplete.custom.css" rel="stylesheet" type="text/css"  />
 	<?php } ?>
 	
 	<?php

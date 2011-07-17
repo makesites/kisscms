@@ -1,13 +1,7 @@
 <?php
 
-
 //===============================================
-// Global Variables
-//===============================================
-
-
-//===============================================
-// Functions
+// Helper Functions
 //===============================================
 
 
@@ -48,8 +42,8 @@ function isStatic( $file ) {
 		$target = $_SERVER['DOCUMENT_ROOT'].$file;
 	// check in the app public folders
 	} elseif( defined("APP") ){
-		if ( file_exists( APP."public".$_SERVER['REQUEST_URI'] ) ) {
-			$target = APP."public".$_SERVER['REQUEST_URI'];
+		if ( file_exists( APP."public".$file ) ) {
+			$target = APP."public".$file;
 		}
 		if ($handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
@@ -64,8 +58,8 @@ function isStatic( $file ) {
 	}
 	// check in the base public folders
 	elseif( defined("BASE") ){
-		if ( file_exists( BASE."public".$_SERVER['REQUEST_URI'] ) ) {
-			$target = BASE."public".$_SERVER['REQUEST_URI'];
+		if ( file_exists( BASE."public".$file ) ) {
+			$target = BASE."public".$file;
 		}
 		if ($handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {

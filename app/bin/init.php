@@ -48,11 +48,12 @@ session_start();
 // Routes
 //===============================================
 // first check if this is a "static" asset
-if ($output = isStatic($_SERVER['REQUEST_URI'])) {
+$url = parse_url( $_SERVER['REQUEST_URI'] );
+if ($output = isStatic($url['path']) ) {
 	echo getFile( $output );
 	exit;
 } else {
-	$controller = findController($_SERVER['REQUEST_URI']);
+	$controller = findController($url['path']);
 	
 }
 //requestParserCustom($controller,$action,$params);

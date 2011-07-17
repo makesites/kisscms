@@ -8,6 +8,9 @@
 define('DEFAULT_ROUTE','Main');
 define('DEFAULT_ACTION','index');
 
+define('DEFAULT_TEMPLATE','default.php');
+
+
 define('DB_PAGES', "pages.sqlite"); 
 
 //===============================================

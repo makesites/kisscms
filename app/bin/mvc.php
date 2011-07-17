@@ -77,6 +77,7 @@ class Controller extends KISS_Controller {
 			$params = array_slice($p,2);
 
 		// finally convert the params to a string if they are only one element
+		if( count($params)==0 ) $params = null;
 		if( count($params)==1 ) $params = implode($params);
 		
 		// if the method doesn't exist rever to a generic 404 page

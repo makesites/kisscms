@@ -89,12 +89,21 @@ class Controller extends KISS_Controller {
 		return $this;
 	}
 
+	//Example of overriding a core class method with your own
+	function request_not_found() {
+		die(View::do_fetch(  getPath('views/errors/404.php') ));
+	}
+	
+	function require_login() {
+	  if (!isset($_SESSION['admin']) && $_SERVER['REQUEST_URI'] != WEB_FOLDER.'admin/login')
+		$this->redirect('admin/login');
+	}
 
+	function redirect($url,$alertmsg='') {
+		header('Location: '.myUrl($url));
+		exit;
+	}
 
-  //Example of overriding a core class method with your own
-  function request_not_found() {
-    die(View::do_fetch(  getPath('views/errors/404.php') ));
-  }
 
 }
 

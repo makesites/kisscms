@@ -170,10 +170,5 @@ class Admin extends Controller {
 		header('Location: '.myUrl('', true));
 	}
 
-	function require_login() {
-	  if (!isset($_SESSION['admin']) && $_SERVER['REQUEST_URI'] != WEB_FOLDER.'admin/login')
-		redirect('admin/login');
-	}
-
 }
 ?>

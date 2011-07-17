@@ -169,13 +169,14 @@ function myUrl($path='',$fullurl=true){
   	return $url;
 }
 
+/*
 function redirect($url,$alertmsg='') {
   if ($alertmsg)
     addjAlert($alertmsg,$url);
   header('Location: '.myUrl($url));
   exit;
 }
-
+*/
 
 //session must have started
 //$uri indicates which uri will activate the alert (substring check)

@@ -12,6 +12,9 @@ body{
 	border-bottom: solid 1px #999;
 	font-family: Helvetica,Verdana,Arial,Tahoma;
 	z-index: 1000;
+	-moz-box-shadow: 0 4px 15px #999; 
+	-webkit-box-shadow: 0 4px 15px #999; 
+	box-shadow: 0 4px 15px #999;
 }
 
 #admin-topbar h3{
@@ -29,6 +32,20 @@ body{
 
 #admin-topbar a:hover{
 	text-decoration: underline;
+}
+
+
+#admin-topbar h3 a{
+	display: block;
+	width: 16px;
+	height: 16px;
+	background: url(../img/admin/topbar-logo.png) 0 0 no-repeat;
+	text-indent: -9999px;
+}
+
+#admin-topbar h3 a:hover{
+	background-position: 0 -16px;
+	
 }
 
 #admin-topbar ul{

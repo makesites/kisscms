@@ -1,5 +1,5 @@
 <div id="admin-topbar">
-	<h3><a href="http://kisscms.com/" title="Visit the website for helpful tips and plugins...">KISSCMS</a></h3>
+	<h3><a href="http://kisscms.com/" title="Made with love...">KISSCMS</a></h3>
 	<ul>
 <?php if( isset( $status ) && $status == "new"){ ?>
 		<!-- <li><a href="<?=myUrl("admin/create", true)?>">Create page</a></li> -->

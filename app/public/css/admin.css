@@ -1,4 +1,8 @@
-#cms-topbar {
+body{
+	padding-top: 24px;
+}
+
+#admin-topbar {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -10,7 +14,7 @@
 	z-index: 1000;
 }
 
-#cms-topbar h3{
+#admin-topbar h3{
 	float: left;
 	margin: 0;
 	padding: 0 4px;
@@ -18,16 +22,16 @@
 	color: #666;
 }
 
-#cms-topbar a{
+#admin-topbar a{
 	color: #444499;
 	text-decoration: none;
 }
 
-#cms-topbar a:hover{
+#admin-topbar a:hover{
 	text-decoration: underline;
 }
 
-#cms-topbar ul{
+#admin-topbar ul{
 	margin: 0;
 	padding: 0 6px;
 	list-style-type: none;
@@ -35,7 +39,7 @@
 	font-size: 14px;
 }
 
-#cms-topbar li{
+#admin-topbar li{
 	display: inline;
 	margin: 0;
 	padding: 0 6px;

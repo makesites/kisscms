@@ -10,7 +10,7 @@
   <base href="<?=str_replace('/index.php','',myUrl('',true))?>" />
   <title>Scrap <?=$GLOBALS['sitename']?></title>
 
-  <? head($head, $admin); ?>
+  <? head($head); ?>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -24,8 +24,6 @@
 </head>
 
 <body>
-
-<?php if(isset($cms_topbar)){ echo "$cms_topbar\n"; } ?>
 
   <div id="container">
     <header>

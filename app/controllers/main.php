@@ -26,17 +26,16 @@ class Main extends Controller {
 		$this->requestPage( $this->data );
 		
 		// add aditional information if this is the admin
-		$this->checkLogin();
-		
-		$this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
-		
+		if (isset($_SESSION['admin'])) {
+			$this->data['body']['admin']= View::do_fetch( getPath('views/admin/topbar.php'), $this->data);
+		}
+
 		// load the view for the page content
 		$this->data['body'][]= View::do_fetch($this->data['view'], $this->data);
 		$this->data['head'] = array();
 		$this->data['aside'] = array();
 		// fallback to the default template if the template isn't available
-		$template =(is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES."default.php";
-		
+		$template =(array_key_exists('template', $this->data) && is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES.DEFAULT_TEMPLATE;
 		View::do_dump($template,$this->data);
 	}
 	
@@ -59,17 +58,6 @@ class Main extends Controller {
 			$this->data['view']= getPath('views/admin/confirm_new.php');
 		}
 
-	}
-
-	function checkLogin() {
-
-	  // check if admin is logged in and apply interface updates
-	  if (isset($_SESSION['admin'])) {
-		$this->data['cms_styles']= true;
-		$this->data['cms_topbar']= View::do_fetch(  getPath('views/admin/topbar.php'), $this->data);
-	  } else {
-		$this->data['cms_styles']= false;  
-	  }
 	}
 
 }

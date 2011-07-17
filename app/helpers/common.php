@@ -176,10 +176,6 @@ function redirect($url,$alertmsg='') {
   exit;
 }
 
-function require_login() {
-  if (!isset($_SESSION['admin']))
-    redirect('admin/login');
-}
 
 //session must have started
 //$uri indicates which uri will activate the alert (substring check)

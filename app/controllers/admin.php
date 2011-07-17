@@ -3,14 +3,22 @@
 class Admin extends Controller {
 
 	public $data;
-	
+
+	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
+		$this->require_login();
+		
+		$this->controller_path=$controller_path;
+		$this->web_folder=$web_folder;
+		$this->default_controller=$default_controller;
+		$this->default_function=$default_function;
+		$this->parse_http_request();
+		$this->route_request();
+	}
+
 	function index() {
     	header('Location: '.myUrl('admin/login', true));
 	}
 
-	/*
-	*  CMS Access
-	*/
 	function login() {
 
 	  $login = false;
@@ -30,7 +38,6 @@ class Admin extends Controller {
 		exit();
 	  } else {
 		// display login form
-		$this->cmsHTML();
 		$this->data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $this->data);
 		View::do_dump(TEMPLATES.DEFAULT_TEMPLATE,$this->data);
 	  }
@@ -46,9 +53,9 @@ class Admin extends Controller {
 	
 	function config( $action=null) {
 
-	  require_login();
-	  $this->cmsHTML();
-	  
+		// add aditional information if this is the admin
+		$this->checkLogin();
+		
 	  if($action == "save" && $GLOBALS['db_pages']){
 
 		$dbh = $GLOBALS['db_pages'];
@@ -71,25 +78,23 @@ class Admin extends Controller {
 	*/
 	function create($path=null) {
 
-	  require_login();
-	  
-	  $this->data['status']="create";
-	  $this->data['path']= ( isset($path) ) ? $path : $_POST['path'];
-	  $this->cmsHTML();
-	  $this->data['tags']= "";
-	  $this->data['template']= DEFAULT_TEMPLATE;
-	  $this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
-	  $this->data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
-	  $this->data['head'] = array();
-	  $this->data['aside'] = array();
-	  
-	  View::do_dump(TEMPLATES.DEFAULT_TEMPLATE,$this->data);
+		// add aditional information if this is the admin
+		$this->checkLogin();
+		
+		$this->data['status']="create";
+		$this->data['path']= ( isset($path) ) ? $path : $_POST['path'];
+		$this->data['tags']= "";
+		$this->data['template']= DEFAULT_TEMPLATE;
+		$this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
+		$this->data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
+		$this->data['head'] = array();
+		$this->data['aside'] = array();
+		
+		View::do_dump(TEMPLATES.DEFAULT_TEMPLATE,$this->data);
 	}
 	
 	function edit($id=null) {
 
-	    require_login();
-		
 		$page=new Page($id);
 
 		// see if we have found a page
@@ -109,14 +114,13 @@ class Admin extends Controller {
 			$this->data['view']="admin/error.php";
 		}
 		// Now render the output
-	  $this->cmsHTML();
-	  $this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
-	  $this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
-	  $this->data['head'] = array();
-	  $this->data['aside'] = array();
-	  // fallback to the default template if the template isn't available
-	  $template =(is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES.DEFAULT_TEMPLATE;
-	  View::do_dump($template,$this->data);
+	  	$this->data['body'][]= View::do_fetch( getPath('views/admin/topbar.php'), $this->data);
+		$this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
+		$this->data['head'] = array();
+		$this->data['aside'] = array();
+		// fallback to the default template if the template isn't available
+		$template =(is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES.DEFAULT_TEMPLATE;
+		View::do_dump($template,$this->data);
 	}
 
 	function update($id=null) {
@@ -158,7 +162,7 @@ class Admin extends Controller {
 	}
 	
 	function delete($id=null) {
-	    require_login();
+
 		if( $id ){
 			$page=new Page($id);
 			$page->delete();
@@ -166,13 +170,9 @@ class Admin extends Controller {
 		header('Location: '.myUrl('', true));
 	}
 
-	function cmsHTML() {
-
-	  // these additional variables add the CMS interface in our website
-		$this->data['cms_styles']= true;
-	  if (isset($_SESSION['kisscms_admin'])) {
-		$this->data['cms_topbar']= View::do_fetch( getPath('views/admin/topbar.php'), $this->data);
-	  }
+	function require_login() {
+	  if (!isset($_SESSION['admin']) && $_SERVER['REQUEST_URI'] != WEB_FOLDER.'admin/login')
+		redirect('admin/login');
 	}
 
 }

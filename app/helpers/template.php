@@ -21,9 +21,12 @@ function showContent( $content ){
 
 }
 
-function head($head, $cms_styles){
+function getHead($head, $cms_styles){
+}
 
-	if(isset($cms_styles)){ ?>
+function head($head){
+
+	if(isset($_SESSION['admin'])){ ?>
 		<link href="<?=myUrl('')?>/css/admin.css" rel="stylesheet" type="text/css" media="screen" />
 		<link href="<?=myUrl('')?>/css/jquery.ui.autocomplete.custom.css" rel="stylesheet" type="text/css"  />
 	<?php } ?>

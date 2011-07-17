@@ -10,7 +10,7 @@
   <base href="<?=str_replace('/index.php','',myUrl('',true))?>" />
   <title><?=$GLOBALS['sitename']?></title>
 
-  <? head($head, $admin); ?>
+  <? head($head); ?>
   <meta name="description" content="">
   <meta name="author" content="">
 

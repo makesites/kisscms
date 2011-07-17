@@ -1,9 +1,4 @@
-<style>
-body{
-	padding-top: 24px;
-}
-</style>
-<div id="cms-topbar">
+<div id="admin-topbar">
 	<h3><a href="http://kisscms.com/" title="Visit the website for helpful tips and plugins...">KISSCMS</a></h3>
 	<ul>
 <?php if( isset( $status ) && $status == "new"){ ?>

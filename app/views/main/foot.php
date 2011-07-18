@@ -1,12 +1,20 @@
-<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script-->
-<script>window.jQuery || document.write("<script src='js/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
+<script type="text/javascript" src="js/libs/require.js"></script>
 
+<script type="text/javascript">
+//Configure RequireJS
+require({
+    //Load jQuery before any other scripts, since jQuery plugins normally
+    //assume jQuery is already loaded in the page.
+    priority: ['jquery-1.5.1.min']
+});
 
-<!-- scripts concatenated and minified via ant build script-->
-<script src="js/plugins.js"></script>
-<script src="js/script.js"></script>
-<!-- end scripts-->
-
+//Load scripts.
+require(['jquery-1.5.1.min', 'js/plugins', 'js/script.js'], function($) {
+    $(function() {
+       // do something...
+    });
+});
+</script>
 
 <!--[if lt IE 7 ]>
 <script src="js/libs/dd_belatedpng.js"></script>

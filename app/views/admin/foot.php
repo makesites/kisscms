@@ -4,8 +4,9 @@
 	<ul>
 <?php if( isset( $status ) && $status == "new"){ ?>
 		<!-- <li><a href="<?=myUrl("admin/create", true)?>">Create page</a></li> -->
-<?php } else { ?>
+<?php } elseif( !isset( $status ) ) { ?>
 		<li><a href="<?=myUrl("admin/edit/$id", true)?>">Edit page</a></li>
+<?php } else { ?>
 <?php 	if( isset( $id ) && $id != "1"){ ?>
 		<li><a href="<?=myUrl("admin/delete/$id", true)?>" onclick="return confirm('<?=$GLOBALS['language']['delete_confirm']?>')">Delete page</a></li>
 <?php 	} ?>

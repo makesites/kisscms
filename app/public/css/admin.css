@@ -1,5 +1,5 @@
 body{
-	padding-top: 24px;
+	padding-top: 40px !important;
 }
 
 #admin-topbar {
@@ -12,9 +12,9 @@ body{
 	border-bottom: solid 1px #999;
 	font-family: Helvetica,Verdana,Arial,Tahoma;
 	z-index: 1000;
-	-moz-box-shadow: 0 4px 15px #999; 
-	-webkit-box-shadow: 0 4px 15px #999; 
-	box-shadow: 0 4px 15px #999;
+	-moz-box-shadow: 0 3px 15px #999; 
+	-webkit-box-shadow: 0 3px 15px #999; 
+	box-shadow: 0 3px 15px #999;
 }
 
 #admin-topbar h3{

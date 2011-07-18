@@ -1,5 +1,52 @@
 <?php
 
+//===============================================================
+// Template
+//===============================================================
+class Template extends KISS_View {
+
+	//Example of overriding a constructor/method, add some code then pass control back to parent
+	function __construct($vars='') {
+		$this->vars = $vars;
+		$file = $this->getTemplate();
+		parent::__construct($file,$vars);
+	}
+
+	function output($vars=''){
+		$template = new Template($vars);
+		$template->get("head");
+		$template->get("section");
+		$template->get("foot");
+		return parent::do_dump($template->file, $template->vars);
+	}
+	
+	function display($block='', $names=''){
+		if (is_array($block))
+		  foreach($block as $name=>$html)
+		  	if ( !is_array($names) || (is_array($names) && array_key_exists($name, $names)) )
+			  echo "$html\n";
+		elseif ( is_array($names) )
+		  foreach($names as $name)
+		  	if ( array_key_exists($name, $block) )
+			  echo "$html\n";
+	}
+	
+	function get($name=''){
+		$files = findFiles( $name.'.php' );
+		if(!array_key_exists($name, $this->vars)){ $this->vars[$name] = array(); }
+		foreach($files as $view){
+			 
+			 $this->vars[$name][] = View::do_fetch( $view, $this->vars);
+		}
+	}
+	
+	function getTemplate(){
+		$file = (array_key_exists('template', $this->vars) && is_file(TEMPLATES.$this->vars['template'])) ? TEMPLATES.$this->vars['template'] : TEMPLATES.DEFAULT_TEMPLATE;
+		return $file;
+	}
+	
+}
+
 function mainMenu(){
 
 	if( array_key_exists('db_pages', $GLOBALS) ){
@@ -11,31 +58,6 @@ function mainMenu(){
 		};  
 		View::do_dump( getPath('views/modules/main_menu.php'), $data);
 	}
-}
-
-function showContent( $content ){
-
-	if (isset($content) && is_array($content))
-	  foreach ($content as $html)
-		echo "$html\n";
-
-}
-
-function getHead($head, $cms_styles){
-}
-
-function head($head){
-
-	if(isset($_SESSION['admin'])){ ?>
-		<link href="<?=myUrl('')?>/css/admin.css" rel="stylesheet" type="text/css" media="screen" />
-		<link href="<?=myUrl('')?>/css/jquery.ui.autocomplete.custom.css" rel="stylesheet" type="text/css"  />
-	<?php } ?>
-	
-	<?php
-	if (isset($head) && is_array($head))
-	  foreach ($head as $html)
-		echo "$html\n";
-
 }
 
 function listTemplates( $selected=null){

@@ -4,15 +4,10 @@ class Admin extends Controller {
 
 	public $data;
 
+	// add call to require login, then pass control back to parent
 	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
 		$this->require_login();
-		
-		$this->controller_path=$controller_path;
-		$this->web_folder=$web_folder;
-		$this->default_controller=$default_controller;
-		$this->default_function=$default_function;
-		$this->parse_http_request();
-		$this->route_request();
+		return parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}
 
 	function index() {
@@ -39,7 +34,9 @@ class Admin extends Controller {
 	  } else {
 		// display login form
 		$this->data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $this->data);
-		View::do_dump(TEMPLATES.DEFAULT_TEMPLATE,$this->data);
+		
+		// display the page
+		Template::output($this->data);
 	  }
 
 	}
@@ -69,7 +66,9 @@ class Admin extends Controller {
 	  } else {
 	  // show the configuration
 	  $this->data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$this->data);
-	  View::do_dump(TEMPLATES.DEFAULT_TEMPLATE,$this->data);
+	  
+		// display the page
+		Template::output($this->data);
 	  }
 	}
 
@@ -87,10 +86,9 @@ class Admin extends Controller {
 		$this->data['template']= DEFAULT_TEMPLATE;
 		$this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
 		$this->data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
-		$this->data['head'] = array();
-		$this->data['aside'] = array();
-		
-		View::do_dump(TEMPLATES.DEFAULT_TEMPLATE,$this->data);
+
+		// display the page
+		Template::output($this->data);
 	}
 	
 	function edit($id=null) {
@@ -114,17 +112,13 @@ class Admin extends Controller {
 			$this->data['view']="admin/error.php";
 		}
 		// Now render the output
-	  	$this->data['body'][]= View::do_fetch( getPath('views/admin/topbar.php'), $this->data);
-		$this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
-		$this->data['head'] = array();
-		$this->data['aside'] = array();
-		// fallback to the default template if the template isn't available
-		$template =(is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES.DEFAULT_TEMPLATE;
-		View::do_dump($template,$this->data);
+	  	$this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
+		
+		// display the page
+		Template::output($this->data);
 	}
 
 	function update($id=null) {
-	    require_login();
 		
 		$validate = $this->validate();
 		// see if we have found a page
@@ -140,7 +134,7 @@ class Admin extends Controller {
 	}
 
 	function save($id=null) {
-	    require_login();
+
 		if( $id ){
 			// Update existing page 
 			$page=new Page($id);

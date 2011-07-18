@@ -163,6 +163,28 @@ function myUrl($path='',$fullurl=true){
   	return $url;
 }
 
+
+// find all files with a certain name
+function findFiles($filename) {
+	$return = array();
+	// first find the files in the app directory
+	if (defined("APP")){ 
+		$files = glob(APP."{views/*/$filename,plugins/*/views/$filename}",GLOB_BRACE);
+		$return = array_merge($return, $files);		
+	}
+	// then find the files in the base directory, if available
+	if (defined("BASE")){ 
+		$files = glob(BASE."{views/*/$filename,plugins/*/views/$filename}",GLOB_BRACE);
+		foreach( $files as $file ){
+			$app_file = str_replace(BASE, APP, $file);
+			if( !in_array($app_file, $return) ){
+				$return[] = $file;
+			}
+		}
+	}
+	return $return;
+}
+
 /*
 function redirect($url,$alertmsg='') {
   if ($alertmsg)

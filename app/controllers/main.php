@@ -20,23 +20,13 @@ class Main extends Controller {
 
 	function render() {
 	
-		$this->data['view'] = getPath('views/main.php');
-
 		// get the page details stored in the database
 		$this->requestPage( $this->data );
 		
-		// add aditional information if this is the admin
-		if (isset($_SESSION['admin'])) {
-			$this->data['body']['admin']= View::do_fetch( getPath('views/admin/topbar.php'), $this->data);
-		}
-
-		// load the view for the page content
-		$this->data['body'][]= View::do_fetch($this->data['view'], $this->data);
-		$this->data['head'] = array();
-		$this->data['aside'] = array();
-		// fallback to the default template if the template isn't available
-		$template =(array_key_exists('template', $this->data) && is_file(TEMPLATES.$this->data['template'])) ? TEMPLATES.$this->data['template'] : TEMPLATES.DEFAULT_TEMPLATE;
-		View::do_dump($template,$this->data);
+		$this->data['body'][]= View::do_fetch( getPath('views/main/body.php'), $this->data);
+		
+		// display the page
+		Template::output($this->data);
 	}
 	
 	function requestPage( ) {

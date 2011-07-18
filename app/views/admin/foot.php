@@ -1,3 +1,4 @@
+<?php if(isset($_SESSION['admin'])){ ?>
 <div id="admin-topbar">
 	<h3><a href="http://kisscms.com/" title="Made with love...">KISSCMS</a></h3>
 	<ul>
@@ -13,3 +14,4 @@
 		<li><a href="<?=myUrl("admin/logout", true)?>">Logout</a></li>
 	</ul>
 </div>
+<?php } ?>

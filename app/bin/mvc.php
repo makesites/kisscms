@@ -48,7 +48,6 @@ class Model extends KISS_Model  {
 //===============================================================
 class Controller extends KISS_Controller {
 
-
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
@@ -112,11 +111,11 @@ class Controller extends KISS_Controller {
 //===============================================================
 class View extends KISS_View {
 
-  //Example of overriding a constructor/method, add some code then pass control back to parent
-  function __construct($file='',$vars='') {
-    $file =  getPath('views/'.$file);
-    return parent::__construct($file,$vars);
-  }
+	//Example of overriding a constructor/method, add some code then pass control back to parent
+	function __construct($file='',$vars='') {
+		$file =  getPath('views/'.$file);
+		return parent::__construct($file,$vars);
+	}
 
 }
 

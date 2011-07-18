@@ -50,9 +50,6 @@ class Admin extends Controller {
 	
 	function config( $action=null) {
 
-		// add aditional information if this is the admin
-		$this->checkLogin();
-		
 	  if($action == "save" && $GLOBALS['db_pages']){
 
 		$dbh = $GLOBALS['db_pages'];
@@ -76,9 +73,6 @@ class Admin extends Controller {
 	*  CMS Actions
 	*/
 	function create($path=null) {
-
-		// add aditional information if this is the admin
-		$this->checkLogin();
 		
 		$this->data['status']="create";
 		$this->data['path']= ( isset($path) ) ? $path : $_POST['path'];

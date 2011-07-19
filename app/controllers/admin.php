@@ -33,7 +33,7 @@ class Admin extends Controller {
 		exit();
 	  } else {
 		// display login form
-		$this->data['body'][]= View::do_fetch( getPath('views/admin/login.php'), $this->data);
+		$this->data['body']['admin']= View::do_fetch( getPath('views/admin/login.php'), $this->data);
 		
 		// display the page
 		Template::output($this->data);
@@ -62,7 +62,7 @@ class Admin extends Controller {
 		header('Location: '.myUrl('main', true));
 	  } else {
 	  // show the configuration
-	  $this->data['body'][]=View::do_fetch( getPath('views/admin/config.php'),$this->data);
+	  $this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);
 	  
 		// display the page
 		Template::output($this->data);
@@ -79,7 +79,7 @@ class Admin extends Controller {
 		$this->data['tags']= "";
 		$this->data['template']= DEFAULT_TEMPLATE;
 		$this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
-		$this->data['body'][]= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
+		$this->data['body']['admin']= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
 
 		// display the page
 		Template::output($this->data);
@@ -106,7 +106,7 @@ class Admin extends Controller {
 			$this->data['view']="admin/error.php";
 		}
 		// Now render the output
-	  	$this->data['body'][]= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
+	  	$this->data['body']['admin']= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
 		
 		// display the page
 		Template::output($this->data);

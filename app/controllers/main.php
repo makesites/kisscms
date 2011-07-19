@@ -23,7 +23,7 @@ class Main extends Controller {
 		// get the page details stored in the database
 		$this->requestPage( $this->data );
 		
-		$this->data['body'][]= View::do_fetch( getPath('views/main/body.php'), $this->data);
+		$this->data['body']['main']= View::do_fetch( getPath('views/main/body.php'), $this->data);
 		
 		// display the page
 		Template::output($this->data);

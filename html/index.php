@@ -6,7 +6,7 @@ Licensed under the GNU - http://www.gnu.org/licenses/gpl-2.0.txt
 *****************************************************************/
 
 //===============================================
-// Constants
+// PATHS
 //===============================================
 
 // where the app is located - include a BASE constant here if this is a clone site
@@ -25,12 +25,6 @@ define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/');
 
 // the url of your cdn, if you're using one
 define('CDN', 'http://' . $_SERVER['SERVER_NAME'] . '/'); 
-
-
-//===============================================
-// Global Variables
-//===============================================
-$GLOBALS['sitename']='KISSCMS - Lightweight CMS based on the KISSMVC Framework';
 
 
 //===============================================

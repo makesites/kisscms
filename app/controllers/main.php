@@ -23,6 +23,9 @@ class Main extends Controller {
 		// get the page details stored in the database
 		$this->requestPage( $this->data );
 		
+		// add the config in the data object
+		$this->data['config'] = $GLOBALS['config'];
+		
 		$this->data['body']['main']= View::do_fetch( getPath('views/main/body.php'), $this->data);
 		
 		// display the page

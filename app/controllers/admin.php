@@ -50,16 +50,30 @@ class Admin extends Controller {
 	
 	function config( $action=null) {
 
-	  if($action == "save" && $GLOBALS['db_pages']){
-
-		$dbh = $GLOBALS['db_pages'];
-		$s='';
+	  if($action == "save" ){
+		// placeholder array for the submission
+		//$data = array();
+		// loop through all the data and reorganise them properly
 		foreach($_POST as $k=>$v){
-			$sql = 'UPDATE "config" SET "value"="' . $v . '" WHERE "name"="' . $k . '"';
-			$results = $dbh->query($sql);
-		//echo $sql . "<br />\n";
+			// get the controller from the field name
+			$name = explode("|", $k);
+			if(count($name) < 2) continue;
+			$table = $name[0];
+			$key = $name[1];
+			$value = $v;
+			// only save the data that have changed
+			if( $GLOBALS["config"][$table][$key] != $v ){
+				$config = new Config($table);
+				//$config->pkname = 'key';
+				$config->set('key', $key);
+				$config->set('value', $value);
+				$config->update();
+				$GLOBALS["config"][$table][$key] = $v;
+			}
+			
 		}
-		header('Location: '.myUrl('main', true));
+		// redirect back to the configuration page
+		header('Location: '.myUrl('admin/config', true));
 	  } else {
 	  // show the configuration
 	  $this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);

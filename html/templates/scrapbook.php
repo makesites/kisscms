@@ -4,7 +4,7 @@
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	<title><?=$GLOBALS['sitename']?></title>
+	<title><?=$config['main']['site_name']?> - <?=$config['main']['site_description']?></title>
 	
 	<? Template::display( $head ); ?>
 
@@ -14,7 +14,7 @@
 
   <div id="container">
     <header>
-    <h1><a href="/"><?=$GLOBALS['sitename']?></a></h1>
+    <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
 <div id="nav">
 
 <? mainMenu(); ?>

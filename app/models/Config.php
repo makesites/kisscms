@@ -3,7 +3,7 @@ class Config extends Model {
 
   function __construct($table='sqlite_master') {
 	$this->tablename = $table;
-	parent::__construct('config.sqlite', null, $this->tablename); //primary key = id; tablename = pages
+	parent::__construct('config.sqlite', 'key', $this->tablename); //primary key = id; tablename = pages
 	$this->rs['key'] = '';
     $this->rs['value'] = '';
 	if($table=='sqlite_master')
@@ -85,20 +85,5 @@ class Config extends Model {
 		return $arr;
 	}
 	
-  function get( $table ) {
-	$dbh= $this->getdbh( $this->db );
-    $sql = 'SELECT * FROM "'.$table.'"';
-    $results = $dbh->prepare($sql);
-    //$results->bindValue(1,$username);
-    $results->execute();
-    $config = $results->fetch(PDO::FETCH_ASSOC);
-    if (!$config)
-      return false;
-    foreach ($config as $k => $v)
-	  //print_r($k." => ".$v);
-      //$this->set($k,$v);
-    return true;
-  }
-
 }
 ?>

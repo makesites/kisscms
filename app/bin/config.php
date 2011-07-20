@@ -8,6 +8,9 @@
 new Config();
 
 // Register variables
+Config::register("main", "site_name", "KISSCMS");
+Config::register("main", "site_description", "Lightweight CMS based on the KISSMVC Framework");
+
 Config::register("main", "default_route", "main");
 Config::register("main", "default_action", "index");
 

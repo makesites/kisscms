@@ -7,9 +7,14 @@ $admin_username = (!isset($admin_username)) ? '' : $admin_username;
 
 <form class="cms-form clearfix" method="post" action="<?=myUrl('admin/config/save')?>">
 <?php 
-	foreach( $GLOBALS['config'] as $k=>$v ){
-		echo '<label>' . $GLOBALS['language']['config'][$k] . ':</label><input type="text" name="' . $k . '" value="' . $v . '" />' . "\n";
-	
+	foreach( $GLOBALS['config'] as $controller=>$vars ){
+		echo '<fieldset name="'.$controller.'">';
+		echo '<legend>'. ucwords( $controller ) .'</legend>';
+    	foreach( $vars as $k=>$v ){
+			// $GLOBALS['language']['config'][$k]
+			echo '<label>' . $k . ':</label><input type="text" name="'. $controller .'|' . $k . '" value="' . $v . '" />' . "\n";
+		}
+		echo '</fieldset>';
 	}
 ?>
 	<input type="submit" name="submit" class="button" value="Save" />

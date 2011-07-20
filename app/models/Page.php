@@ -25,7 +25,7 @@ class Page extends Model {
   }
 
   function get_page_from_path( $uri ) {
-    $dbh= $this->getdbh( DB_PAGES );
+    $dbh= $this->getdbh();
     $sql = 'SELECT * FROM "pages" WHERE "path"="'. $uri . '" LIMIT 1';
     $results = $dbh->prepare($sql);
     //$results->bindValue(1,$username);

@@ -4,13 +4,10 @@
 // Includes
 //===============================================
 // follows this order: 
-//- libs,helpers in the app folder
-//- libs,helpers in the base folder
+//- libs,helpers in the app/base folder
+//- models in the app/base folder
 //- files in this dir
-//- models in the app folder
-//- models in the base folder
-//- plugins init.php in the app folder
-//- plugins init.php in the base folder
+//- plugins init.php in the app/base folder
 
 if( defined("APP") ){
 	requireAll( APP."lib/" );
@@ -20,15 +17,15 @@ if( defined("BASE") ){
 	requireAll( BASE."lib/" );
 	requireAll( BASE."helpers/" );
 }
-
-requireAll( dirname(__FILE__)."/", null, array("init.php") );
-
 if( defined("APP") ){
 	requireAll( APP."models/" );
 }
 if( defined("BASE") ){
 	requireAll( BASE."models/" );
 }
+
+requireAll( dirname(__FILE__)."/", null, array("init.php") );
+
 if( defined("APP") ){
 	requireAll( APP."plugins/", array("/bin/init.php"));
 }

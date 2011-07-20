@@ -35,7 +35,6 @@ class Model extends KISS_Model  {
 		//return call_user_func($this->dbhfnname, $this->db);
 	}
 
-
 	//Example of adding your own method to the core class
 	function gethtmlsafe($key) {
 		return htmlspecialchars($this->get($key));

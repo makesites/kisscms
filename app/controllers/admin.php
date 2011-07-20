@@ -22,7 +22,7 @@ class Admin extends Controller {
 		$username=trim($_POST['admin_username']);
 		$password=$_POST['admin_password'];
 		// check for the entered data
-		if($username == $GLOBALS['admin']['username'] && $password == $GLOBALS['admin']['password']){
+		if($username == $GLOBALS['config']['admin']['admin_username'] && $password == $GLOBALS['config']['admin']['admin_password']){
 			$login = true;
 		}
 	  }

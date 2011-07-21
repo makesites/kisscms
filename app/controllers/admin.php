@@ -7,6 +7,10 @@ class Admin extends Controller {
 	// add call to require login, then pass control back to parent
 	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
 		$this->require_login();
+		
+		// add the config in the data object
+		$this->data['config'] = $GLOBALS['config'];
+		
 		return parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}
 

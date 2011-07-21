@@ -22,7 +22,7 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
     
 	<input type="text" name="tags" id="tags" value="<?=$tags?>" />
 	
-    <?=listTemplates( $template );?>
+    <?=Template::doList($template);?>
     
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>

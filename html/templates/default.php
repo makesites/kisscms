@@ -17,7 +17,7 @@
     <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
 <div id="nav">
 
-<? mainMenu(); ?>
+<? Template::display( $section, 'menu' ); ?>
 
   </div>
     </header>

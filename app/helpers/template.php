@@ -23,7 +23,7 @@ class Template extends KISS_View {
 	function display($block='', $names=''){
 		if (is_array($block))
 		  foreach($block as $name=>$html)
-		  	if ( !is_array($names) || (is_array($names) && array_key_exists($name, $names)) )
+		  	if ( ($names == '' ) || (!is_array($names) && $names == $name ) || (is_array($names) && array_key_exists($name, $names)) )
 			  echo "$html\n";
 		elseif ( is_array($names) )
 		  foreach($names as $name)
@@ -66,35 +66,24 @@ class Template extends KISS_View {
 		return $section;
 	}
 	
-}
-
-function mainMenu(){
-
-	if( array_key_exists('db_pages', $GLOBALS) ){
-		$dbh = $GLOBALS['db_pages'];
-		$sql = 'SELECT * FROM "pages" ORDER BY "date" LIMIT 5';
-		$results = $dbh->query($sql);
-		while ($variable = $results->fetch(PDO::FETCH_ASSOC)) {
-			$data['modules']['main_menu'][] = array("title"=>$variable['title'], "path"=>$variable['path']);
-		};  
-		View::do_dump( getPath('views/modules/main_menu.php'), $data);
-	}
-}
-
-function listTemplates( $selected=null){
 	
-	$data['selected']['list_templates'] = $selected;
-	
-	if ($handle = opendir(TEMPLATES)) {
-		while (false !== ($template = readdir($handle))) {
-			if ($template == '.' || $template == '..') { 
-			  continue; 
-			} 
-			if ( is_file(TEMPLATES.$template) ) {
-				$data['modules']['list_templates'][] = $template;
-			}
-		}	
-		View::do_dump( getPath('views/modules/list_templates.php'), $data);
+	function doList( $selected=null){
+		
+		$data['template']['selected'] = $selected;
+		
+		if ($handle = opendir(TEMPLATES)) {
+			while (false !== ($template = readdir($handle))) {
+				if ($template == '.' || $template == '..') { 
+				  continue; 
+				} 
+				if ( is_file(TEMPLATES.$template) ) {
+					$data['template']['list'][] = $template;
+				}
+			}	
+			View::do_dump( getPath('views/admin/list_templates.php'), $data);
+		} else {
+			return false;
+		}			
 	}
 }
 

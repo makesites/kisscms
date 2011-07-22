@@ -72,6 +72,14 @@ function isStatic( $file ) {
 			}
 		}
 	}
+	// check in the plugins directory
+	elseif( defined("PLUGINS")){
+		$files = glob(PLUGINS."*/public/$file");
+		if( count($files) > 0 ) {
+			// arbitrary pick the first file - should have a comparison mechanism in place
+			$target = $files[0];
+		}
+	}
 	
 	// output the results
 	if( isset($target) ){
@@ -108,12 +116,12 @@ function getFile($filename) {
 } 
  
 function getPath( $file ) {
-	if (defined("APP") && file_exists(APP.$file)){ 
+	if (defined("APP")){ 
 		// find the clone file first
 		if (file_exists(APP.$file)){ 
 			return APP.$file;
 		// check the plugins folder
-		} else if ($handle = opendir(APP."plugins/")) {
+		} elseif ($handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -124,12 +132,12 @@ function getPath( $file ) {
 			}
 			
 		}
-	} elseif (defined("BASE") && file_exists(BASE.$file)) {
+	} elseif( defined("BASE") ) {
 		// find the core file second
 		if (file_exists(BASE.$file)){ 
 			return BASE.$file;
 		// check the plugins folder
-		} else if ($handle = opendir(BASE."plugins/")) {
+		} elseif ($handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -140,10 +148,25 @@ function getPath( $file ) {
 			}
 			
 		}
-	} else {
-	   // nothing checks out - output the same...
-	   return $file;
-	}
+	} elseif( defined("PLUGINS") ){
+		// find the core file second
+		if (file_exists(PLUGINS.$file)){ 
+			return PLUGINS.$file;
+		// check the plugins folder
+		} elseif ($handle = opendir(PLUGINS)) {
+			while (false !== ($plugin = readdir($handle))) {
+				if ($plugin == '.' || $plugin == '..') { 
+				  continue; 
+				} 
+				if ( is_dir($plugin) && file_exists( PLUGINS.$plugin."/".$file ) ) {
+					return PLUGINS.$plugin."/".$file;
+				}
+			}
+		}
+	} 
+	
+	// nothing checks out - output the same...
+	return $file;
 }
 
 function myUrl($path='',$fullurl=true){
@@ -181,6 +204,10 @@ function findFiles($filename) {
 				$return[] = $file;
 			}
 		}
+	}
+	if (defined("PLUGINS")){
+		$files = glob(PLUGINS."*/views/$filename");
+		$return = array_merge($return, $files);	 
 	}
 	return $return;
 }

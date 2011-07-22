@@ -12,15 +12,11 @@
 if( defined("APP") ){
 	requireAll( APP."lib/" );
 	requireAll( APP."helpers/" );
+	requireAll( APP."models/" );
 }
 if( defined("BASE") ){
 	requireAll( BASE."lib/" );
 	requireAll( BASE."helpers/" );
-}
-if( defined("APP") ){
-	requireAll( APP."models/" );
-}
-if( defined("BASE") ){
 	requireAll( BASE."models/" );
 }
 
@@ -31,6 +27,9 @@ if( defined("APP") ){
 }
 if( defined("BASE") ){
 	requireAll( BASE."plugins/", array("/bin/init.php"));
+}
+if( defined("PLUGINS") ){
+	requireAll( PLUGINS, array("/bin/init.php"));
 }
 
 

@@ -23,6 +23,9 @@ define('DATA', realpath("../").'/data/');
 // full path of where the templates reside
 define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
+// optionaly, you can set the location of your plugins - by default a subdir in the app folder
+// define('PLUGINS', APP . 'plugins/');
+
 // the url of your cdn, if you're using one
 define('CDN', 'http://' . $_SERVER['SERVER_NAME'] . '/'); 
 

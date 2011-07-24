@@ -15,7 +15,6 @@ class Template extends KISS_View {
 	function output($vars=''){
 		$template = new Template($vars);
 		$template->get("head");
-		$template->get("section");
 		$template->get("foot");
 		return parent::do_dump($template->file, $template->vars);
 	}

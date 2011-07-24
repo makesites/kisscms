@@ -17,7 +17,7 @@
     <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
 <div id="nav">
 
-<? Template::display( $section, 'menu' ); ?>
+<? Menu::display(); ?>
 
   </div>
     </header>
@@ -27,9 +27,6 @@
 
     </div>
     <aside>
-    
-<? Template::display( $section, 'twitter' ); ?>
-<? Template::display( $section, 'gallery' ); ?>
 
     </aside>
     <footer>

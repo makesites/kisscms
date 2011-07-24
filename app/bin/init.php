@@ -4,19 +4,21 @@
 // Includes
 //===============================================
 // follows this order: 
-//- libs,helpers in the app/base folder
-//- models in the app/base folder
+//- libs,helpers,models in the app folder
+//- libs,helpers,models in the base folder
 //- files in this dir
 //- plugins init.php in the app/base folder
+//- plugins init.php in the plugins folder
 
 if( defined("APP") ){
+	// by default load the mvc.php first
 	requireAll( APP."lib/" );
-	requireAll( APP."helpers/" );
+	requireAll( APP."helpers/", null, null, array("mvc.php") );
 	requireAll( APP."models/" );
 }
 if( defined("BASE") ){
 	requireAll( BASE."lib/" );
-	requireAll( BASE."helpers/" );
+	requireAll( BASE."helpers/", null, null, array("mvc.php") );
 	requireAll( BASE."models/" );
 }
 
@@ -57,23 +59,32 @@ if ($output = isStatic($url['path']) ) {
 //===============================================
 // Including Files
 //===============================================
-function requireAll($folder='', $only=array(), $exclude=array()) {
+function requireAll($folder='', $only=array(), $exclude=array(), $priority=array()) {
 if ($handle = opendir($folder)) {
     
 	// include everything unless explicitly specified
 	while (false !== ($file = readdir($handle))) {
 		if ($file == '.' || $file == '..') { 
 		  continue; 
-		} 	
+		}
+		// first give priority to the $priority array
+		if( count( $priority ) > 0 ){
+			foreach( $priority as $target ){
+				if(file_exists($folder.$target)){
+					require_once( $folder.$target );
+					
+				}
+			}	
+		}
+		// include only the files in the $only array
 		if( count( $only ) > 0 ){ 
-			// include only the files in the $only array
 			foreach( $only as $target ){
-				if(file_exists($folder.$file.$target)){
-					require_once( $folder.$file.$target );
+				if(file_exists($folder.$target)){
+					require_once( $folder.$target );
 				}
 			}
+		// exclude all the files in the $exclude array
 		} elseif( count( $exclude ) > 0 ){
-			// exclude all the files in the $exclude array
 			foreach( $exclude as $target ){
 				if ($file != $target && file_exists($folder.$file)) {				
 		  			require_once( $folder.$file );

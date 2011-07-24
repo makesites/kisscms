@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+/*******************************************************************************
+ *  KISSCMS print.css
+ */
+
+* {
+	color: #000 !important;
+	background-color: #fff !important;;
+	background-image: none !important;;
+}
+div {
+	border: none !important;
+	padding: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+a {
+	text-decoration: none !important;
+}
+#header {
+	padding-bottom: 1em !important;
+	border-bottom: solid 1px #000 !important;
+}
+#menu{
+	display: none;
+}
+
+aside {
+	float: none;
+	width: 100%;
+	font-size: 1em;
+	margin-right: 0;
+}
+#footer {
+	padding-top: 1em !important;
+	border-top: solid 1px #000 !important;
+}

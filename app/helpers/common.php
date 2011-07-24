@@ -165,8 +165,8 @@ function getPath( $file ) {
 		}
 	} 
 	
-	// nothing checks out - output the same...
-	return $file;
+	// nothing checks out...
+	return false;
 }
 
 function myUrl($path='',$fullurl=true){

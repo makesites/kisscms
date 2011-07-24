@@ -1,9 +1,6 @@
 <?php
 
-//===============================================================
-// Template
-//===============================================================
-class Meta extends Model {
+class Meta {
 	
 	static function display($type){
 		$meta = new Meta();
@@ -16,11 +13,11 @@ class Meta extends Model {
 	}
 	
 	function getTitle(){
-		return $GLOBALS['main']['site_name'];
+		echo $GLOBALS['config']['main']['site_name'];
 	}
 	
 	function getDescription(){
-		return $GLOBALS['main']['site_description'];
+		echo $GLOBALS['config']['main']['site_description'];
 	}
 }
 

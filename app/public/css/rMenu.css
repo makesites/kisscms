@@ -1,0 +1,686 @@
+@charset "UTF-8";
+
+/*******************************************************************************
+*  rMenu.css : 2008.04.11 : ruthsarian@gmail.com
+* ------------------------------------------------------------------------------
+* Ruthsarian Menus - A CSS-based dropdown menu system
+*
+* <insert long, boring ramble here>
+*
+* KNOWN BUGS
+*	- Opera 7.23 and earlier have problems with absolutely positioned 
+*	  elements positioned relative to a parent element. this causes a
+*	  problem with right-aligned horizontal menus. stay away from those
+*	  types of menus if you've got any reason to care about Opera 7.23 or
+*	  earlier versions.
+*
+* DEV NOTES
+*	- setting position: relative; to ul.rMenu triggers a bug in Netscape 7
+*	  and earlier that makes content jump as menus pop
+*	- need to remember that when assigning multiple classes to an element
+*	  to list them left-to-right from most-specific to least-specific.
+*	  Otherwise IE/Mac flips out
+*	- IE/Mac needs whitespace before <UL> and </UL> tags in the markup
+*	  otherwise very odd things can happen
+*	- hasLayout should not be triggered on LI elements under IE7
+*	- IE/Mac has a selector bug where rMenu-v* and rMenu-h* rules
+*	  are applied to rMenu-v and rMenu-h elements. ie rMenu-vRight rules
+*	  get applied to rMenu-v elements. This is incorrect.
+*	- if any parent element of the menu is a float it (or the parent of
+*	  the menu) needs to be relatively positioned. Otherwise the menu
+*	  is not rendered on the page.
+*	- z-indexing is all screwed up when you specify one menu's li
+*	  elements background color ( div.rMenu-center ul.rMenu li )
+*	  under IE/7. I don't know why. IE/7 sucks.
+*
+* EXAMPLE HTML
+*	<ul class="rMenu-hor rMenu"
+*	  ><li
+*	    ><a href="">Menu Item</a
+*	    > <ul class="rMenu-ver"
+*	      ><li
+*	        ><a href="">Menu Item</a
+*	      ></li
+*	      ><li
+*	        ><a href="">Menu Item</a
+*	      ></li
+*	    > </ul
+*	  ></li
+*	  ><li
+*	    ><a href="">Menu Item</a
+*	  ></li
+*	 > </ul>
+*
+* ------------------------------------------------------------------------------
+*  This stylesheet is released into the public domain.
+*******************************************************************************/
+
+/*******************************************************************************
+ * General Menu Mechanics
+ *
+ * Below is a set of rules which is applicable to any list used within
+ * this dropdown menu system. You could apply just these rules and get
+ * a basic dropdown menu system working just fine in FireFox, Opera,
+ * Safari, and most other modern browsers.
+ */
+ul.rMenu, ul.rMenu ul, ul.rMenu li, ul.rMenu a
+{
+	display: block;		/* make these objects blocks so they're easier
+				   to deal with */
+	margin: 0;
+	padding: 0;		/* get rid of padding/margin values that these
+				   elements may have by default */
+}
+ul.rMenu, ul.rMenu li, ul.rMenu ul
+{
+	list-style: none;	/* proper browsers don't require this because
+				   block elements (see previous rule set) cannot
+				   take any list-style property. meaning 
+				   existing list-style properties are removed
+				   when they are set to display: block. IE7 
+				   seems to ignore this fact under certain
+				   situations so we explicitly set it here
+				   even though it's, technically, incorrect 
+				   CSS (but it will validate). */
+}
+ul.rMenu ul
+{
+	display: none;		/* hide the sub-menus until needed */
+}
+ul.rMenu li
+{
+	position: relative;	/* so sub-menus position relative to their 
+				   parent LI element */
+	z-index: 1;
+}
+ul.rMenu li:hover
+{
+	z-index: 999;		/* make sure this and any sub-menus that pop 
+				   appear above everything else on the page */
+}
+ul.rMenu li:hover > ul/* hide from IE5.0 because it gets confused by this selector */
+{
+	display: block;		/* show the sub-menu */
+	position: absolute;	/* remove the sub-menus from the flow of the
+				   layout so when they pop they don't cause any
+				   disfiguration of the layout.
+
+				   NOTE: this value use to belong to the 
+				         "ul.rMenu ul" selector, however it was
+				         discovered that IE7 will muck up
+				         z-indexing on the ULs under very
+				         specific conditions unless the
+				         position attribute is set ONLY as
+				         they pop and not at all times.
+
+				         the specific condition? setting a
+				         background color on LI elements using
+				         a selector other than "ul.rMenu li".
+				         I have no idea why this is the case,
+				         but it is. 
+
+				         Also worth noting there's another fix
+				         for this bug. Simply set
+				         background-position: 0 0 
+				         on the ul.rMenu li:hover class 
+				         selector. The idea is that IE7 needs
+				         an extra rule to give it something
+				         to do, to give it a reason to notice
+				         the element when it's display
+				         state changes. Just odd.
+				*/
+}
+
+/*******************************************************************************
+ * Extended Menu Mechanics
+ *
+ * These rules exist only for specific menu types, such as horizontal or
+ * vertical menus, right or left aligned menus.
+ */
+ul.rMenu-hor li
+{
+	float: left;
+	width: auto;
+}
+ul.rMenu-hRight li
+{
+	float: right;		/* horizontal, right menus need their LI
+				   elements floated to get them over there */
+}
+ul.rMenu-ver li
+{
+	float: none;		/* clear this so vertical sub-menus that are
+				   children of horizontal menus won't have
+				   their LI widths set to auto. */
+}
+ul.rMenu-ver, ul.rMenu-ver ul
+{
+	width: 10em;		/* sub-menus need a defined width, especially
+				   vertical sub-menus. salt to taste. */
+}
+ul.rMenu-wide
+{
+	width: 100%;		/* apply this rule if you want the top-level
+				   menu to go as wide as possible. this is 
+				   something you might want if your top-level
+				   is a vertical menu that spans the width
+				   of a column which has its width 
+				   pre-defined. IE/Win 5 seems to prefer
+				   a value of 100% over auto. */
+}
+ul.rMenu-vRight
+{
+	float: right;		/* use this to float a vertical menu right. */
+}
+ul.rMenu-lFloat
+{
+	float: left;		/* use this to float a vertical menu left. */
+}
+ul.rMenu-noFloat
+{
+	float: none;		/* this is to cover those cases where a menu
+				   is floated by default and you have a reason
+				   to not float it. such as a menu on the
+				   right side of the screen that you want 
+				   to have drops going left but not floated.
+				   to be honest, i don't think this rule is 
+				   needed. the clearfix hack will resolve
+				   renering issues associated with a floated
+				   menu anyways. */
+}
+
+/*******************************************************************************
+ * Extended Menu Mechanics - Center Horizontal Menu
+ *
+ * This has it's own section to explain the unique nature of this feature. 
+ *
+ * In the past center horiztonal menus were achieved by setting list items
+ * to inline elements and then setting text-align to center. However these
+ * inline list items could not properly anchor their child menus, instead
+ * they would drop relative to the parent unordered list, not the list item.
+ *
+ * This means the only way to have drop menus from a center-aligned horizontal
+ * menu is to somehow keep the list items as blocks. This makes use of
+ * text-align impossible. Instead we must resort to CSS trickery to create
+ * the illusion of a center-aligned list.
+ *
+ * The trick is simple enough. Push the menu right 50% of the available width,
+ * and then pull it left 50% of the horizontal menu's width. However it's not
+ * as simple as a couple position statements. When a rule is set with a value
+ * of 50% you should be asking yourself "50% of what?".
+ *
+ * In terms of space, percent values are based on the dimensions of the parent
+ * object. So if I set an element to a width of 50%, it will be 50% the width
+ * of it's parent object.
+ *
+ * So move the UL element right 50% using positioning, then move the LI elements
+ * for the first tier left 50% and we're good, right?
+ *
+ * Wrong! The UL element is a block element and takes 100% the width of its
+ * parent element by default. This means left 50% on the LI elements puts them
+ * right back where they were, as if we didn't move them at all. The trick is
+ * to find a way to make the UL element collapse so that it takes on the width
+ * of the horizontal menu and not the width of its parent. We can do this
+ * easily enough by floating the UL element.
+ *
+ * With the UL element floated, we can position it right 50% and then position
+ * the LI elements left 50% and we wind up with a perfectly centered horizontal
+ * menu.
+ *
+ * There is one catch: we need to wrap this horizontal menu in an extra DIV 
+ * element and apply the clearfix class to it. If we don't clear the horizontal
+ * menu with clearfix then the menu will act like a float (since we're floating
+ * the UL element now) and content will start to the right of the menu.
+ *
+ * The parent DIV also allows us a place to add a border or padding for extra 
+ * visual treatment. That is why, in the CSS below, there is a parent 
+ * div.rMenu-center element specifically referenced.
+ *
+ * The added HTML for your menu would be:
+ *
+ * <div class="clearfix rMenu-center">
+ *    ...{ your regular menu here }...
+ * </div>
+ *
+ * NOTE: IE/Macs won't center these, they will display as left-aligned. This is
+ *       something that needs to be worked on.
+ *
+ *	 IE has problems with z-indexing on elements with hasLayout set. Most
+ *	 menus don't have hasLayout set except on the LIs. These centered 
+ *	 menus have hasLayout set on the top-level UL. This breaks z-indexing.
+ *	 Do not stack this menu anywhere near other menus or they will
+ *	 overlap incorrectly. The only fix for this is to specificly set
+ *	 z-index values where the top-most menu (first in the page) has
+ *	 the highest z-index with the values decreased the farther down
+ *	 the page you go.
+ */
+div.rMenu-center ul.rMenu
+{
+	float: left;
+	position: relative;
+	left: 50%;
+}
+div.rMenu-center ul.rMenu li
+{
+	position: relative;
+	left: -50%;
+}
+div.rMenu-center ul.rMenu li li
+{
+	left: auto;
+}
+
+/*******************************************************************************
+ * DROP POSITIONS
+ *
+ * This handles where sub-menus drops relative to the parent element. The same
+ * attributes should be set in all rule sets in this section so that cascading
+ * rules don't create problems.
+ *
+ * NOTE: The suckerfish/form fields hack found towards the bottom of this
+ *       stylesheet overwrites a few of these rules for IE 6 and earlier. If
+ *       you change any of the LEFT attributes here you need to also make the
+ *       same changes to the * html <selector> rule set down below. 
+ */
+ul.rMenu-hor ul
+{
+	top: auto;		/* a value of 100% creates a problem in IE 5.0 
+				   and Opera 7.23 */
+	right: auto;
+	left: auto;		/* typically want a value of 0 here but set to
+				   auto for same reasons detailed above */
+	margin-top: -1px;	/* so the top border of the dropdown menu 
+				   overlaps the bottom border of its parent
+				   horizontal menu. */
+}
+ul.rMenu-ver ul
+{
+	left: 60%;
+	right: auto;
+	top: auto;
+	margin-top: -0.5em;	/* i prefer top: 80% but this creates a problem
+				   in iCab so negative top margin must be used.
+				   salt to taste. */
+}
+ul.rMenu-vRight ul, ul.rMenu-hRight ul.rMenu-ver ul
+{
+	left: -60%;
+	right: auto;
+	top: auto;
+	margin-top: -0.5em;	/* i prefer top: 80% but this creates a problem
+				   in iCab so negative top margin must be used.
+				   salt to taste. */
+}
+ul.rMenu-hRight ul
+{
+	left: auto;
+	right: 0;		/* this doesn't work in Opera 7.23 but 7.5 and
+				   beyond work fine. this means right-aligned
+				   horizontal menus break in Opera 7.23 and
+				   earlier. no workaround has been found. */
+	top: auto;
+	margin-top: -1px;	/* so the top border of the dropdown menu 
+				   overlaps the bottom border of its parent
+				   horizontal menu. */
+}
+
+/*******************************************************************************
+ * PRESENTATION : General
+ *
+ * This is where the visual presentation of the menu is handled. If you try to
+ * alter the borders width or location of placement pay close attention to the
+ * notes provided with the existing CSS rules in this section. There are key
+ * reasons behind borders and negative margins being placed where they are.
+ */
+ul.rMenu li a
+{
+	border: solid 1px #99f	/* border around all anchor tags */
+}
+ul.rMenu-hor li
+{
+	margin-bottom: -1px;	/* this is so if we apply a bottom border to 
+							   the UL element it will render behind, but
+							   inline with the bottom border of the LI
+							   elements. */
+	margin-left: -1px;	/* negative borders on LIs to make borders on
+						   child A elements overlap. they go here and
+						   not on the A element for compatibility
+						   reasons (IE6 and earlier) */
+}
+ul.rMenu-hor
+{
+	padding-left: 1px ;	/* compensate for the 1px left jog created by
+						   the above negative margin. */
+}
+ul.rMenu-ver li
+{
+	margin-left: 0;
+	margin-top: -1px;	/* same thing above except for vertical
+						   menus */
+}
+ul.rMenu-ver
+{
+	border-top: solid 1px #fff;	/* ditto */
+}
+ul.rMenu li a
+{
+	padding: 2px 5px 3px;	/* 2px top, 3px bottom always seems to
+							   provide the most visually balanced 
+							   padding */
+}
+ul.rMenu li a:link, ul.rMenu li a:hover, ul.rMenu li a:visited, ul.rMenu li a:active
+{
+	text-decoration: none;
+}
+ul.rMenu li.sfhover a:active,
+ul.rMenu li:hover a:active
+{
+	color: #fff;
+	background-color: #c00;
+}
+ul.rMenu li
+{
+	background-color: #ddf;	/* default background color of menu items */
+}
+ul.rMenu li:hover,
+ul.rMenu li.sfhover
+{
+	background-color: #eda;	/* background color for parent menu items of
+							   the current sub-menu. includes the sfhover
+							   class which is used in the suckerfish hack
+							   detailed later in this stylesheet. */
+}
+ul.rMenu li a:hover
+{
+	background-color: #ffc;
+}
+
+/*******************************************************************************
+ * PRESENTATION : Expand
+ *
+ * the bits below implement a graphic to appear on those anchor elements which 
+ * have the rMenu-expand class assigned. this is something you have to do
+ * manually on any LI element containing a UL element that is to be a dropdown 
+ * menu. there is no mechanism to do this automatically.
+ *
+ * the seemingly redundant CSS is done for reasons similar to the suckerfish
+ * css. it's to deal with all sorts of nested menu issues. it'll work as far
+ * as three levels deep, after that all bets off.
+ */
+ul.rMenu li.rMenu-expand a,
+ul.rMenu li.rMenu-expand li.rMenu-expand a,
+ul.rMenu li.rMenu-expand li.rMenu-expand li.rMenu-expand a
+{
+	padding-right: 25px;
+	background-image: url("expand-right.gif");
+	background-repeat: no-repeat;
+	background-position: 100% 50%;
+}
+ul.rMenu-vRight li.rMenu-expand a,
+ul.rMenu-vRight li.rMenu-expand li.rMenu-expand a,
+ul.rMenu-vRight li.rMenu-expand li.rMenu-expand li.rMenu-expand a,
+ul.rMenu-hRight li.rMenu-expand a,
+ul.rMenu-hRight li.rMenu-expand li.rMenu-expand a,
+ul.rMenu-hRight li.rMenu-expand li.rMenu-expand li.rMenu-expand a
+{
+	padding-right: 5px;
+	padding-left: 20px;
+	background-image: url("expand-left.gif");
+	background-repeat: no-repeat;
+	background-position: -5px 50%;
+}
+ul.rMenu-hor li.rMenu-expand a
+{
+	padding-left: 5px;	/* reset padding */
+	padding-right: 15px;
+	background-image: url("expand-down.gif");
+	background-position: 100% 50%;
+}
+ul.rMenu li.rMenu-expand li a,
+ul.rMenu li.rMenu-expand li.rMenu-expand li a,
+ul.rMenu li.rMenu-expand li.rMenu-expand li.rMenu-expand li a
+{
+	background-image: none;
+	padding-right: 5px;	/* reset padding */
+	padding-left: 5px;	/* reset padding */
+}
+
+/*******************************************************************************
+ * HACKS : General
+ *
+ * These are rules specifically targeted to resolve bugs/quirks that some
+ * browser exhibit.
+ *
+ * REFERENCES:
+ *	http://www.webdevout.net/css-hacks
+ *	http://www.satzansatz.de/cssd/onhavinglayout.html
+ *	http://www.communis.co.uk/dithered/css_filters/css_only/index.html
+ */
+* html ul.rMenu
+{
+	display: inline-block;	/* this is for IE/Mac. it forces IE/Mac to 
+				   expand the element's dimensions to contain 
+				   its floating child elements without a 
+				   clearing element. */
+	/* \*/ display: block;	/* override above rule for every other 
+				   browser using IE/Mac backslash hack */
+	position: relative;	/* IE 5.0/Mac needs this or it may clip the
+				   dropdown menus */
+	/* \*/ position: static;/* reset position attribute for IE/Win as it
+				   causes z-index problems */
+}
+* html ul.rMenu ul
+{
+	float: left;		/* IE/Mac 5.0 needs this, otherwise hidden 
+				   menus are not completely removed from the
+				   flow of the document. */
+	/* \*/ float: none;	/* reset the rule for non-Macs */
+}
+ul.rMenu ul
+{
+	background-color: #fff;	/* IE/Win (including 7) needs this on an object 
+				   that hasLayout so that it doesn't "look through"
+				   the menu and let any object (text) below the 
+				   menu to gain focus, causing the menu to 
+				   disappear. application of this rule does not
+				   cause any rendering problems with other browsers
+				   as the background color his covered by the
+				   menu itself. */
+}
+* html ul.rMenu-ver li,
+* html ul.rMenu-hor li ul.rMenu-ver li
+{
+				/* the second selector above is there 
+				   because of problems IE/Mac has with 
+				   inheritance and what rules should take
+				   precedence. and to serve as a reminder on
+				   how to work around the issue if it's 
+				   encountered again down the road. */
+	width: 100%;
+	float: left;
+	clear: left;		/* IE likes to stick space below any LI
+				   in :hover state with a sub-menu. floating
+				   the LIs seems to work around this issue. But
+				   note that this also triggers hasLayout 
+				   because we need a width of 100% on floats. */
+}
+*:first-child+html ul.rMenu-ver > li/* hide from IE5.0 because it gets confused by this selector */
+{
+	width: 100%;
+	float: left;
+	clear: left;		/* same as previous rule set except this is
+				   for IE7 and the direct child selector 
+				   make inheritence much easier and obvious */
+}
+ul.rMenu li a
+{
+	position: relative;	/* trigger hasLayout for IE on anchor 
+				   elements. without hasLayout on anchors
+				   they would not expand the full width 
+				   of the menu. this rule may not trigger
+				   hasLayour in later versions of IE and
+				   if you find this system broken in new
+				   versions of IE, this is probably the
+				   source. */
+	min-width: 0;		/* triggers hasLayout for IE 7 */
+}
+* html ul.rMenu-hor li
+{
+	width: 6em;		/* IE Mac doesn't do auto widths so specify a width 
+				   for the sake of IE/Mac. Salt to taste. */
+	/* \*/ width: auto;	/* now undo previous rule for non Macs by using 
+				   the IE Mac backslash comment hack */
+}
+* html div.rMenu-center
+{
+	position: relative;
+	z-index: 1;		/* IE 6 and earlier need a little help with
+				   z-indexes on centered menus */
+}
+html/* */:not([lang*=""]) div.rMenu-center ul.rMenu li a:hover {
+	height: 100%;	/* for Netscape 6 */
+}
+html:/* */not([lang*=""])  div.rMenu-center ul.rMenu li a:hover {
+	height: auto;	/* reset for Netscape 7 and better */
+}
+
+
+/*******************************************************************************
+ * HACKS : Suckerfish w/Form Field Support (for IE 5.5 & 6.x)
+ *
+ * IE6 and earlier do not support the :hover pseudoclass and so javascript is 
+ * used to add the "sfhover" class of any LI element that the mouse is currently 
+ * over. This method is called suckerfish and you can read up on it at:
+ * http://www.htmldog.com/articles/suckerfish/dropdowns/
+ *
+ * One problem with this approach is IE6 and earlier versions have a bug where
+ * form fields appear over the dropdown menus regardless of z-index values.
+ * The fix is to generate and stick an IFRAME element under the dropdown menus
+ * as they pop. The JavaScript used to do this requires that we hide menus off
+ * to the side of the screen ( left: -100000px; ), but normal rMenu operation
+ * is to hide menus with the DISPLAY property ( display: none; ). So also
+ * included in the set of rules below are rules to overwrite this original
+ * functionality of rMenu and utilize the LEFT property to move menus off-
+ * screen until needed. Any other rules that use the LEFT property in the
+ * normal rMenu system will also have to be ovewriten here as well. This
+ * includes the dropdown positions.
+ *
+ * NOTE: this allows for support of dropdown menus up to 3 levels deep. if you 
+ *	 want to support greather menu depth you need to alter these selectors. 
+ *	 read the above mentioned website for more info on how to do that.
+ *
+ *       The fix to get dropdowns to appear over form fields requires we 
+ *       position menus off screen rather than simply hiding them with
+ *       display:none. So you might think we should not be using the display
+ *       property in the fields below. However we can because these display
+ *       properties are only being set when a parent LI is being hovered, so
+ *       the JavaScript used to operate on these LIs will already have the
+ *       dimensions they need before these display rules are activated.
+ */
+* html ul.rMenu ul
+{
+	display: block;
+	position: absolute;	/* ovewrite original functionality of hiding
+				   element so we can hide these off screen */
+}
+* html ul.rMenu ul,
+* html ul.rMenu-hor ul,
+* html ul.rMenu-ver ul,
+* html ul.rMenu-vRight ul, 
+* html ul.rMenu-hRight ul.rMenu-ver ul,
+* html ul.rMenu-hRight ul
+{
+	left: -10000px;		/* move menus off screen. note we're ovewriting
+				   the dropdown position rules that use the 
+				   LEFT property, thus all the selectors. */
+}
+* html ul.rMenu li.sfhover
+{
+	z-index: 999;		/* not totally needed, but keep the menu 
+				   that pops above all other elements within
+				   it's parent menu system */
+}
+* html ul.rMenu li.sfhover ul
+{
+	left: auto;		/* pull the menus that were off-screen back 
+				   onto the screen */
+}
+* html ul.rMenu li.sfhover ul ul, 
+* html ul.rMenu li.sfhover ul ul ul
+{ 
+	display: none;		/* IE/Suckerfish alternative for browsers that
+				   don't support :hover state on LI elements */
+}
+* html ul.rMenu li.sfhover ul, 
+* html ul.rMenu li li.sfhover ul, 
+* html ul.rMenu li li li.sfhover ul
+{
+	display: block;		/* ^ ditto ^ */
+}
+
+* html ul.rMenu-ver li.sfhover ul
+{
+	left: 60%;		/* dropdown positioning uses the left attribute
+				   for horizontal positioning. however we can't
+				   use this property until the menu is being
+				   displayed.
+
+				   note that all ULs beneath the menu item 
+				   currently in the hover state will get this
+				   value through inheritance. however all sub-
+				   menus still won't display because
+				   two rule sets up we're setting the 
+				   DISPLAY property to none.
+				 */
+}
+* html ul.rMenu-vRight li.sfhover ul, 
+* html ul.rMenu-hRight ul.rMenu-ver li.sfhover ul
+{
+	left: -60%;		/* ^ ditto ^ */
+}
+* html ul.rMenu iframe
+{
+	/* filter:progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0); */
+				/* the above rule is now applied in the 
+				   javascript used to generate the IFRAME this
+				   is applied to. it allows the CSS to validate
+				   while keeping the original functionality. */
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: -1;		/* this is the IFRAME that's placed behind
+				   dropdown menus so that form elements don't
+				   show through the menus. they are not set
+				   programatically via javascript because
+				   doing so generates some lag in the display
+				   of the dropdown menu. */
+}
+
+/*******************************************************************************
+ * HACKS : Clearfix
+ *
+ * Clearfix provides a means to for an element to contain all it's floated 
+ * children even if it's not normally tall enough to do so. For more information
+ * on clearfix please see:
+ * http://www.positioniseverything.net/easyclearing.html
+ */
+.clearfix:after
+{
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+.clearfix
+{
+	min-width: 0;		/* trigger hasLayout for IE7 */
+	display: inline-block;
+	/* \*/	display: block;	/* Hide from IE Mac */
+}
+* html .clearfix
+{
+	/* \*/  height: 1%;	/* Hide from IE Mac */ 
+}
+
+/******************************************************************************/

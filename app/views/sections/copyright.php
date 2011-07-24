@@ -1,0 +1,1 @@
+Copyright &copy; <?=$year?>  by <a href="/"><?=$author?></a>

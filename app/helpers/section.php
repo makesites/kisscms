@@ -5,17 +5,25 @@ class Section {
 	public $view;
 	public $data = array();
 	
-	function __construct($view=false, $vars=false){		
+	function __construct($vars=false, $view=false){
+				
+		$defaults = array( 'id' => '', 'class' => '', 
+							'h3' => array( 'id' => '', 'class' => '', 'html' => ''),
+							'ul' => array( 'id' => '', 'class' => ''),
+							'li' => array( 'id' => '', 'class' => '', 'html' => '') 
+						);
+		// parse the passed variables 
 		if( $view )
 			$this->view = $view;
-		if( $vars )
-			$this->data = json_decode( $vars, true);
+		$properties = json_decode( $vars, true);
+		if( is_array( $properties ) )
+			$this->data = array_merge( $defaults, $properties );
 	}
 	
 	static function display($section='', $vars=false, $view=false){
 		$class =  ucwords($section);
 		if( class_exists ( $class ) ){ 
-			new $class($view, $vars);
+			new $class($vars, $view);
 		}
 	}
 	
@@ -40,8 +48,8 @@ class Section {
 
 class Copyright extends Section {
 	
-	function __construct($view=false, $vars=false){
-		parent::__construct($view,$vars);
+	function __construct($vars=false, $view=false){
+		parent::__construct($vars,$view);
 		if( array_key_exists('db_config', $GLOBALS) ){
 			// get site author
 			$dbh = $GLOBALS['db_config'];
@@ -61,18 +69,18 @@ class Copyright extends Section {
 
 class Menu extends Section { 
 
-	function __construct($view=false, $vars=false){
-		parent::__construct($view,$vars);
-		$pages=array();
+	function __construct($vars=false, $view=false){
+		parent::__construct($vars,$view);
+		
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
 			$sql = 'SELECT * FROM "pages" ORDER BY "date"';
 			$results = $dbh->query($sql);
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
-				$pages[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] );
+				$items[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] );
 			} 
 		}
-		$this->data['pages'] = $pages;
+		$this->data['li']['html'] = $items;
 		$this->render();
 	}
 }
@@ -80,8 +88,8 @@ class Menu extends Section {
 
 class Breadcrumb extends Section {
 	
-	function __construct($view=false, $vars=false){
-		parent::__construct($view,$vars);
+	function __construct($vars=false, $view=false){
+		parent::__construct($vars,$view);
 		
 	}
 	
@@ -91,30 +99,37 @@ class Breadcrumb extends Section {
 
 class Archive extends Section {
 	
-	function __construct($view=false, $vars=false){
-		parent::__construct($view,$vars);
-				echo <<<HTML
+	function __construct($vars=false, $view=false){
+		parent::__construct($vars,$view);
+		// Additional defaults for specific section
+		$this->data['h3']['html'] = "Archives";
 		
-							<h4>Archives</h4>		<ul>
-			<li><a href="/2011/03/" title="March 2011">March 2011</a></li>
-	<li><a href="/2010/03/" title="March 2010">March 2010</a></li>
-	<li><a href="/2010/01/" title="January 2010">January 2010</a></li>
-	<li><a href="/2009/11/" title="November 2009">November 2009</a></li>
-	<li><a href="/2009/10/" title="October 2009">October 2009</a></li>
-	<li><a href="/2009/06/" title="June 2009">June 2009</a></li>
-	<li><a href="/2009/05/" title="May 2009">May 2009</a></li>
-	<li><a href="/2009/04/" title="April 2009">April 2009</a></li>
-	<li><a href="/2009/03/" title="March 2009">March 2009</a></li>
-	<li><a href="/2009/02/" title="February 2009">February 2009</a></li>
-	<li><a href="/2009/01/" title="January 2009">January 2009</a></li>
-	<li><a href="/2008/10/" title="October 2008">October 2008</a></li>
-		</ul>
-		
-HTML;
-
+		if( array_key_exists('db_pages', $GLOBALS) ){
+			$dbh = $GLOBALS['db_pages'];
+			$sql = 'SELECT * FROM "pages" ORDER BY "date"';
+			$results = $dbh->query($sql);
+			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
+				$date = strtotime($v['date']);
+				$title = date("F Y", $date );
+				$url = "archives/" . date("Y", $date ) ."/". date("m", $date ) ."/";
+				//$date =  = date("Y", v() );
+				$items[$title] = array( 'url' =>  myUrl( $url, true ), 'title' => $title );
+			} 
+		}
+		$this->data['li']['html'] = $items;
+		$this->render();
 	}
 	
 }
 
+
+class Search extends Section {
+	
+	function __construct($vars=false, $view=false){
+		parent::__construct($vars,$view);
+		$this->render();
+	}
+	
+}
 
 ?>

@@ -26,31 +26,32 @@ class Main extends Controller {
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		
-		$this->data['body']['main']= View::do_fetch( getPath('views/main/body.php'), $this->data);
+		//$this->data['body']['main']= View::do_fetch( getPath('views/main/body.php'), $this->data);
 		
 		// display the page
 		Template::output($this->data);
 	}
 	
 	function requestPage( ) {
-
-		$page=new Page();
+		
+		$data = array();
+		$page = new Page();
 		$page->get_page_from_path($this->data['path']);
-
+		
 		// see if we have found a page
 		if( $page->get('id') ){
 			// store the information of the page
 			$this->data['id'] = $page->get('id');
-			$this->data['title'] = stripslashes( $page->get('title') );
-			$this->data['content'] = stripslashes( $page->get('content') );
-			$this->data['tags'] = stripslashes( $page->get('tags') );
+			$this->data['body']['title'] = stripslashes( $page->get('title') );
+			$this->data['body']['content'] = stripslashes( $page->get('content') );
+			$this->data['body']['tags'] = stripslashes( $page->get('tags') );
+			$this->data['body']['date'] = strtotime( stripslashes( $page->get('date') ) );
 			$this->data['template'] = stripslashes( $page->get('template') );
 		} else {
 			// forward to create a new page
 			$this->data['status']="new";
 			$this->data['view']= getPath('views/admin/confirm_new.php');
 		}
-
 	}
 
 }

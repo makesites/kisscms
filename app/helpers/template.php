@@ -14,6 +14,7 @@ class Template extends KISS_View {
 
 	function output($vars=''){
 		$template = new Template($vars);
+		$template->getBody();
 		$template->get("head");
 		$template->get("foot");
 		return parent::do_dump($template->file, $template->vars);
@@ -30,6 +31,17 @@ class Template extends KISS_View {
 			  echo "$html\n";
 	}
 	
+	function getBody(){
+		$this->vars['body']['main'] = $this->vars;
+	}
+
+	function render($data='', $view=false){
+		if ( $view )
+		  View::do_dump( getPath('views/main/body-'. $view .'.php'), $data);
+		else
+		  View::do_dump( getPath('views/main/body.php'), $data);
+	}
+
 	function get($name=''){
 		$files = findFiles( $name.'.php' );
 		if(!array_key_exists($name, $this->vars)){ $this->vars[$name] = array(); }

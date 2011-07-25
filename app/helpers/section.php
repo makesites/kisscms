@@ -30,12 +30,15 @@ class Section {
 	
 	function render(){
 		// if there is a view, use it
+		$class = strtolower( get_class ( $this ) );
 		if($this->view) { 
 			$file = getPath('views/sections/'. $this->view .'.php');
+			// alternative naming for the view
+			if(!$file)
+				$file = getPath('views/sections/'. $class .'-'. $this->view .'.php');
 		// else if there is a view in the sections folder with the same name as the class, use it
 		} else { 
-			$view = strtolower( get_class ( $this ) );
-			$file = getPath('views/sections/'. $view .'.php');
+			$file = getPath('views/sections/'. $class .'.php');
 			// finally, try to render the section with the default view
 			if(!$file)
 				$file = getPath('views/sections/default.php');
@@ -95,6 +98,29 @@ class Breadcrumb extends Section {
 	
 }
 
+
+class Tags extends Section {
+	
+	function __construct($vars=false, $view=false){
+		// extra manipulation of the vars for this section
+		$data['tags'] = explode(",", $vars);
+		// encode to jsonc to decode again in the constrructor? there must be a better way...
+		$vars = json_encode( $data );
+		parent::__construct($vars,$view);
+		$this->render();
+	}
+	
+}
+
+
+class Pagination extends Section {
+	
+	function __construct($vars=false, $view=false){
+		parent::__construct($vars,$view);
+		$this->render();
+	}
+	
+}
 
 
 class Archive extends Section {

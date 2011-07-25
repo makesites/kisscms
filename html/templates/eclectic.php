@@ -31,12 +31,8 @@
 					<!-- posts starts here -->
 
 					<? Template::render( $body, 'blog' ); ?>
-
-					<div class="pagination">
-						<a href="" class="current round button">1</a>
-						<a href="/tag/editor/page/2/" class=" round button">2</a>
-					</div>
-					<!-- end of .pagination -->
+					
+                    <? Section::display("pagination")?> 
 
 				</div>
 				<!-- end of #content -->

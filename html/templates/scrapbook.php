@@ -4,9 +4,9 @@
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	<title><?=$config['main']['site_name']?> - <?=$config['main']['site_description']?></title>
-	
+	<title><?=Meta::display('title')?></title>
 	<? Template::display( $head ); ?>
+    <link rel="stylesheet" href="<?=myUrl()?>/assets/css/scrapbook.css" type="text/css" media="screen" />
 
 </head>
 
@@ -17,7 +17,7 @@
     <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
 <div id="nav">
 
-<? Menu::display(); ?>
+<? Section::display("menu"); ?>
 
   </div>
     </header>

@@ -1,0 +1,329 @@
+@charset "UTF-8";
+
+/*******************************************************************************
+*  cubic.css : Based on the comic theme by Ruthsarian Layouts
+*  originally comic_layout.css : 2008.04.10
+*  website: http://webhost.bridgew.edu/etribou/layouts/
+* -----------------------------------------------------------------------------
+*  A two column layout with a customization toolbox that gives users the
+*  ability to swap out styles (change colors, fonts, etc) to meet their personal
+*  tastes.
+*
+*  Small and simple in design (for a multi-column CSS layout) this should
+*  provide web site managers with a solid, compatible design from which
+*  to deliver content to their users.
+*
+* ------------------------------------------------------------------------------
+*  This stylesheet is released into the public domain.
+*******************************************************************************/
+
+.clear {
+	clear: both;		/* generic clearing element so that whatever comes 
+						   after this element will appear below all floating 
+						   elements above it */
+}
+.hide {
+	display: none;		/* generic class to hide elements from CSS-capable
+						   browsers */
+}
+body {
+	background-color: #fff;
+	color: #000;
+	margin: 0;			/* void out browser-defined gutterspace */
+	padding: 0;
+	font-family: calibri, helvetica, sans-serif;
+						/* calibri, the "IN" font for reading text on screens */
+}
+#sleeve {
+	max-width: 999px;	/* max resolution - 25px to accomadate for the vertical
+						   scrollbar */
+	min-width: 615px;	/* min resolution - 25px */
+	margin: 0 auto;		/* auto horizontal margins will cause the layout to be
+						   horizontally centered (usually) */
+}
+#book {
+	margin: 1em;			/* reserve some gutter space around the layout even
+							   in very low resolution */
+	border: solid 1px #ccc;
+	background-color: #fff;
+}
+#masthead,
+#footer {
+	border: solid 1px #ccc;
+	margin: 0.5em;
+	padding: 1px 0.5em;
+}
+#masthead {
+	padding: 1em;
+	margin-bottom: 0;
+	background-image: url(../img/cubic/flair3.png);
+	background-repeat: no-repeat;
+	background-position: 100% 20%;
+}
+#masthead h1 {
+	font-size: 1em;
+	margin: 0;
+}
+#masthead h2 {
+	font-size: 2em;
+	margin: 0;
+}
+#main-menu {
+	margin-top: -0.85em;	/* ( 1.2em (line height) + .5em (gutter) ) / 2 */
+}
+#main-menu ul.rMenu li a {
+	border-color: #ccc;
+	color: #000;
+	background-color: #fff;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+	line-height: 1.2em;		/* these last three are important to define if 
+							   we're to vertically center this element on
+							   the bottom border of the mastead. see previous
+							   selector */
+}
+#main-menu ul.rMenu li a:hover {
+	border-color: #ccc;
+	background-color: #eee;
+	color: #009;
+}
+#binding {
+	padding-right: 2.1em;	/* 1.6em (width of #toolbox) + .5em (gutterspace) */
+}
+#page {
+	float: left;			/* #toolbox will float next to #page */
+	width: 100%;
+}
+div.panel {
+	border: solid 1px #ccc;
+	padding: 1px 1em;
+	margin: 0.5em;
+	margin-bottom: 0;		/* don't rely on margin collapsing. simply have
+							   no bottom margin */
+}
+#left-column {
+	float: left;
+	width: 70%;				/* width of main column as a percent of the 
+							   available horizontal space */
+}
+#left-column div.panel {
+	margin-right: 0.25em;
+}
+#right-column {
+	float: left;
+	width: 30%;				/* 100% - <width of #left column> */
+	font-size: 0.85em;		/* gutter space of panels inside #right-column
+							   is defined in EMs. If you change the 
+							   font size of this column YOU MUST CHANGE
+							   the gutter space dimensions of panels
+							   in this column. the formula here is simple:
+
+							   ( 1 / <font size> ) * <target size>
+
+							   Apply this formula and round to the 
+							   nearest hundreth. Look below for some
+							   examples. */
+}
+#right-column div.panel {
+	margin-left: 0.29em;	/* ( 1em / 0.85em ) * 0.25em = 0.29em */
+	margin-right: 0.59em;	/* ( 1em / 0.85em ) * 0.5em = 0.59em */
+	margin-top: 0.59em;		/* ( 1em / 0.85em ) * 0.5em = 0.59em */
+}
+#toolbox {
+	width: 1.6em;
+	float: left;
+	margin-right: -1.6em;	/* if you change this, check the HACKS section below.
+							   as you need to update that as well */
+	text-align: center;
+}
+#toolbox div.panel {
+	padding: 0;
+	margin-left: 0;
+	margin-right: 0;		/* already have gutterspace created, no need
+							   for the panels to do it as well */
+	border: none;			/* no border. this is a style choice. */
+}
+#toolbox button {
+	background-color: #fff;
+	color: #000;
+	border: solid 1px #ccc;
+}
+#toolbox p.fontsize-set {
+	margin-top: 0;
+}
+#toolbox p.fontsize-set input,
+#toolbox p.theme-picker input {
+	width: 1.6em;				/* target width of toolbox buttons */
+	height: 1.6em;				/* target height (make 'em square) */
+	margin-bottom: 0.5em;		/* gutterspace between buttons */
+	border: solid 1px #ccc;		/* border to make it look buttonish */
+	background-color: #fff;
+	color: #000;
+	cursor: pointer;			/* give user visual feedback that it's
+								   a button */
+	padding: 0;
+	font-size: 1em;				/* if this isn't explicitly set the buttons
+								   won't change in size as the layout's
+								   font size is increased */
+	line-height: 1.6em;			/* set to the height of the box should get
+								   the text vertically aligned */
+`	text-align: center;
+}
+#toolbox p.fontsize-set input:hover {
+	background-color: #eee;
+}
+#toolbox p.fontsize-set small,
+#toolbox p.fontsize-set big {
+	font-size: 1em;				/* we need to set the font sizes for BIG and
+								   SMALL tags on the input buttoms themselves
+								   otherwise the buttons themselves (not the
+								   text) won't be of equal size */
+}
+#toolbox p.fontsize-set small input {
+						/* formula for calculating the width and height of
+						   these buttons so they're all the same size:
+						   <target size> * ( 1 / <font-size> ) */
+	font-size: 0.8em;
+	width: 2em;			/* 1.6 * ( 1 / 0.8 ) = 2 */
+	height: 2em;
+	line-height: 2em;
+}
+#toolbox p.fontsize-set big input {
+	font-size: 1.2em;
+	width: 1.33em;		/* 1.6 * ( 1 / 1.2 ) = 1.33 */
+	height: 1.33em;
+	line-height: 1.33em;
+}
+#toolbox p.theme-picker input.blue {
+	background-color: #ccf;
+}
+#toolbox p.theme-picker input.red {
+	background-color: #fcc;
+}
+#toolbox p.theme-picker input.green {
+	background-color: #cfc;
+}
+#toolbox p.theme-picker input.orange {
+	background-color: #fc9;
+}
+#toolbox p.theme-picker input.gray {
+	background-color: #ccc;
+}
+#footer {
+	padding: 1px 1em;
+	text-align: center;
+}
+div.two-columns {
+	width: 100%;
+}
+div.two-columns div.tc-left-column {
+	float: left;
+	width: 50%;
+	vertical-align: top;
+}
+div.two-columns div.tc-right-column {
+	float: left;
+	width: 50%;
+	vertical-align: top;
+}
+div.two-columns div.tc-right-align {
+	text-align: right;
+}
+div.two-columns div.tc-left-column div.tc-panel {
+	margin-right: 1em;
+}
+div.two-columns div.tc-right-column div.tc-panel {
+	margin-left: 1em;
+}
+div.tc-border div.tc-left-column {
+	margin-right: -1px;
+	border-right: solid 1px #ccc;
+}
+div.tc-border  div.tc-right-column {
+	border-left: solid 1px #ccc;
+}
+
+
+/* CSS Hacks
+ * --
+ * These things are a necessity of CSS life. While I wish we didn't have to 
+ * resort to such sillyness, if you want to keep your layout as compatible
+ * as possible you need to invest in some CSS trickery like this for layouts
+ * that go beyond a single column.
+ *
+ * The Key Hacks Used In this Layout
+ *
+ * [* html]		Any rule that starts with this will only be applied by
+ *				Win/IE 6, Mac/IE 5 and earlier versions. This is a quick
+ *				and dirty way to hide CSS from non-IE browsers
+ *
+ * [\*]			The backslash acts as an escape character for Mac/IE. Thus
+ *				changing how it interprets the closing comment mark, 
+ *				essentially causing Mac/IE to ignore it and treat anything
+ *				that follows as part of a CSS comment until another,
+ *				unescaped closing comment mark is found. This allows us
+ *				to hide IE hacks specific to Windows from Mac users.
+ *
+ * [min-width:0]		- IE 7
+ * [position:relative]	- IE 6
+ * [height:0.01%]		- IE 5
+ *				This is used to trigger hasLayout in Win/IE. hasLayout is 
+ *				a unique property of IE's rendering engine that is the 
+ *				root of almost every IE rendering bug. triggering hasLayout
+ *				will often resolve a rendering issue in IE, although it
+ *				can sometimes lead to other rendering bugs.
+ *
+ */
+.clear {					/* hide from IE/Mac \*/
+	padding-bottom: 1px;
+	margin-bottom: -1px;	/* this padding/margin hack is here for
+							   older Mozilla engines (Netscape 7, 6,
+							   FireFox pre 2.0) which will not allow 
+							   an element to clear unless it has some 
+							   effect on how the rest of the layout 
+							   renders (ie, it takes up space). 
+							   Hidden from IE/Mac as it triggers a 
+							   horizontal scrollbar. */
+}
+#page,
+#left-column,
+#right-column,
+#toolbox {
+	overflow: visible;		/* an old hack for Win/IE where the width of
+							   italicized text is not properly calculated
+							   and leads to possibly breaking the layout. */
+}
+#main-menu {
+	padding-left: 1em;
+	padding-right: 1em;		/* for clients that can't center the menu,
+							   such as Mac/IE and Netscape 6 */
+}
+#book {
+	min-width: 0;			/* for IE 7 */
+}
+* html #book {				/* hide from IE/Mac \*/
+	position: relative;		/* for IE 6 */
+}
+* html #binding {
+	height: 100%;			/* for IE 5.5 */
+}
+div.tc-right-column,
+#right-column {
+	margin-right: -1px;		/* for IE's rounding bug */
+}
+* html #masthead {
+	background-image: none;	/* for IE 6 and earlier - can't really do
+							   transparent PNGs */
+}
+* html #toolbox {
+	margin-right: -100%;	/* for Mac/IE \*/
+	margin-right: -1.6em;	/* reset for Win/IE */
+}
+* html div.tc-border div.tc-right-column {
+	margin-right: -100%;	/* for IE */
+}
+* html div.tc-panel {		/* hide from Mac/IE \*/
+	padding: 1px 0;			/* help IE ignore margin collapse */
+}
+
+/******************************************************************************/

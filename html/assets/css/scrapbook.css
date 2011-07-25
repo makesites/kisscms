@@ -1,0 +1,123 @@
+/******************************************************************/
+/*     From Almeros' Coding Blog at http://code.almeros.com/      */
+/*                                                                */
+/* http://code.almeros.com/how-to-create-a-css3-enabled-tag-cloud */
+/******************************************************************/
+body {
+	background:#000;
+}
+
+#tag_holder {
+	width:300px;
+}
+
+.tag {
+	/* Some standard .tag settings: starting point */
+	float:left;
+	background-color:#9ab9e4;
+	font-family: monospace;
+	font-size:13px;
+	font-weight:bold;
+	text-decoration:none;
+	padding: 2px 4px;
+	color:#eef;
+
+	
+	
+	/* Shadow under text */
+	-webkit-text-shadow: rgba(0,0,0,0.2) 2px 0, rgba(0,0,0,0.2) 0 2px, rgba(255,255,255,0.2) -2px 0, rgba(255,255,255,0.2) 0 -2px, rgba(0,0,0,0.2) 2px 2px, rgba(255,255,255,0.2) -2px -2px; 
+	-moz-text-shadow: rgba(0,0,0,0.2) 2px 0, rgba(0,0,0,0.2) 0 2px, rgba(255,255,255,0.2) -2px 0, rgba(255,255,255,0.2) 0 -2px, rgba(0,0,0,0.2) 2px 2px, rgba(255,255,255,0.2) -2px -2px; 
+	-o-text-shadow: rgba(0,0,0,0.2) 2px 0, rgba(0,0,0,0.2) 0 2px, rgba(255,255,255,0.2) -2px 0, rgba(255,255,255,0.2) 0 -2px, rgba(0,0,0,0.2) 2px 2px, rgba(255,255,255,0.2) -2px -2px;
+	text-shadow: rgba(0,0,0,0.2) 2px 0, rgba(0,0,0,0.2) 0 2px, rgba(255,255,255,0.2) -2px 0, rgba(255,255,255,0.2) 0 -2px, rgba(0,0,0,0.2) 2px 2px, rgba(255,255,255,0.2) -2px -2px;
+
+	/* Shadow under tag */
+	-webkit-box-shadow: 0 0 10px rgb(0,0,0);
+	-moz-box-shadow: 0 0 10px rgb(0,0,0);
+	-o-box-shadow: 0 0 10px rgb(0,0,0);
+	box-shadow: 0 0 10px rgb(0,0,0);
+
+	/* Rotation transformation */
+	-webkit-transform: rotate(-2deg);
+	-moz-transform: rotate(-2deg);
+	-o-transform: rotate(-2deg);
+	transform: rotate(-2deg);
+	
+
+
+	/* Transition between this and :hover state */
+	-webkit-transition: -webkit-transform 0.1s ease-in;
+	-moz-transition: -moz-transform 0.1s ease-in;
+	-o-transition: -o-transform 0.1s ease-in;
+	transition: transform 0.1s ease-in;	
+}
+
+.tag:hover {
+	color:#fff;
+	background-color:#3e6cf5;
+	z-index:10000;
+	
+	-webkit-box-shadow: 0 0 20px rgb(0,0,100);
+	-moz-box-shadow: 0 0 20px rgb(0,0,100);
+	-o-box-shadow: 0 0 20px rgb(0,0,100);
+	box-shadow: 0 0 10px rgb(0,0,100);	 
+
+	-webkit-transform: rotate(3deg) scale(1.2);
+	-moz-transform: rotate(3deg) scale(1.2);
+	-o-transform: rotate(3deg) scale(1.2);
+	transform: rotate(3deg) scale(1.2);
+}
+
+
+.tag:nth-child(2n) {
+	background-color:#8ab9e4;
+	font-size:17px;
+
+	-webkit-transform: rotate(2deg);
+	-moz-transform: rotate(2deg);
+	-o-transform: rotate(2deg);
+	transform: rotate(2deg);
+}
+
+.tag:nth-child(4n) {
+	background-color:#9ab9e4;
+	font-size:15px;
+
+	-webkit-transform: rotate(-8deg);
+	-moz-transform: rotate(-8deg);
+	-o-transform: rotate(-8deg);
+	transform: rotate(-8deg);
+}
+
+.tag:nth-child(5n) {
+	background-color:#9ab9d4;
+	font-size:18px;
+
+	-webkit-transform: rotate(-3deg);
+	-moz-transform: rotate(-3deg);
+	-o-transform: rotate(-3deg);
+	transform: rotate(-3deg);
+}
+
+
+
+
+.tag:nth-child(2n):hover {
+	-webkit-transform: rotate(-3deg) scale(1.2);
+	-moz-transform: rotate(-3deg) scale(1.2);
+	-o-transform: rotate(-3deg) scale(1.2);
+	transform: rotate(-3deg) scale(1.2);
+}
+
+.tag:nth-child(4n):hover {
+	-webkit-transform: rotate(3deg) scale(1.2);
+	-moz-transform: rotate(3deg) scale(1.2);
+	-o-transform: rotate(3deg) scale(1.2);
+	transform: rotate(3deg) scale(1.2);
+}
+
+.tag:nth-child(5n):hover {
+	-webkit-transform: rotate(2deg) scale(1.2);
+	-moz-transform: rotate(2deg) scale(1.2);
+	-o-transform: rotate(2deg) scale(1.2);
+	transform: rotate(2deg) scale(1.2);
+}

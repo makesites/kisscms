@@ -9,13 +9,16 @@ Licensed under the GNU - http://www.gnu.org/licenses/gpl-2.0.txt
 // PATHS
 //===============================================
 
-// where the app is located - include a BASE constant here if this is a clone site
+// where the app is located
 define('APP', realpath("../").'/app/'); //with trailing slash pls
-// the location of the website in relation with the domain root
 
+// Optional: include a BASE constant here if this is a clone site
+// define('BASE', APP);
+
+// the location of the website in relation with the domain root
 define('WEB_FOLDER','/');
 // alternatively use this if you do not have mod_rewrite enabled
-//define('WEB_FOLDER','/index.php/'); 
+// define('WEB_FOLDER','/index.php/'); 
 
 // the location where the SQLite databases will be saved
 define('DATA', realpath("../").'/data/');
@@ -23,7 +26,7 @@ define('DATA', realpath("../").'/data/');
 // full path of where the templates reside
 define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
-// optionaly, you can set the location of your plugins - by default a subdir in the app folder
+// Optional: you can set the location of your plugins - by default a subdir in the app folder
 // define('PLUGINS', APP . 'plugins/');
 
 // the url of your cdn, if you're using one

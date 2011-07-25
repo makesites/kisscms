@@ -6,34 +6,18 @@
 <head>
 	<title><?=Meta::display('title')?></title>
 	<? Template::display( $head ); ?>
-
-	<link rel="stylesheet" href="<?=myUrl()?>/assets/css/default.css" type="text/css" media="screen" />
-  
+    <link rel="stylesheet" href="<?=myUrl()?>/assets/css/old_school.css" type="text/css" media="screen" />
 </head>
 
 <body>
 
-  <div id="container">
-    <header>
-    <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
-<div id="nav">
 
 <? Section::display("menu"); ?>
 
-  </div>
-    </header>
-    <div id="main" role="main">
 
-<? Template::display( $body ); ?>
-
-    </div>
-    <aside>
-
-    </aside>
-    <footer>
-
-    </footer>
-  </div> <!-- eo #container -->
+<div id="article">
+	<? Template::display( $body ); ?>
+</div>
 
 
 <? Template::display( $foot ); ?>

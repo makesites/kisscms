@@ -14,7 +14,7 @@ class Template extends KISS_View {
 
 	function output($vars=''){
 		$template = new Template($vars);
-		$template->getBody();
+		//$template->getBody();
 		$template->get("head");
 		$template->get("foot");
 		return parent::do_dump($template->file, $template->vars);
@@ -32,14 +32,18 @@ class Template extends KISS_View {
 	}
 	
 	function getBody(){
-		$this->vars['body']['main'] = $this->vars;
+		//$this->vars['body']['main'] = $this->vars;
 	}
 
 	function render($data='', $view=false){
-		if ( $view )
-		  View::do_dump( getPath('views/main/body-'. $view .'.php'), $data);
-		else
-		  View::do_dump( getPath('views/main/body.php'), $data);
+		foreach($data as $part){ 
+			//if ( $view )
+			//  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
+			if ($part['view'])
+			  View::do_dump( $part['view'], $part);
+			else
+			  View::do_dump( getPath('views/main/body.php'), $part);
+		}
 	}
 
 	function get($name=''){
@@ -88,7 +92,9 @@ class Template extends KISS_View {
 				  continue; 
 				} 
 				if ( is_file(TEMPLATES.$template) ) {
-					$data['template']['list'][] = $template;
+					$data['template']['list'][] = array( 	'value' => $template, 
+															'title' => beautify($template)
+														);
 				}
 			}	
 			View::do_dump( getPath('views/admin/list_templates.php'), $data);

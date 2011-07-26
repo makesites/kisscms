@@ -110,21 +110,22 @@ class Admin extends Controller {
 		// see if we have found a page
 		if( $page->get('id') ){
 			// store the information of the page
-			$this->data['id'] = $page->get('id');
-			$this->data['title'] = stripslashes( $page->get('title') );
-			$this->data['content'] = stripslashes( $page->get('content') );
-			$this->data['path'] = $page->get('path');
-			$this->data['tags'] = $page->get('tags');
-			$this->data['template'] = $page->get('template');
+			$data['id'] = $this->data['id'] = $page->get('id');
+			$data['title'] = stripslashes( $page->get('title') );
+			$data['content'] = stripslashes( $page->get('content') );
+			$data['path'] = $page->get('path');
+			$data['tags'] = $page->get('tags');
+			$data['view'] = getPath('views/admin/edit_page.php');
+			$data['status']="edit";
 			// presentation variables
-			$this->data['status']="edit";
-			$this->data['view'] = "admin/edit_page.php";
+			$data['template'] = $this->data['template'] = $page->get('template');
 		} else {
-			$this->data['status']="error";
-			$this->data['view']="admin/error.php";
+			$data['status']="error";
+			$data['view'] = getPath('views/admin/error.php');
 		}
+			$this->data['body'][] = $data;
 		// Now render the output
-	  	$this->data['body']['admin']= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
+	  	//$this->data['body']['admin']= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
 		
 		// display the page
 		Template::output($this->data);

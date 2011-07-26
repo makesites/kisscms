@@ -24,7 +24,7 @@
     </header>
     <div id="main" role="main">
 
-<? Template::display( $body ); ?>
+<? Template::render( $body ); ?>
 
     </div>
     <aside>

@@ -21,7 +21,7 @@ class Main extends Controller {
 	function render() {
 	
 		// get the page details stored in the database
-		$this->requestPage( $this->data );
+		$this->requestPage();
 		
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
@@ -41,11 +41,13 @@ class Main extends Controller {
 		// see if we have found a page
 		if( $page->get('id') ){
 			// store the information of the page
-			$this->data['id'] = $page->get('id');
-			$this->data['body']['title'] = stripslashes( $page->get('title') );
-			$this->data['body']['content'] = stripslashes( $page->get('content') );
-			$this->data['body']['tags'] = stripslashes( $page->get('tags') );
-			$this->data['body']['date'] = strtotime( stripslashes( $page->get('date') ) );
+			$data['id'] = $this->data['id'] = $page->get('id');
+			$data['title'] = stripslashes( $page->get('title') );
+			$data['content'] = stripslashes( $page->get('content') );
+			$data['tags'] = stripslashes( $page->get('tags') );
+			$data['date'] = strtotime( stripslashes( $page->get('date') ) );
+			$data['view'] = getPath('views/main/body.php');
+			$this->data['body'][] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );
 		} else {
 			// forward to create a new page

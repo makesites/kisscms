@@ -18,6 +18,8 @@ class Section {
 		$properties = json_decode( $vars, true);
 		if( is_array( $properties ) )
 			$this->data = array_merge( $defaults, $properties );
+		else 
+			$this->data = $defaults;
 	}
 	
 	static function display($section='', $vars=false, $view=false){

@@ -5,12 +5,12 @@ if( count( $template['list'] ) > 0 ) {
 ?>
 <select name="template">
 <?
-	foreach ($template['list'] as $template){
-		echo '<option value="' . $template . '"';
-		if( $template == $template['selected'] ) {
+	foreach ($template['list'] as $item){
+		echo '<option value="' . $item['value'] . '"';
+		if( $item['value'] == $template['selected'] ) {
 			echo ' selected="selected"';
 		}
-		echo '>' . $template . '</option>';
+		echo '>' . $item['title'] . '</option>';
 	}
 ?>
 </select>

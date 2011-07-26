@@ -3,7 +3,8 @@
 class Tag extends Controller {
 
 	public $data;
-
+	public $tag;
+	
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function route_request() {
 		
@@ -12,6 +13,8 @@ class Tag extends Controller {
 		// check if we have a trailing slash (and remove it) 
 		$this->data['path'] = ( substr($this->data['path'], -1) == "/" ) ? substr($this->data['path'], 0, -1) : $this->data['path'];
 		
+		$this->tag = $this->getTag();
+		
 		// load the index
 		$this->render();
 		
@@ -19,39 +22,40 @@ class Tag extends Controller {
 	}
 
 	function render() {
-	
+		
 		// get the page details stored in the database
-		$this->requestPage( $this->data );
+		$this->requestAllPages();
 		
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		
-		$this->data['body']['main']= View::do_fetch( getPath('views/main/body.php'), $this->data);
-		
+		//$this->data['body']['main']= View::do_fetch( getPath('views/tag/body.php'), $this->data);
 		// display the page
 		Template::output($this->data);
 	}
 	
-	function requestPage( ) {
+	function requestAllPages() {
 
 		$page=new Page();
-		$page->get_page_from_path($this->data['path']);
-
-		// see if we have found a page
-		if( $page->get('id') ){
-			// store the information of the page
-			$this->data['id'] = $page->get('id');
-			$this->data['title'] = stripslashes( $page->get('title') );
-			$this->data['content'] = stripslashes( $page->get('content') );
-			$this->data['tags'] = stripslashes( $page->get('tags') );
-			$this->data['template'] = stripslashes( $page->get('template') );
-		} else {
-			// forward to create a new page
-			$this->data['status']="new";
-			$this->data['view']= getPath('views/admin/confirm_new.php');
+		$page->tablename = "pages";
+		$pages = $page->retrieve_many("tags like '%".$this->tag."%'");
+		$view = getPath('views/tag/body.php');
+		
+		foreach( $pages as $p ){
+			$data = $p->rs;
+			$data['view'] = $view;
+			$this->data['body'][] = $data;
 		}
 
 	}
+	
+	
+	function getTag() {
+		$params = explode("/", $this->data['path']);
+		// path like : tag/name
+		return $params[1];
+	}
+	
 
 }
 

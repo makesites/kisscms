@@ -212,6 +212,43 @@ function findFiles($filename) {
 	return $return;
 }
 
+
+// Original PHP code by Chirp Internet: www.chirp.com.au
+// Please acknowledge use of this code by including this header.
+
+function truncate($string, $limit, $break=".", $pad="...")
+{
+  // return with no change if string is shorter than $limit
+  if(strlen($string) <= $limit) return $string;
+
+  // is $break present between $limit and the end of the string?
+  if(false !== ($breakpoint = strpos($string, $break, $limit))) {
+    if($breakpoint < strlen($string) - 1) {
+      $string = substr($string, 0, $breakpoint) . $pad;
+    }
+  }
+    
+  return $string;
+}
+
+
+function beautify($string, $block='.', $ucwords=true)
+{
+  
+  // stop in the occurance of the designated character
+  if( $block ){ 
+  	$string = substr( $string, 0 , strpos($string, $block) );
+  }
+  // replace all underscores with spaces
+  $string = str_replace( "_", " ", $string );
+  
+  if($ucwords){
+	  $string = ucwords ( $string );
+  }
+  return $string;
+}
+
+
 /*
 function redirect($url,$alertmsg='') {
   if ($alertmsg)
@@ -220,9 +257,10 @@ function redirect($url,$alertmsg='') {
   exit;
 }
 */
-
 //session must have started
 //$uri indicates which uri will activate the alert (substring check)
+
+/*
 function addjAlert($msg,$uri='') {
   if ($msg) {
     $s="alert(\"$msg\");";
@@ -252,5 +290,6 @@ function getjAlert() {
   }
   return '';
 }
+*/
 
 ?>

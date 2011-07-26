@@ -4,8 +4,8 @@
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	<title><?=Meta::display('title')?></title>
-	<? Template::display( $head ); ?>
+	<title><?=Meta::title()?></title>
+	<? Template::head(); ?>
     <link rel="stylesheet" href="<?=myUrl()?>/assets/css/scrapbook.css" type="text/css" media="screen" />
 
 </head>
@@ -24,7 +24,7 @@
     <div id="main" role="main">
 
 
-<? Template::display( $body ); ?>
+<? Template::body(); ?>
 
 
     </div>
@@ -33,7 +33,7 @@
     </footer>
   </div> <!-- eo #container -->
 
-<? Template::display( $foot ); ?>
+<? Template::foot(); ?>
 
 </body>
 </html>

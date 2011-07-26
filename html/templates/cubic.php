@@ -4,8 +4,8 @@
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	<title><?=Meta::display('title')?></title>
-	<? Template::display( $head ); ?>
+	<title><?=Meta::title()?></title>
+	<? Template::head(); ?>
 
     <link rel="stylesheet" href="<?=myUrl()?>/assets/css/cubic.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="<?=myUrl()?>/css/rMenu.css" type="text/css" media="screen" />
@@ -48,7 +48,7 @@
 						<hr class="hide">
 						<div class="panel">
 
-<? Template::display( $body ); ?>
+<? Template::body(); ?>
 
 						</div>
 						<div id="left-column">
@@ -154,7 +154,7 @@
 			</div>
 		</div>
 
-<? Template::display( $foot ); ?>
+<? Template::foot(); ?>
 
 </body>
 </html>

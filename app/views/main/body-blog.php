@@ -7,15 +7,14 @@
             </label> 
         </a> 
     </div> 
-    <h2></h2>
-
+    
     <!-- end of .posttop --> 
     <div class="postbody"> 
         <h2><?=$title?></h2>
         <p class="postinfo"> 
             Posted at <?=date("G:i", $date)?>
         </p> 
-        <div<?=$content?></div>
+        <div><?=$content?></div>
     </div> 
     <!-- end of .postfoot --> 
     <div class="postmeta"> 

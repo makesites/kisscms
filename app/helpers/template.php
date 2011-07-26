@@ -14,15 +14,41 @@ class Template extends KISS_View {
 
 	function output($vars=''){
 		$template = new Template($vars);
-		//$template->getBody();
-		$template->get("head");
-		$template->get("foot");
+		$GLOBALS['body'] = $template->vars["body"];
+		$GLOBALS['head'] = $template->get("head");
+		$GLOBALS['foot'] = $template->get("foot");
 		return parent::do_dump($template->file, $template->vars);
 	}
 	
-	function display($block='', $names=''){
-		if (is_array($block))
-		  foreach($block as $name=>$html)
+	function head( $vars=false ){
+		$data = $GLOBALS['head'];
+		foreach($data as $name=>$html){
+			echo "$html\n";
+		}		
+	}
+	
+	function body($vars=false){
+		$data = $GLOBALS['body'];
+		foreach($data as $part){ 
+			if ( $vars && !$_SESSION['admin'] )
+			  View::do_dump( getPath('views/main/body-'. $vars .'.php'), $part);
+			elseif ($part['view'])
+			  View::do_dump( $part['view'], $part);
+			else
+			  View::do_dump( getPath('views/main/body.php'), $part);
+		}
+	}
+	
+	function foot($vars=false){
+		$data = $GLOBALS['foot'];
+		foreach($data as $name=>$html){
+			echo "$html\n";
+		}
+	}
+	/*
+	function display($data='', $names=''){
+		if (is_array($data))
+		  foreach($data as $name=>$html)
 		  	if ( ($names == '' ) || (!is_array($names) && $names == $name ) || (is_array($names) && array_key_exists($name, $names)) )
 			  echo "$html\n";
 		elseif ( is_array($names) )
@@ -30,29 +56,16 @@ class Template extends KISS_View {
 		  	if ( array_key_exists($name, $block) )
 			  echo "$html\n";
 	}
-	
-	function getBody(){
-		//$this->vars['body']['main'] = $this->vars;
-	}
-
-	function render($data='', $view=false){
-		foreach($data as $part){ 
-			//if ( $view )
-			//  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
-			if ($part['view'])
-			  View::do_dump( $part['view'], $part);
-			else
-			  View::do_dump( getPath('views/main/body.php'), $part);
-		}
-	}
-
+	*/
 	function get($name=''){
+		$data = array();
 		$files = findFiles( $name.'.php' );
 		if(!array_key_exists($name, $this->vars)){ $this->vars[$name] = array(); }
 		foreach($files as $view){
 			 $section = $this->getSection( $view );
-			 $this->vars[$name][$section] = View::do_fetch( $view, $this->vars);
+			 $data[$section] = View::do_fetch( $view, $this->vars);
 		}
+		return $data;
 	}
 	
 	function getTemplate(){

@@ -77,6 +77,8 @@ class Menu extends Section {
 	function __construct($vars=false, $view=false){
 		parent::__construct($vars,$view);
 		
+		$items = array();
+		
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
 			$sql = 'SELECT * FROM "pages" ORDER BY "date"';

@@ -4,8 +4,8 @@
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-	<title><? Meta::display('title')?></title>
-	<? Template::display( $head ); ?>
+	<title><? Meta::title() ?></title>
+	<? Template::head() ?>
     <link rel="stylesheet" href="<?=myUrl()?>/assets/css/eclectic.css" type="text/css" media="screen" />
 </head>
 <body>
@@ -30,7 +30,7 @@
 				<div class="grid_8">
 					<!-- posts starts here -->
 
-					<? Template::render( $body, 'blog' ); ?>
+					<? Template::body('blog'); ?>
 					
                     <? Section::display("pagination")?> 
 
@@ -84,7 +84,7 @@
 	</div>
 	<!-- end of #foot -->
 
-<? Template::display( $foot ); ?>
+<? Template::foot() ?>
 
 </body>
 </html>

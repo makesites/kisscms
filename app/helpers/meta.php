@@ -3,6 +3,7 @@
 class Meta {
 	
 	static function display($type){
+		/*
 		$meta = new Meta();
 		switch( $type ){ 
 			case "title": 
@@ -10,13 +11,14 @@ class Meta {
 			case "description": 
 				$meta->getDescription();
 		}
+		*/
 	}
 	
-	function getTitle(){
+	function title(){
 		echo $GLOBALS['config']['main']['site_name'];
 	}
 	
-	function getDescription(){
+	function description(){
 		echo $GLOBALS['config']['main']['site_description'];
 	}
 }

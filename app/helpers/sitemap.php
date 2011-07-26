@@ -137,4 +137,5 @@ class Sitemap {
 	}
 
 }
-?>					
+
+?>

@@ -64,7 +64,7 @@ if ($handle = opendir($folder)) {
     
 	// include everything unless explicitly specified
 	while (false !== ($file = readdir($handle))) {
-		if ($file == '.' || $file == '..') { 
+		if ($file == '.' || $file == '..' || $file == '.DS_Store') { 
 		  continue; 
 		}
 		// first give priority to the $priority array

@@ -6,19 +6,17 @@ class Tag extends Controller {
 	public $tag;
 	
 	//This function maps the controller name and function name to the file location of the .php file to include
-	function route_request() {
+	function index( $params ) {
 		
 		// the main controler is a special case that has only one parameter - the url
 		$this->data['path'] = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
 		// check if we have a trailing slash (and remove it) 
 		$this->data['path'] = ( substr($this->data['path'], -1) == "/" ) ? substr($this->data['path'], 0, -1) : $this->data['path'];
 		
-		$this->tag = $this->getTag();
+		$this->tag = $params;
 		
 		// load the index
 		$this->render();
-		
-		return $this;
 	}
 
 	function render() {
@@ -47,13 +45,6 @@ class Tag extends Controller {
 			$this->data['body'][] = $data;
 		}
 
-	}
-	
-	
-	function getTag() {
-		$params = explode("/", $this->data['path']);
-		// path like : tag/name
-		return $params[1];
 	}
 	
 

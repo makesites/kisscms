@@ -16,7 +16,7 @@
 
 
 <div id="article">
-	<? Template::display( $body ); ?>
+	<? Template::render( $body ); ?>
 </div>
 
 

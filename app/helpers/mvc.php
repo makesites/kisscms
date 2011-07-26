@@ -64,16 +64,23 @@ class Controller extends KISS_Controller {
 	function route_request() {
 		$controller = $this->default_controller;
 		$function = $this->default_function;
+		$class = strtolower( get_class($this) );
 		$params = array();
 
 		$p = $this->request_uri_parts;
-		if (isset($p[0]) && $p[0])
+		//findController($url)
+		if (isset($p[0]) && $p[0] == $class) {
 			$controller=$p[0];
-		if (isset($p[1]) && $p[1])
-			$function=$p[1];
-		if (isset($p[2]))
-			$params = array_slice($p,2);
-
+			if (isset($p[1]) && method_exists($this, $p[1])) {
+				$function=$p[1];
+				$params = array_slice($p,2);
+			} else {
+				$params = array_slice($p,1);
+			}
+		} else {
+			$params = $p;
+		}
+		
 		// finally convert the params to a string if they are only one element
 		if( count($params)==0 ) $params = null;
 		if( count($params)==1 ) $params = implode($params);

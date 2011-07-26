@@ -5,7 +5,7 @@ class Main extends Controller {
 	public $data;
 
 	//This function maps the controller name and function name to the file location of the .php file to include
-	function route_request() {
+	function index( $params ) {
 		
 		// the main controler is a special case that has only one parameter - the url
 		$this->data['path'] = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
@@ -14,8 +14,7 @@ class Main extends Controller {
 		
 		// load the index
 		$this->render();
-		
-		return $this;
+
 	}
 
 	function render() {

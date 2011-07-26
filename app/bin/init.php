@@ -79,8 +79,8 @@ if ($handle = opendir($folder)) {
 		// include only the files in the $only array
 		if( count( $only ) > 0 ){ 
 			foreach( $only as $target ){
-				if(file_exists($folder.$target)){
-					require_once( $folder.$target );
+				if(file_exists($folder.$file.$target)){
+					require_once( $folder.$file.$target );
 				}
 			}
 		// exclude all the files in the $exclude array

@@ -27,11 +27,11 @@ class Template extends KISS_View {
 		}		
 	}
 	
-	function body($vars=false){
+	function body($view=false){
 		$data = $GLOBALS['body'];
 		foreach($data as $part){ 
-			if ( $vars && !$_SESSION['admin'] )
-			  View::do_dump( getPath('views/main/body-'. $vars .'.php'), $part);
+			if ( $view && !$_SESSION['admin'] )
+			  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
 			elseif ($part['view'])
 			  View::do_dump( $part['view'], $part);
 			else

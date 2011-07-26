@@ -33,7 +33,7 @@
     <footer>
 
     </footer>
-  </div> <!-- eo #container -->
+  </div>
 
 
 <? Template::foot(); ?>

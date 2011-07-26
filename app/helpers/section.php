@@ -33,6 +33,7 @@ class Section {
 	function render(){
 		// if there is a view, use it
 		$class = strtolower( get_class ( $this ) );
+		
 		if($this->view) { 
 			$file = getPath('views/sections/'. $this->view .'.php');
 			// alternative naming for the view

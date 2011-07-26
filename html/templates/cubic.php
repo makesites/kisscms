@@ -40,7 +40,7 @@
 					<hr class="hide">
 
 
-<? Section::display("menu", "rmenu"); ?>
+<? Section::display("menu", '{"ul":{"class": "clearfix rMenu-hor rMenu"}}'); ?>
 
 				</div>
 				<div id="binding">

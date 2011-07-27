@@ -50,7 +50,7 @@ class Main extends Controller {
 			$this->data['template'] = stripslashes( $page->get('template') );
 		} else {
 			// forward to create a new page
-			$data['status']="new";
+			$data['status']= $this->data['status']="new";
 			$data['path']= $this->data['path'];
 			$data['view']= getPath('views/admin/confirm_new.php');
 			$this->data['body'][] = $data;

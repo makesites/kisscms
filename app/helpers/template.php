@@ -30,7 +30,7 @@ class Template extends KISS_View {
 	function body($view=false){
 		$data = $GLOBALS['body'];
 		foreach($data as $part){ 
-			if ( $view && !$_SESSION['admin'] )
+			if ( $view && !isset($part['view']) )
 			  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
 			elseif ($part['view'])
 			  View::do_dump( $part['view'], $part);
@@ -60,7 +60,7 @@ class Template extends KISS_View {
 	function get($name=''){
 		$data = array();
 		$files = findFiles( $name.'.php' );
-		if(!array_key_exists($name, $this->vars)){ $this->vars[$name] = array(); }
+		
 		foreach($files as $view){
 			 $section = $this->getSection( $view );
 			 $data[$section] = View::do_fetch( $view, $this->vars);

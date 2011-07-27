@@ -96,8 +96,8 @@ class Admin extends Controller {
 	*/
 	function create($path=null) {
 		
-		$data['status']="create";
-		$data['path']= ( isset($path) ) ? $path : $_POST['path'];
+		$data['status']= $this->data['status']="create";
+		$data['path']= ( isset($path) ) ? implode("/", $path) : $_REQUEST['path'];
 		$data['tags']= "";
 		$data['view']= getPath('views/admin/edit_page.php');
 		$data['template']= $this->data['template']= DEFAULT_TEMPLATE;
@@ -120,14 +120,14 @@ class Admin extends Controller {
 			$data['id'] = $this->data['id'] = $page->get('id');
 			$data['title'] = stripslashes( $page->get('title') );
 			$data['content'] = stripslashes( $page->get('content') );
-			$data['path'] = $page->get('path');
+			$data['path'] = $this->data['path'] = $page->get('path');
 			$data['tags'] = $page->get('tags');
 			$data['view'] = getPath('views/admin/edit_page.php');
-			$data['status']="edit";
+			$data['status']= $this->data['status']="edit";
 			// presentation variables
 			$data['template'] = $this->data['template'] = $page->get('template');
 		} else {
-			$data['status']="error";
+			$data['status']= $this->data['status']="error";
 			$data['view'] = getPath('views/admin/error.php');
 		}
 			$this->data['body'][] = $data;
@@ -145,7 +145,7 @@ class Admin extends Controller {
 		if( $validate == true ){
 			$this->save($id);
 		}
-		header('Location: '.myUrl($_POST['path'], true));
+		header('Location: '.myUrl($_REQUEST['path'], true));
 
 	}
 	

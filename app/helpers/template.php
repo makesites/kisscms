@@ -30,7 +30,7 @@ class Template extends KISS_View {
 	function body($view=false){
 		$data = $GLOBALS['body'];
 		foreach($data as $part){ 
-			if ( $view && !isset($part['view']) )
+			if ( $view && !isset($part['status']) )
 			  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
 			elseif ($part['view'])
 			  View::do_dump( $part['view'], $part);

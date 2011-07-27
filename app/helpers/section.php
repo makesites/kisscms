@@ -5,35 +5,69 @@ class Section {
 	public $view;
 	public $data = array();
 	
-	function __construct($vars=false, $view=false){
-				
-		$defaults = array( 'id' => '', 'class' => '', 
-							'h3' => array( 'id' => '', 'class' => '', 'html' => ''),
-							'ul' => array( 'id' => '', 'class' => ''),
-							'li' => array( 'id' => '', 'class' => '', 'html' => '') 
+	function __construct($view=false, $vars=false, $data=false){
+		
+		// defaults
+		$defaults = array( 	'id' => false, 'class' => false, 
+							'h3' => false,  'h4' => false, 'h5' => false,
+							'h3-id' => false,'h3-class' => false,
+							'h4-id' => false,'h4-class' => false,
+							'h5-id' => false,'h5-class' => false,
+							'ul' => false, 'ul-id' => false, 'ul-class' => false,
+							'li' => false, 'li-id' => false, 'li-class' => false,
 						);
+		
+		$this->view = $view;
+		
 		// parse the passed variables 
-		if( $view )
-			$this->view = $view;
-		$properties = json_decode( $vars, true);
-		if( is_array( $properties ) )
-			$this->data = array_merge( $defaults, $properties );
-		else 
-			$this->data = $defaults;
+		$vars = $this->createVars($vars);
+		if( is_array($vars) )
+			$this->data['vars'] = array_merge( $defaults, $vars );
+		else
+			$this->data['vars'] = $defaults;
+			
+		return $this;
 	}
 	
-	static function display($section='', $vars=false, $view=false){
-		$class =  ucwords($section);
+	
+	public static function display($view='default', $vars=false, $data=false){
+		$class =  static::getSection();
+		$view = getPath('views/sections/'. $view .'.php');
+		
 		if( class_exists ( $class ) ){ 
-			new $class($vars, $view);
+			$section = new $class($view, $vars, $data);
 		}
 	}
 	
+	public static function ul($vars=false, $data=false){
+		$view = 'default';
+		static::display($view, $vars, $data);
+	}
+	
+	
+	public static function inline($vars=false, $data=false){
+		$view = 'inline';
+		static::display($view, $vars, $data);
+	}
+	
+	
+	function createVars($vars=false){
+		if(!$vars) return;
+		// replace commas with carriage returns
+		$search = array(", ", ",", ":");
+		$replace = array(",", "\n", ": ");
+		
+		$vars = str_replace($search, $replace, $vars);
+		
+		$array = sfYaml::load($vars); 
+		
+		return $array;
+
+	}
 	
 	function render(){
 		// if there is a view, use it
-		$class = strtolower( get_class ( $this ) );
-		
+		/*
 		if($this->view) { 
 			$file = getPath('views/sections/'. $this->view .'.php');
 			// alternative naming for the view
@@ -46,7 +80,14 @@ class Section {
 			if(!$file)
 				$file = getPath('views/sections/default.php');
 		}
-		View::do_dump($file, $this->data);
+		*/
+		
+		
+		View::do_dump($this->view, $this->data);
+	}
+	
+	public static function getSection(){
+		return __CLASS__;
 	}
 	
 }
@@ -54,8 +95,8 @@ class Section {
 
 class Copyright extends Section {
 	
-	function __construct($vars=false, $view=false){
-		parent::__construct($vars,$view);
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
 		if( array_key_exists('db_config', $GLOBALS) ){
 			// get site author
 			$dbh = $GLOBALS['db_config'];
@@ -70,13 +111,16 @@ class Copyright extends Section {
 		}
 	}
 	
+	public static function getSection(){
+		return __CLASS__;
+	}
 }
 
 
 class Menu extends Section { 
 
-	function __construct($vars=false, $view=false){
-		parent::__construct($vars,$view);
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
 		
 		$items = array();
 		
@@ -88,52 +132,64 @@ class Menu extends Section {
 				$items[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] );
 			} 
 		}
-		$this->data['li']['html'] = $items;
+		$this->data['items'] = $items;
 		$this->render();
+	}
+	
+	public static function getSection(){
+		return __CLASS__;
 	}
 }
 
 
 class Breadcrumb extends Section {
 	
-	function __construct($vars=false, $view=false){
-		parent::__construct($vars,$view);
-		
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
+		$this->data['items'] = array();
+		$this->render();
 	}
 	
+	public static function getSection(){
+		return __CLASS__;
+	}
 }
 
 
 class Tags extends Section {
 	
-	function __construct($vars=false, $view=false){
+	function __construct($view=false, $vars=false, $data=false){
 		// extra manipulation of the vars for this section
-		$data['tags'] = explode(",", $vars);
-		// encode to jsonc to decode again in the constrructor? there must be a better way...
-		$vars = json_encode( $data );
-		parent::__construct($vars,$view);
+		parent::__construct($view, $vars, $data);
+		$this->data['items'] = explode(",", $data);
 		$this->render();
 	}
 	
+	public static function getSection(){
+		return __CLASS__;
+	}
 }
 
 
 class Pagination extends Section {
 	
-	function __construct($vars=false, $view=false){
-		parent::__construct($vars,$view);
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
 		$this->render();
 	}
 	
+	public static function getSection(){
+		return __CLASS__;
+	}
 }
 
 
 class Archive extends Section {
 	
-	function __construct($vars=false, $view=false){
-		parent::__construct($vars,$view);
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
 		// Additional defaults for specific section
-		$this->data['h3']['html'] = "Archives";
+		$this->data['vars']['h3'] = "Archives";
 		
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
@@ -147,20 +203,27 @@ class Archive extends Section {
 				$items[$title] = array( 'url' =>  myUrl( $url, true ), 'title' => $title );
 			} 
 		}
-		$this->data['li']['html'] = $items;
+		$this->data['items'] = $items;
 		$this->render();
 	}
 	
+	public static function getSection(){
+		return __CLASS__;
+	}
 }
 
 
 class Search extends Section {
 	
-	function __construct($vars=false, $view=false){
-		parent::__construct($vars,$view);
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
+		$this->data['items'] = array();
 		$this->render();
 	}
 	
+	public static function getSection(){
+		return __CLASS__;
+	}
 }
 
 ?>

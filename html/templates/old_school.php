@@ -12,7 +12,7 @@
 <body>
 
 
-<? Section::display("menu"); ?>
+<? Menu::ul(); ?>
 
 
 <div id="article">

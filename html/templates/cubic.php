@@ -26,7 +26,7 @@
 	</div>
 	<div class="tc-right-column tc-right-align">
 	
-		<? Section::display("search")?>    		
+		<? Search::display("search")?>    		
 
 	</div>
 	<div class="clear"></div>
@@ -37,7 +37,7 @@
 					<hr class="hide">
 
 
-<? Section::display("menu", '{"ul":{"class": "clearfix rMenu-hor rMenu"}}'); ?>
+<? Menu::ul("ul-class: 'clearfix rMenu-hor rMenu'"); ?>
 
 				</div>
 				<div id="binding">
@@ -87,13 +87,13 @@ BANNER AD
 
 							<div class="panel">
 
-<? Section::display("archive"); ?>
+<? Archive::ul(); ?>
                 
 
 							</div>
 							<div class="panel">
 
-<? Section::display("tagcloud")?> 
+<? Tags::inline($body[0]['tags'])?> 
       		
 
 							</div>
@@ -105,7 +105,7 @@ BANNER AD
 				<div id="footer">
 					<hr class="hide">
 
-<p><? Section::display("copyright")?></p>
+<p><? Copyright::display("copyright")?></p>
 
 				</div>
 			</div>

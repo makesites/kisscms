@@ -1,10 +1,10 @@
-<section id="<?=$id?>" class="<?=$class?>">
-<? if(!empty($h3['html'])){ ?>
-<h3 id="<?=$h3['id']?>" class="<?=$h3['class']?>"><?=$h3['html']?></h3>
+<section id="<?=$vars['id']?>" class="<?=$vars['class']?>">
+<? if(!empty($vars['h3'])){ ?>
+<h3 id="<?=$vars['h3-id']?>" class="<?=$vars['h3-class']?>"><?=$vars['h3']?></h3>
 <? } ?>
-<ul id="<?=$ul['id']?>" class="<?=$ul['class']?>">
-<? if(!empty($li['html'])){ ?>
-<? foreach($li['html'] as $item){ ?>
+<ul id="<?=$vars['ul-id']?>" class="<?=$vars['ul-class']?>">
+<? if(!empty($items)){ ?>
+<? foreach($items as $item){ ?>
 	<li><a href="<?=$item['url']?>"><?=$item['title']?></a></li>
 <? } 
 } ?>

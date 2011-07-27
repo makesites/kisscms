@@ -15,14 +15,15 @@
 				<a href="/" title=""><?=$config['main']['site_name']?></a>
 			</h1>
             
-			<? Section::display("menu", '{"ul": {"id":"nav", "class":"right"}}'); ?>
+			<? Menu::ul('ul-id: nav, ul-class: right'); ?>
             
 		</div>
 	</div>
 	<!-- end of #top -->
 	<div id="main">
-
-		<? Section::display("breadcrumb", "{id:'path'}")?> 
+    
+		<? Breadcrumb::inline("id: path, h3: 'You are here:'")?> 
+		
 
 		<!-- end of #path -->
 		<div id="content">
@@ -32,18 +33,18 @@
 
 					<? Template::body('blog'); ?>
 					
-                    <? Section::display("pagination")?> 
+                    <? Pagination::ul() ?> 
 
 				</div>
 				<!-- end of #content -->
 				<div class="grid_4" id="sidebar">
 
-				<? Section::display("archive"); ?>
+				<? Archive::ul() ?>
                 
                
 			<div class="textwidget"><br></div>
             
-            <? Section::display("search")?> 
+            <? Search::display("search") ?> 
       		 
 				</div>
 				<div class="clear">
@@ -72,7 +73,7 @@
 			</div>
 			<!-- end of grid row -->
 			<div class="grid_9">
-				<p><? Section::display("copyright")?></p>
+				<p><? Copyright::display("copyright") ?></p>
 			</div>
 			<div class="grid_3">
 				<img src="./assets/img/eclectic/logo.foot.png" alt="">

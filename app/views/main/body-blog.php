@@ -18,9 +18,7 @@
     </div> 
     <!-- end of .postfoot --> 
     <div class="postmeta"> 
-        <div class="right"> 
-            <strong>Tags:</strong> <? Section::display("tags", $tags, "inline")?>
-        </div> 
+        <? Tags::inline("class: right, h3: 'Tags:'", $tags)?>
     </div> 
     <!-- end of .postmeta --> 
 </div> 

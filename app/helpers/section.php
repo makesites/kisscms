@@ -165,8 +165,35 @@ class Tags extends Section {
 	function __construct($view=false, $vars=false, $data=false){
 		// extra manipulation of the vars for this section
 		parent::__construct($view, $vars, $data);
-		$this->data['items'] = explode(",", $data);
+		$this->data['items'] = $data;
 		$this->render();
+	}
+	
+	
+	public static function cloud($vars=false){
+		// set the view
+		$view = 'tagcloud';
+		// get the data
+		if( array_key_exists('db_pages', $GLOBALS) ){
+			$dbh = $GLOBALS['db_pages'];
+			$sql = 'SELECT tags FROM "pages" ORDER BY "date"';
+			$results = $dbh->query($sql);
+			$items = array();
+			
+			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
+				$tags = explode(",", $v['tags']);
+				foreach($tags as $tag){ 
+					// calculate the weight
+					if(array_key_exists($tag, $items)){
+						$items[$tag]['weight'] += 1;
+					} else {
+						$items[$tag] = array( 'url' =>  myUrl( "tag/".$tag, true ), 'title' => $tag, 'weight' => 1 );
+					}
+				}
+			} 
+		// process the view
+		static::view($view, $vars, $items);
+		}
 	}
 	
 	public static function getSection(){

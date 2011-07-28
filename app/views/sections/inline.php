@@ -3,6 +3,6 @@
 <strong id="<?=$vars['h3-id']?>" class="<?=$vars['h3-class']?>"><?=$vars['h3']?></strong>
 <? } ?>
 <? foreach($items as $item){ ?>
-<a href="<?=myUrl("tag/".$item)?>" rel="tag"><?=$item?></a><? if ( $item != end($items) ){ ?>, <? } ?>
+<a href="<?=myUrl("tag/".$item)?>" rel="tag"><?=$item?></a><? if ( $vars['delimiter'] && $item != end($items) ){ echo $vars['delimiter'].' '; } ?>
 <? } ?>
 </section>

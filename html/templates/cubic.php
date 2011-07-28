@@ -93,7 +93,7 @@ BANNER AD
 							</div>
 							<div class="panel">
 
-<? Tags::inline($body[0]['tags'])?> 
+<? Tags::inline(false, $body[0]['tags'])?> 
       		
 
 							</div>

@@ -9,6 +9,7 @@ class Section {
 		
 		// defaults
 		$defaults = array( 	'id' => false, 'class' => false, 
+							'delimiter' => false,  
 							'h3' => false,  'h4' => false, 'h5' => false,
 							'h3-id' => false,'h3-class' => false,
 							'h4-id' => false,'h4-class' => false,
@@ -57,8 +58,8 @@ class Section {
 	function createVars($vars=false){
 		if(!$vars) return;
 		// replace commas with carriage returns
-		$search = array(", ", ",", ":");
-		$replace = array(",", "\n", ": ");
+		$search = array(", ", ":");
+		$replace = array("\n", ": ");
 		
 		$vars = str_replace($search, $replace, $vars);
 		

@@ -45,6 +45,8 @@ class Main extends Controller {
 			$data['content'] = stripslashes( $page->get('content') );
 			$data['tags'] = stripslashes( $page->get('tags') );
 			$data['date'] = strtotime( stripslashes( $page->get('date') ) );
+			
+			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
 			$this->data['body'][] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );

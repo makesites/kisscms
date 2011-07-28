@@ -1,6 +1,6 @@
 <div class="post"> 
     <div class="posttop"> 
-        <a href="/2010/01/19/editor/" rel="bookmark" title="Permanent Link: Editor"> 
+        <a href="<? myUrl( $path ) ?>" rel="bookmark" title="Permanent Link: <?=$title?>"> 
             <label> 
                 <strong class="date"><?=date("d", $date)?></strong> <strong class="month"><?=date("M", $date)?></strong>
                 <!--strong class="comments">0</strong--> 
@@ -18,7 +18,7 @@
     </div> 
     <!-- end of .postfoot --> 
     <div class="postmeta"> 
-        <? Tags::inline("class: right, h3: 'Tags:'", $tags)?>
+        <? Tags::inline("class: right, delimiter: ',', h3: 'Tags:'", $tags)?>
     </div> 
     <!-- end of .postmeta --> 
 </div> 

@@ -26,6 +26,8 @@ class Main extends Controller {
 			$is_category = $this->requestCategoryPages();
 			if(!$is_category){
 				$this->requestNewPage();
+			} else {
+				$this->data['status'] = 'category';
 			}
 		}
 		// add the config in the data object

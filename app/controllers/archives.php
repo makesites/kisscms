@@ -22,6 +22,8 @@ class Archives extends Controller {
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		
+		$this->data['status'] = 'archives';
+
 		// display the page
 		Template::output($this->data);
 	}

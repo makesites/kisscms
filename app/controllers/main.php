@@ -3,7 +3,7 @@
 class Main extends Controller {
 
 	public $data;
-
+	
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function index( $params ) {
 		
@@ -20,8 +20,14 @@ class Main extends Controller {
 	function render() {
 	
 		// get the page details stored in the database
-		$this->requestPage();
-		
+		$is_page = $this->requestPage();
+		// check if this is a category page
+		if(!$is_page){
+			$is_category = $this->requestCategoryPages();
+			if(!$is_category){
+				$this->requestNewPage();
+			}
+		}
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		
@@ -50,14 +56,41 @@ class Main extends Controller {
 			$data['view'] = getPath('views/main/body.php');
 			$this->data['body'][] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );
+			return true;
 		} else {
-			// forward to create a new page
-			$data['status']= $this->data['status']="new";
-			$data['path']= $this->data['path'];
-			$data['view']= getPath('views/admin/confirm_new.php');
-			$this->data['body'][] = $data;
+			return false;			
 		}
 	}
+	
+	function requestCategoryPages() {
+
+		$page=new Page();
+		$page->tablename = "pages";
+		$pages = $page->retrieve_many("path like '". $this->data['path'] ."%'");
+		$view = getPath('views/main/category.php');
+		
+		if( count($pages) > 0 ){ 
+			foreach( $pages as $p ){
+				$data = $p->rs;
+				$data['view'] = $view;
+				$this->data['body'][] = $data;
+			}
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	
+
+	function requestNewPage( ) {
+		// forward to create a new page
+		$data['status']= $this->data['status']="new";
+		$data['path']= $this->data['path'];
+		$data['view']= getPath('views/admin/confirm_new.php');
+		$this->data['body'][] = $data;
+	}
+	
 
 }
 

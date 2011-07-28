@@ -27,7 +27,6 @@ class Tag extends Controller {
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		
-		//$this->data['body']['main']= View::do_fetch( getPath('views/tag/body.php'), $this->data);
 		// display the page
 		Template::output($this->data);
 	}

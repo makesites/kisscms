@@ -130,10 +130,16 @@ class Menu extends Section {
 		
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
-			$sql = 'SELECT * FROM "pages" ORDER BY "date"';
+			$sql = 'SELECT * FROM "pages" ORDER BY "id"';
 			$results = $dbh->query($sql);
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
-				$items[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] );
+				// pick only first level pages
+				$path = explode("/", $v['path'] );
+				if(count($path) > 1){ 
+					$items[$path[0]] = array( 'url' =>  myUrl( $path[0], true ), 'title' => ucwords($path[0]) );
+				} else {
+					$items[$v['path']] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] );
+				}
 			} 
 		}
 		$this->data['items'] = $items;

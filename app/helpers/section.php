@@ -30,7 +30,7 @@ class Section {
 	}
 	
 	
-	public static function display($view='default', $vars=false, $data=false){
+	public static function view($view='default', $vars=false, $data=false){
 		$class =  static::getSection();
 		$view = getPath('views/sections/'. $view .'.php');
 		
@@ -41,13 +41,13 @@ class Section {
 	
 	public static function ul($vars=false, $data=false){
 		$view = 'default';
-		static::display($view, $vars, $data);
+		static::view($view, $vars, $data);
 	}
 	
 	
 	public static function inline($vars=false, $data=false){
 		$view = 'inline';
-		static::display($view, $vars, $data);
+		static::view($view, $vars, $data);
 	}
 	
 	

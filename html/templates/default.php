@@ -18,7 +18,7 @@
     <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
 <div id="nav">
 
-<? Section::display("menu"); ?>
+<? Section::view("menu"); ?>
 
   </div>
     </header>

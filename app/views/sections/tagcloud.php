@@ -5,7 +5,7 @@
 <div id="tag_holder">
 <? if(!empty($items)){ ?>
 <? foreach($items as $item){ ?>
-	<a href="<?=$item['url']?>" class="tag" style="font-size: <?=(100+($item['weight']*10))?>%"><?=$item['title']?></a>
+	<a href="<?=$item['url']?>" class="tag"<? if($vars['weight']) echo ' style="font-size: '. (100+($item['weight']*10)). '%"' ?>><?=$item['title']?></a>
 <? } 
 } ?>
 </div>

@@ -9,7 +9,7 @@ class Section {
 		
 		// defaults
 		$defaults = array( 	'id' => false, 'class' => false, 
-							'delimiter' => false,  
+							'delimiter' => false, 'weight' => false,
 							'h3' => false,  'h4' => false, 'h5' => false,
 							'h3-id' => false,'h3-class' => false,
 							'h4-id' => false,'h4-class' => false,

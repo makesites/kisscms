@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="<?=myUrl()?>/css/rMenu.css" type="text/css" media="screen" />
 
 </head>
-<body style="font-size: 120%;">
+<body>
 
 		<div id="sleeve">
 			<div id="book">
@@ -93,7 +93,7 @@ BANNER AD
 							</div>
 							<div class="panel">
 
-<? Tags::cloud()?> 
+<? Tags::cloud('weight: 1')?> 
       		
 
 							</div>

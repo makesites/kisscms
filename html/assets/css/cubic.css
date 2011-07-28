@@ -32,6 +32,7 @@ body {
 	margin: 0;			/* void out browser-defined gutterspace */
 	padding: 0;
 	font-family: calibri, helvetica, sans-serif;
+	font-size: 120%;
 						/* calibri, the "IN" font for reading text on screens */
 }
 #sleeve {

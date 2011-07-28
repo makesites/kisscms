@@ -26,6 +26,8 @@
 
 <? Template::body(); ?>
 
+<? Tags::cloud()?> 
+
 
     </div>
     <footer>

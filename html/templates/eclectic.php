@@ -44,7 +44,7 @@
                
 			<div class="textwidget"><br></div>
             
-            <? Search::view("search") ?> 
+            <? Search::view() ?> 
       		 
 				</div>
 				<div class="clear">
@@ -73,7 +73,7 @@
 			</div>
 			<!-- end of grid row -->
 			<div class="grid_9">
-				<p><? Copyright::view("copyright") ?></p>
+				<p><? Copyright::view() ?></p>
 			</div>
 			<div class="grid_3">
 				<img src="./assets/img/eclectic/logo.foot.png" alt="">

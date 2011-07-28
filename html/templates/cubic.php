@@ -26,7 +26,7 @@
 	</div>
 	<div class="tc-right-column tc-right-align">
 	
-		<? Search::view("search")?>    		
+		<? Search::view()?>    		
 
 	</div>
 	<div class="clear"></div>
@@ -105,7 +105,7 @@ BANNER AD
 				<div id="footer">
 					<hr class="hide">
 
-<p><? Copyright::view("copyright")?></p>
+<p><? Copyright::view()?></p>
 
 				</div>
 			</div>

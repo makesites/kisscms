@@ -32,6 +32,9 @@ class Section {
 	
 	public static function view($view='default', $vars=false, $data=false){
 		$class =  static::getSection();
+		// fallback for view is the controller name
+		if(!$view)
+			$view  = strtolower( $class );
 		$view = getPath('views/sections/'. $view .'.php');
 		
 		if( class_exists ( $class ) ){ 

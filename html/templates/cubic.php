@@ -21,7 +21,7 @@
 	<div class="tc-left-column">
 
 <h1><?=$config['main']['site_description']?></h1>
-<h2><?=$config['main']['site_name']?></h2>
+<h2><a href="/"><?=$config['main']['site_name']?></a></h2>
 
 	</div>
 	<div class="tc-right-column tc-right-align">

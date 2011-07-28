@@ -11,13 +11,17 @@
 
 <body>
 
+    <header>
+    	<h1><a href="/"><?=$config['main']['site_name']?></a></h1>
+	</header>
 
-<? Menu::ul(); ?>
-
-
-<div id="article">
-	<? Template::body(); ?>
-</div>
+	<aside>
+		<? Menu::ul(); ?>
+	</aside>
+    
+    <div id="article">
+        <? Template::body(); ?>
+    </div>
 
 
 <? Template::foot(); ?>

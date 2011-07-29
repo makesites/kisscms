@@ -6,7 +6,7 @@ Website: http://www.kisscms.com
 
 Description
 -----------
-A CMS lightning fast to setup and easy to use The main goal was the creation of an environment to easily create new content on a website while lifting unecessary barriers on extensibility and customization. Although it's origin derives from KISSMVC, a simple PHP MVC framework, it's course is totally diverted and has independednt development.  
+A CMS lightning fast to setup and easy to use. One of the main objectives is to create an environment where editing content is dead simple while at the same time it accomodating in extensibility and customization by lifting unecessary barriers. Although it's origin derives from KISSMVC, a simple PHP MVC framework, it's course is totally diverted and has independednt development. The architecture has also been greatily inspired by the Node.js and jQuery principles. 
 
 
 Setup
@@ -15,6 +15,7 @@ Setup
 - The files in the "html" folder should be placed in your web root. All other files on level above it.
 - Open a browser and enter the address of your website. Sample content should already work with no further work.
 - Add "/admin" to your web address to be able to administer your site. Default username/password are: admin/pass 
+
 
 Customization
 -----

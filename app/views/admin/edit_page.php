@@ -12,16 +12,17 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 <form class="cms-form clearfix" method="post" action="<?=$action?>">
 	<input type="hidden" name="path" value="<?=$path?>" />
 
-	<label>Title</label>
-	<input type="text" name="title" value="<?=$title?>" />
+	<label for="title">Title</label>
+	<input type="text" id="title" name="title" value="<?=$title?>" />
 
-	<label>Content</label>
-	<textarea name="content"><?=$content?></textarea>
+	<label for="content">Content</label>
+	<textarea id="content" name="content"><?=$content?></textarea>
 
-	<label>Tags</label>
+	<label for="tags">Tags</label>
     
 	<input type="text" name="tags" id="tags" value="<?=$tags?>" />
 	
+    <label for="template">Template</label>
     <?=Template::doList($template);?>
     
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />

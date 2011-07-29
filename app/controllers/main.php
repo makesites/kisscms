@@ -12,6 +12,8 @@ class Main extends Controller {
 		// check if we have a trailing slash (and remove it) 
 		$this->data['path'] = ( substr($this->data['path'], -1) == "/" ) ? substr($this->data['path'], 0, -1) : $this->data['path'];
 		
+		$GLOBALS['path'] = $this->data['path']; 
+		
 		// load the index
 		$this->render();
 

@@ -18,7 +18,7 @@
     </div> 
     <!-- end of .postfoot --> 
     <div class="postmeta"> 
-        <? Tags::inline("class: right, delimiter: ',', h3: 'Tags:'", explode(",",$tags))?>
+        <? Tags::inline("class: right, delimiter: ',', h3: 'Tags:'", $tags)?>
     </div> 
     <!-- end of .postmeta --> 
 </div> 

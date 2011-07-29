@@ -69,24 +69,7 @@ class Section {
 
 	}
 	
-	function render(){
-		// if there is a view, use it
-		/*
-		if($this->view) { 
-			$file = getPath('views/sections/'. $this->view .'.php');
-			// alternative naming for the view
-			if(!$file)
-				$file = getPath('views/sections/'. $class .'-'. $this->view .'.php');
-		// else if there is a view in the sections folder with the same name as the class, use it
-		} else { 
-			$file = getPath('views/sections/'. $class .'.php');
-			// finally, try to render the section with the default view
-			if(!$file)
-				$file = getPath('views/sections/default.php');
-		}
-		*/
-		
-		
+	function render(){	
 		View::do_dump($this->view, $this->data);
 	}
 	
@@ -155,9 +138,23 @@ class Menu extends Section {
 class Breadcrumb extends Section {
 	
 	function __construct($view=false, $vars=false, $data=false){
+		$this->data['items'] = $this->getItems($data);
 		parent::__construct($view,$vars);
-		$this->data['items'] = array();
 		$this->render();
+	}
+	
+	private function getItems(){
+		$items = array();
+		$path = explode("/", $GLOBALS['path']);
+		//$title = $GLOBALS['title'];
+		// always include the homepage
+		$items[] = array("url"=> myUrl( "", false), "title" => "Home" );
+
+		foreach($path as $dir){
+			$items[] = array("url"=> myUrl( implode("/", $path) ), "title" => ucwords(end($path)));
+			array_pop($path);
+		}
+		return $items;
 	}
 	
 	public static function getSection(){
@@ -169,13 +166,29 @@ class Breadcrumb extends Section {
 class Tags extends Section {
 	
 	function __construct($view=false, $vars=false, $data=false){
-		// extra manipulation of the vars for this section
+		// form data
+		$this->data['items'] = $this->getItems($data);
 		parent::__construct($view, $vars, $data);
-		$this->data['items'] = $data;
 		$this->render();
 	}
 	
-	
+	private function getItems($data){
+		// create an array if we are provided with a comma delimited list
+		$tags = (!is_array($data)) ? explode(",",$data) : $data;
+
+		$items = array();
+		// form the array in items format
+		foreach($tags as $tag){
+			// calculate the weight
+			if(array_key_exists($tag, $items)){
+				$items[$tag]['weight'] += 1;
+			} else {
+				$items[$tag] = array( 'url' =>  myUrl( "tag/".$tag, true ), 'title' => $tag, 'weight' => 1 );
+			}
+		}
+		return $items;
+	}
+
 	public static function cloud($vars=false){
 		// set the view
 		$view = 'tagcloud';
@@ -189,12 +202,7 @@ class Tags extends Section {
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
 				$tags = explode(",", $v['tags']);
 				foreach($tags as $tag){ 
-					// calculate the weight
-					if(array_key_exists($tag, $items)){
-						$items[$tag]['weight'] += 1;
-					} else {
-						$items[$tag] = array( 'url' =>  myUrl( "tag/".$tag, true ), 'title' => $tag, 'weight' => 1 );
-					}
+					$items[] = $tag;
 				}
 			} 
 		// process the view

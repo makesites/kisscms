@@ -19,6 +19,8 @@
 		<? Menu::ul(); ?>
 	</aside>
     
+    <? Breadcrumb::inline("id: path, h3: 'You are here:', delimiter: '&gt;'")?> 
+
     <div id="article">
         <? Template::body(); ?>
     </div>

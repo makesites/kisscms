@@ -31,12 +31,17 @@ class Section {
 	}
 	
 	
-	public static function view($view='default', $vars=false, $data=false){
+	public static function view($view=false, $vars=false, $data=false){
 		$class =  static::getSection();
 		// fallback for view is the controller name
-		if(!$view)
+		if(!$file = getPath('views/sections/'. $view .'.php'))
 			$view  = strtolower( $class );
-		$view = getPath('views/sections/'. $view .'.php');
+			// fallback to the default view
+			if(!$file = getPath('views/sections/'. $view .'.php'))
+				$view  = 'default';
+				$file = getPath('views/sections/'. $view .'.php');
+		// save the view we found
+		$view = $file;
 		
 		if( class_exists ( $class ) ){ 
 			$section = new $class($view, $vars, $data);
@@ -270,5 +275,20 @@ class Search extends Section {
 		return __CLASS__;
 	}
 }
+
+
+class LatestUpdates extends Section {
+	
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
+		$this->data['items'] = array();
+		$this->render();
+	}
+	
+	public static function getSection(){
+		return __CLASS__;
+	}
+}
+
 
 ?>

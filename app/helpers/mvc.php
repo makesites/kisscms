@@ -46,7 +46,9 @@ class Model extends KISS_Model  {
 // Controller
 //===============================================================
 class Controller extends KISS_Controller {
-
+	
+	public $data;
+	
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
@@ -88,6 +90,14 @@ class Controller extends KISS_Controller {
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
 			$this->request_not_found();
+		
+		
+		// calculate the path - possibly this can be merged with parse_http_request()
+		$path = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
+		// check if we have a trailing slash (and remove it) 
+		$path = ( substr($path, -1) == "/" ) ? substr($path, 0, -1) : $path;
+		// save the path for later use by controllers and helpers
+		$GLOBALS['path'] = $this->data['path'] = $path; 
 		
 		// call the method
 		$this->$function($params);

@@ -2,17 +2,8 @@
 
 class Main extends Controller {
 
-	public $data;
-	
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function index( $params ) {
-		
-		// the main controler is a special case that has only one parameter - the url
-		$this->data['path'] = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
-		// check if we have a trailing slash (and remove it) 
-		$this->data['path'] = ( substr($this->data['path'], -1) == "/" ) ? substr($this->data['path'], 0, -1) : $this->data['path'];
-		
-		$GLOBALS['path'] = $this->data['path']; 
 		
 		// load the index
 		$this->render();

@@ -6,28 +6,34 @@
 <head>
 	<title><? Meta::title() ?></title>
 	<? Template::head(); ?>
-
+	
+    <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="<?=myUrl()?>/assets/css/default.css" type="text/css" media="screen" />
   
 </head>
 
 <body>
 
-  <div id="container">
+  <div class="page">
     <header>
-    <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
-<div id="nav">
+    	<div id="nav" class="pink-gd r5"><? Menu::view(); ?></div>
+        
+        <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
 
-<? Menu::view(); ?>
-
-  </div>
     </header>
+    
     <div id="main" role="main">
 
-<? Template::body(); ?>
+		<? Template::body(); ?>
 
     </div>
-    <aside>
+    <aside class="sidebar">
+		
+		<? Search::view()?>    		
+
+		<? Archive::ul('class: r10')?>    		
+
+		<? LatestUpdates::ul()?>    		
 
     </aside>
     <footer>

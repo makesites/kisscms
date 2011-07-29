@@ -1,0 +1,163 @@
+
+/* Tags */
+html, body {
+	min-height: 100%;
+}
+
+body {
+	font: 13px/18px Helvetica, Arial, sans-serif; 
+	font-size: 75%;
+	background: #fff url(../img/default/back.png) top center no-repeat; 
+	color: #444; 
+	text-align: center; 
+	overflow-y: scroll;
+}
+
+p, h2, h3, h4 {
+	margin-bottom: 8px;
+}
+
+h2 {
+	font-size: 1.4em;
+	font-family: 'Orbitron', sans-serif;
+}
+
+
+/* Layout */
+.page {
+	width: 960px; 
+	margin: 0 auto; 
+	text-align: left; 
+}
+
+header {
+	margin-bottom: 30px; 
+	padding: 28px 0 0 0; 
+}
+
+
+header #nav {
+	height: 40px;
+}
+
+header #nav ul {
+	height: 40px;
+	list-style-type: none;
+	background: url(../img/default/nav-logo.png) 8px 6px no-repeat;
+	margin: 0; 
+	padding: 0 0 0 50px;
+}
+
+
+header #nav ul li{
+	float: left;
+	padding: 12px;
+}
+
+
+header #nav a{
+	color: #eee;
+	font-family: 'Orbitron', sans-serif;
+	font-size: 1.3em;
+	text-decoration: none;
+}
+
+header #nav a:hover{
+	color: #fff;
+}
+
+header h1{
+	font-family: 'Orbitron', sans-serif;
+	font-size: 120px;
+	line-height: 120px;
+	text-align: center;
+	margin-top: 10px;
+}
+
+
+header h1 a, header h1 a:hover, header h1 a:visited{
+	color: #777;
+	text-decoration: none;
+}
+
+
+#main {
+	float: left;
+	width: 60%;
+}
+
+.sidebar {
+	float: right;
+	width: 35%;
+}
+
+.sidebar section {
+	background-color: #eee;
+	margin: 8px 0;
+	padding: 10px
+}
+
+
+
+/* Scrollbar */
+::-webkit-scrollbar {
+	width: 20px; height: 10px;
+}
+::-webkit-scrollbar-button:start:decrement,
+::-webkit-scrollbar-button:end:increment {
+	display: block; height: 10px; background: #fff;
+}
+::-webkit-scrollbar-button:vertical:increment {
+	background: #fff;
+}
+::-webkit-scrollbar-track-piece {
+	background: #eee url(../img/default/scrollbar-back.gif) 0 0 repeat-y;
+}
+::-webkit-scrollbar-thumb:vertical {
+	height: 50px; background: #ccc url(../img/default/scrollbar-tracker-back.gif) 0 0 repeat-y;
+}
+::-webkit-scrollbar-thumb:vertical:hover {
+	background: #ccc url(../img/default/scrollbar-tracker-hover-back.gif) 0 0 repeat-y;
+}
+::-webkit-scrollbar-thumb:horizontal {
+	width: 50px; background: #ccc;
+}
+
+
+
+/* Common classes */
+
+.pink-gd {
+  /* fallback */
+  background-color: #ff00cc;
+  background-repeat: repeat-x;
+  
+  /* Safari 4-5, Chrome 1-9 */
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ff00cc), to(#cc0099));
+  
+  /* Safari 5.1, Chrome 10+ */
+  background: -webkit-linear-gradient(top, #cc0099, #ff00cc);
+  
+  /* Firefox 3.6+ */
+  background: -moz-linear-gradient(top, #cc0099, #ff00cc);
+  
+  /* IE 10 */
+  background: -ms-linear-gradient(top, #cc0099, #ff00cc);
+  
+  /* Opera 11.10+ */
+  background: -o-linear-gradient(top, #cc0099, #ff00cc);
+}
+
+
+/* Rounded corners */
+.r5 {
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+.r10 {
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}

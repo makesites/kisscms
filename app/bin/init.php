@@ -24,10 +24,10 @@ if( defined("BASE") ){
 
 requireAll( dirname(__FILE__)."/", null, array("init.php") );
 
-if( defined("APP") ){
+if( defined("APP") && is_dir(APP."plugins/") ){
 	requireAll( APP."plugins/", array("/bin/init.php"));
 }
-if( defined("BASE") ){
+if( defined("BASE") && is_dir(BASE."plugins/") ){
 	requireAll( BASE."plugins/", array("/bin/init.php"));
 }
 if( defined("PLUGINS") ){

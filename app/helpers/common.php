@@ -45,7 +45,7 @@ function isStatic( $file ) {
 		if ( file_exists( APP."public".$file ) ) {
 			$target = APP."public".$file;
 		}
-		if ($handle = opendir(APP."plugins/")) {
+		if (is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -61,7 +61,7 @@ function isStatic( $file ) {
 		if ( file_exists( BASE."public".$file ) ) {
 			$target = BASE."public".$file;
 		}
-		if ($handle = opendir(BASE."plugins/")) {
+		if (is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -121,7 +121,7 @@ function getPath( $file ) {
 		if (file_exists(APP.$file)){ 
 			return APP.$file;
 		// check the plugins folder
-		} elseif ($handle = opendir(APP."plugins/")) {
+		} elseif ( is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -137,7 +137,7 @@ function getPath( $file ) {
 		if (file_exists(BASE.$file)){ 
 			return BASE.$file;
 		// check the plugins folder
-		} elseif ($handle = opendir(BASE."plugins/")) {
+		} elseif ( is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 

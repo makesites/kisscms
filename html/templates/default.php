@@ -37,7 +37,7 @@
 
     </aside>
     <footer>
-
+		<? Copyright::view() ?>
     </footer>
   </div>
 

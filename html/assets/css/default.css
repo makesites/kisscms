@@ -97,7 +97,14 @@ header h1 a, header h1 a:hover, header h1 a:visited{
 	padding: 10px
 }
 
-
+footer {
+	clear: both;
+	margin-top: 12px;
+	border-top: solid 3px #ccc;
+	padding-top: 4px;
+	font-size: 0.8em;
+	
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar {

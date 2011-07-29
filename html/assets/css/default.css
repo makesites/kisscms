@@ -92,9 +92,7 @@ header h1 a, header h1 a:hover, header h1 a:visited{
 }
 
 .sidebar section {
-	background-color: #eee;
 	margin: 8px 0;
-	padding: 10px
 }
 
 footer {
@@ -133,6 +131,13 @@ footer {
 
 
 /* Common classes */
+.hide{
+	display: none;
+}
+
+.gray-tr {
+	background: rgba(220, 220, 220, 0.8);
+}
 
 .pink-gd {
   /* fallback */
@@ -161,10 +166,13 @@ footer {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
+	padding: 5px;
+
 }
 
 .r10 {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
+	padding: 10px;
 }

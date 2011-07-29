@@ -31,9 +31,12 @@
 		
 		<? Search::view()?>    		
 
-		<? Archive::ul('class: r10')?>    		
+		<? Archive::ul("class: 'r10 gray-tr'")?>    		
 
-		<? LatestUpdates::ul()?>    		
+		<? LatestUpdates::ul()?> 
+        
+        <canvas width="300" height="200" id="tagcloud"></canvas>
+        <? Tags::cloud('id: taglist, class: hide, weight: 1')?>    		
 
     </aside>
     <footer>
@@ -41,8 +44,15 @@
     </footer>
   </div>
 
-
 <? Template::foot(); ?>
+
+<script type="text/javascript">
+require(['js/plugins/jquery.tagcanvas.min'], function() {
+		$("#tagcloud").tagcanvas({
+			 depth : 0.75
+		}, "tag_holder");
+});
+</script>
 
 </body>
 </html>

@@ -113,7 +113,11 @@ class Menu extends Section {
 
 	function __construct($view=false, $vars=false, $data=false){
 		parent::__construct($view,$vars);
-		
+		$this->data['items'] = $this->getItems();
+		$this->render();
+	}
+	
+	private function getItems(){
 		$items = array();
 		
 		if( array_key_exists('db_pages', $GLOBALS) ){
@@ -130,8 +134,7 @@ class Menu extends Section {
 				}
 			} 
 		}
-		$this->data['items'] = $items;
-		$this->render();
+		return $items;
 	}
 	
 	public static function getSection(){
@@ -237,9 +240,11 @@ class Pagination extends Section {
 class Archive extends Section {
 	
 	function __construct($view=false, $vars=false, $data=false){
+		// Additional defaults for specific section, if not set
+		if(!strpos($vars, "h3"))
+			$vars .= ", h3: 'Archives'";
+
 		parent::__construct($view,$vars);
-		// Additional defaults for specific section
-		$this->data['vars']['h3'] = "Archives";
 		
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
@@ -280,9 +285,25 @@ class Search extends Section {
 class LatestUpdates extends Section {
 	
 	function __construct($view=false, $vars=false, $data=false){
+		if(!strpos($vars, "h3"))
+			$vars .= ", h3: 'Latest Updates'";
 		parent::__construct($view,$vars);
-		$this->data['items'] = array();
+		$this->data['items'] = $this->getItems();
 		$this->render();
+	}
+	
+	private function getItems(){
+		$items = array();
+		
+		if( array_key_exists('db_pages', $GLOBALS) ){
+			$dbh = $GLOBALS['db_pages'];
+			$sql = 'SELECT * FROM "pages" ORDER BY "data" ASC LIMIT 10';
+			$results = $dbh->query($sql);
+			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
+				$items[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] ." (". date("d-m-Y", strtotime($v['date'])) . ")" );
+			} 
+		}
+		return $items;
 	}
 	
 	public static function getSection(){

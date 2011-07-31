@@ -31,9 +31,9 @@
 		
 		<? Search::view()?>    		
 
-		<? Archive::ul("class: 'r10 gray-tr'")?>    		
+		<? LatestUpdates::ul("class: 'r10 gray-tr'")?> 
 
-		<? LatestUpdates::ul()?> 
+		<? Archive::ul("class: 'r10 gray-tr'")?>    		
         
         <canvas width="300" height="200" id="tagcloud"></canvas>
         <? Tags::cloud('id: taglist, class: hide, weight: 1')?>    		

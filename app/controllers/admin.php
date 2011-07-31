@@ -6,6 +6,11 @@ class Admin extends Controller {
 	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
 		$this->require_login();
 		
+		// UGLY fix to load the pages db in the administration pages
+		$page = new Page();
+		$page->get_page_from_path("");
+		// END of UGLY fix - please revise as soon as possible
+		
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		

@@ -3,7 +3,9 @@
 
 
 /* TEAM */
-  Author: Your Name or Company  Site: http://localhost:90  
+  Author: <?=$config['main']['site_author']?>
+  Site: <?=myUrl('', true)?>
+  
 /* THANKS */
   Makis Tracend (http://makesit.es)
   

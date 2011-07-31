@@ -70,7 +70,7 @@ class Admin extends Controller {
 			$table = $name[0];
 			$key = $name[1];
 			$value = $v;
-			// only save the data that have changed
+			// only save the data that has changed
 			if( $GLOBALS["config"][$table][$key] != $v ){
 				$config = new Config($table);
 				//$config->pkname = 'key';
@@ -81,6 +81,9 @@ class Admin extends Controller {
 			}
 			
 		}
+		// generate the humans.txt file
+		$humans = $this->humansText();
+		
 		// redirect back to the configuration page
 		header('Location: '.myUrl('admin/config', true));
 	  } else {
@@ -191,5 +194,16 @@ class Admin extends Controller {
 		header('Location: '.myUrl('', true));
 	}
 
+	function humansText(){
+		//get config
+		$data['config'] = $GLOBALS['config'];
+		// load tempalate
+		$output = View::do_fetch( getPath("views/admin/humans.php"), $data);
+		// write file
+		$file = fopen(APP.'public/humans.txt',"w");
+		fwrite($file,$output);
+		fclose($file);
+		
+	}
 }
 ?>

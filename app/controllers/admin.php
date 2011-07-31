@@ -176,6 +176,10 @@ class Admin extends Controller {
 			$page->set('path', $_POST['path']);
 			$page->create();
 		}
+		
+		// Generate sitemap
+		$sitemap = new Sitemap();
+		
 	}
 	
 	function delete($id=null) {

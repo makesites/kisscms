@@ -297,7 +297,7 @@ class LatestUpdates extends Section {
 		
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
-			$sql = 'SELECT * FROM "pages" ORDER BY "data" ASC LIMIT 10';
+			$sql = 'SELECT * FROM "pages" ORDER BY "date" DESC LIMIT 10';
 			$results = $dbh->query($sql);
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
 				$items[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] ." (". date("d-m-Y", strtotime($v['date'])) . ")" );

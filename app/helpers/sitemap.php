@@ -2,80 +2,39 @@
 
 class Sitemap {
 	
-	public $isoLastModifiedSite = "";
+	public $data;
 
-	function __contruct(){ 
-		// search terms	
-		$quotes = explode('"', $q);
-		$quoted = array();
-		for($i=0; $i<count($quotes); $i++){
-			if($i%2==0) continue;
-			$j = '"'.$quotes[$i].'"';
-			array_push($quoted, $j);
-			$q = str_replace($j, "", $q);
-		}
-		
-		$searchTerms = explode("|", implode("|", explode("%20", implode("|", explode(" ", implode("|", explode("+", trim($q))))))));
-		if(count($searchTerms)==1 && $searchTerms[0]=="") $searchTerms = array();
-		
-		$includes = array();
-		$excludes = array();
-		for($i=0; $i<count($searchTerms); $i++){
-			if(strpos($searchTerms[$i], "-")===0){
-				array_push($excludes, substr($searchTerms[$i], 1, strlen($searchTerms[$i])));
-			}else{
-				array_push($includes, $searchTerms[$i]);
-			}
-		}
-		array_splice($includes, 0, 0, $quoted);
-		
-		// prepare search terms for display
-		if(count($searchTerms) == 0 && $ingredient != "") $searchTerms = array($ingredient);
-		$concatTerms = implode(", ", $includes);
-		$concatTerms = str_replace(",,", ",", $concatTerms);
-		if(count($excludes)>0) $concatTerms .= ", -".implode(", -", $excludes);
-		
-		$md = new MetaData();
-		$results = new Search();
-		
-		
-		
-		// for the clear all
-		$isParameter = ($preptime!="" || $cooktime!="" || $serves!="" || $rating!="" || $cuisine!="" || $brand!="" || $prod!="" || $ingredient!="" || $category!="" || $tag);
-		
-		// for title
-		array_splice($searchTerms, 0, 0, $quoted);
-		
-		
-		// Create recorde for homepage
-		$urlsetValue .= $this->makeUrlTag ($myUrl("/"), $this->isoLastModifiedSite, "daily", "1.0");
-		
-		// Create records for main categories 
-		foreach($md->categoryList as $category){
-			$urlsetValue .= $this->makeUrlTag ($myUrl("/") ."recipes/?category=".$category, $this->isoLastModifiedSite, "weekly", "0.9");
-		}
-											
-		// Create records for recipies
-		foreach($results->matches as $recipe){ 
-			$isRecipe = ($recipe["type"] == "recipe");
-			$match = $recipe["ob"];
-			$urlsetValue .= $this->makeUrlTag ($myUrl("/") . $match->friendlyUrl(), $this->isoLastModifiedSite, "monthly", "0.6");
-		} 
-		
-		$XML = $xmlHeader . $urlsetOpen . $urlsetValue . $urlsetClose;
-		$this->makeXMLSitemap($XML);
-		
-	}
-
-	
-	function makeUrlString ($urlString) {
-		return htmlentities($urlString, ENT_QUOTES, 'UTF-8');
+	function __construct(){ 
+		$this->data['items'] = $this->getItems();
+		$this->render();
 	}
 	
-	function makeIso8601TimeStamp ($dateTime) {
-		if (!$dateTime) {
-			$dateTime = date('Y-m-d H:i:s');
+	private function getItems(){
+		$items = array();
+		
+		if( array_key_exists('db_pages', $GLOBALS) ){
+			$dbh = $GLOBALS['db_pages'];
+			$sql = 'SELECT * FROM "pages" ORDER BY "date" DESC';
+			$results = $dbh->query($sql);
+			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
+				$url = $this->makeUrlString( $v );
+				$date = $this->makeIso8601TimeStamp( $v );
+				$frequency = $this->getFrequency( $v);
+				$priority = $this->getPriority( $v );
+				$items[] = array( 'url' =>  $url, 'date' => $date, 'frequency' => $frequency, 'priority' => $priority );
+			} 
 		}
+		return $items;
+	}
+	
+	function makeUrlString($item) {
+		$url = htmlentities( myUrl( $item['path'], true ), ENT_QUOTES, 'UTF-8');
+		return $url;
+	}
+	
+	function makeIso8601TimeStamp($item) {
+		$dateTime = $item['date'];
+
 		if (is_numeric(substr($dateTime, 11, 1))) {
 			$isoTS = substr($dateTime, 0, 10) ."T"
 					 .substr($dateTime, 11, 8) ."+00:00";
@@ -86,50 +45,57 @@ class Sitemap {
 		return $isoTS;
 	}
 
-	function makeUrlTag ($url, $modifiedDateTime, $changeFrequency, $priority) {
+	function getFrequency( $item ) {
 		
-		$urlOpen = "\t" . "<url>" . "\n";
-		$urlValue = "";
-		$urlClose = "\t" . "</url>" . "\n";
-		$locOpen = "\t\t" . "<loc>";
-		$locValue = "";
-		$locClose = "</loc>" . "\n";
-		$lastmodOpen = "\t\t" . "<lastmod>";
-		$lastmodValue = "";
-		$lastmodClose = "</lastmod>" . "\n";
-		$changefreqOpen = "\t\t" . "<changefreq>";
-		$changefreqValue = "";
-		$changefreqClose = "</changefreq>" . "\n";
-		$priorityOpen = "\t\t" . "<priority>";
-		$priorityValue = "";
-		$priorityClose = "</priority>" . "\n";
-	
-		$urlTag = $urlOpen;
-		$urlValue     = $locOpen .makeUrlString("$url") .$locClose;
-		if ($modifiedDateTime) {
-		 $urlValue .= $lastmodOpen .makeIso8601TimeStamp($modifiedDateTime) .$lastmodClose;
+		$now = date('Y-m-d H:i:s');
+    	$last_update = $item['date'];
+		// a precaution due to server timezone differences
+		if( strtotime( $last_update ) >= strtotime( $now ) )
+        {
+			$now = $last_update;
 		}
-		if ($changeFrequency) {
-		 $urlValue .= $changefreqOpen .$changeFrequency .$changefreqClose;
+		
+		$diff = get_time_difference( $last_update, $now );
+		
+		if($diff['days'] > 365){
+			$frequency = 'yearly';
+		}elseif($diff['days'] > 30){
+			$frequency = 'monthly';
+		}elseif($diff['days'] > 7){
+			$frequency = 'weekly';
+		}elseif($diff['days'] > 0){
+			$frequency = 'daily';
+		}elseif($diff['days'] == 0 && $diff['hours'] != 0){
+			$frequency = 'hourly';
+		}elseif($diff['days'] == 0 && $diff['hours'] == 0){
+			$frequency = 'always';
+		} else {
+			$frequency = 'never';
 		}
-		if ($priority) {
-		 $urlValue .= $priorityOpen .$priority .$priorityClose;
-		}
-		$urlTag .= $urlValue;
-		$urlTag .= $urlClose;
-		return $urlTag;
+
+		return $frequency;
 	}
-	
-	function makeXMLSitemap($content){
-	
-		$file = fopen($_SERVER['DOCUMENT_ROOT'].WEB_FOLDER.'sitemap.xml',"w");
-		fwrite($file,$content);
+
+	function getPriority( $item ) {
+		$path = explode("/", $item['path'] );
+		// calculate a number from 0 to 1, based on the tree structure
+		$priority = 1 - (count($path) -1);
+		
+		return $priority;
+	}
+		
+	function render(){
+		
+		$output = View::do_fetch( getPath('views/main/sitemap.php'), $this->data);
+		
+		$file = fopen(APP.'public/sitemap.xml',"w");
+		fwrite($file,$output);
 		fclose($file);
 		
 		// create the compressed version 
-		$gz_content = gzcompress($content, 9); 
-		$gz_file = gzopen('sitemap.xml.gz', "w9");
-		gzwrite($gz_file, $gz_content);
+		$gz_output = gzcompress($output, 9); 
+		$gz_file = gzopen(APP.'public/sitemap.xml.gz', "w9");
+		gzwrite($gz_file, $gz_output);
 		gzclose($gz_file);
 		
 		// view the Sitemap XML

@@ -87,16 +87,10 @@ class Sitemap {
 	function render(){
 		
 		$output = View::do_fetch( getPath('views/main/sitemap.php'), $this->data);
-		
-		$file = fopen(APP.'public/sitemap.xml',"w");
-		fwrite($file,$output);
-		fclose($file);
-		
-		// create the compressed version 
-		$gz_output = gzcompress($output, 9); 
-		$gz_file = gzopen(APP.'public/sitemap.xml.gz', "w9");
-		gzwrite($gz_file, $gz_output);
-		gzclose($gz_file);
+		// write the sitemap 
+		writeFile(APP.'public/sitemap.xml', $output, 'w');
+		// write the compressed sitemap
+		writeFile(APP.'public/sitemap.xml.gz', $output, 'w9');
 		
 		// view the Sitemap XML
 		//header('Location: ./sitemap.xml');

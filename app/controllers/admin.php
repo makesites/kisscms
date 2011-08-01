@@ -200,10 +200,8 @@ class Admin extends Controller {
 		// load tempalate
 		$output = View::do_fetch( getPath("views/admin/humans.php"), $data);
 		// write file
-		$file = fopen(APP.'public/humans.txt',"w");
-		fwrite($file,$output);
-		fclose($file);
-		
+		writeFile(APP.'public/humans.txt', $output, 'w');
+				
 	}
 }
 ?>

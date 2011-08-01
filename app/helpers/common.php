@@ -40,10 +40,13 @@ function isStatic( $file ) {
 	// check in the document root
 	if ( file_exists( $_SERVER['DOCUMENT_ROOT'].$file ) ) {
 		$target = $_SERVER['DOCUMENT_ROOT'].$file;
+		return $target;
+	} 
 	// check in the app public folders
-	} elseif( defined("APP") ){
+	if( defined("APP") ){
 		if ( file_exists( APP."public".$file ) ) {
 			$target = APP."public".$file;
+			return $target;
 		}
 		if (is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
@@ -52,14 +55,16 @@ function isStatic( $file ) {
 				} 
 				if ( is_dir($plugin) && file_exists( APP."plugins/".$plugin."/public".file ) ) {
 					$target = APP."plugins/".$plugin."/public".file;
+					return $target;
 				}
 			}
 		}
 	}
 	// check in the base public folders
-	elseif( defined("BASE") ){
+	if( defined("BASE") ){
 		if ( file_exists( BASE."public".$file ) ) {
 			$target = BASE."public".$file;
+			return $target;
 		}
 		if (is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
@@ -68,25 +73,23 @@ function isStatic( $file ) {
 				} 
 				if ( is_dir($plugin) && file_exists( BASE."plugins/".$plugin."/public".file ) ) {
 					$target = BASE."plugins/".$plugin."/public".file;
+					return $target;	
 				}
 			}
 		}
 	}
 	// check in the plugins directory
-	elseif( defined("PLUGINS")){
+	if( defined("PLUGINS")){
 		$files = glob(PLUGINS."*/public/$file");
 		if( count($files) > 0 ) {
 			// arbitrary pick the first file - should have a comparison mechanism in place
 			$target = $files[0];
+			return $target;
 		}
 	}
 	
-	// output the results
-	if( isset($target) ){
-		return $target;
-	}else {
-		return false;
-	}
+	// return false if there are no results
+	return false;
 }
 
 function getFile($filename) { 
@@ -132,7 +135,9 @@ function getPath( $file ) {
 			}
 			
 		}
-	} elseif( defined("BASE") ) {
+	}
+	// try the base folder if we didn't find anything
+	if( defined("BASE") ) {
 		// find the core file second
 		if (file_exists(BASE.$file)){ 
 			return BASE.$file;
@@ -148,7 +153,9 @@ function getPath( $file ) {
 			}
 			
 		}
-	} elseif( defined("PLUGINS") ){
+	} 
+	// check the plugins folder if we still haven't found anything
+	if( defined("PLUGINS") ){
 		// find the core file second
 		if (file_exists(PLUGINS.$file)){ 
 			return PLUGINS.$file;
@@ -193,7 +200,9 @@ function findFiles($filename) {
 	// first find the files in the app directory
 	if (defined("APP")){ 
 		$files = glob(APP."{views/*/$filename,plugins/*/views/$filename}",GLOB_BRACE);
-		$return = array_merge($return, $files);		
+		if( is_array( $files) ){ 
+			$return = array_merge($return, $files); 
+		}
 	}
 	// then find the files in the base directory, if available
 	if (defined("BASE")){ 
@@ -207,11 +216,43 @@ function findFiles($filename) {
 	}
 	if (defined("PLUGINS")){
 		$files = glob(PLUGINS."*/views/$filename");
-		$return = array_merge($return, $files);	 
+		if( is_array( $files) ){ 
+			$return = array_merge($return, $files); 
+		}
 	}
 	return $return;
 }
 
+
+function writeFile($file = false, $output=false, $method='w'){ 
+	
+	if ($file){ 
+		// try to find the directory, create it if not avaiable
+		$dir = dirname($file);
+		if( is_dir( $dir ) ){ 
+		
+		} else {
+			mkdir($dir, 0777);
+		}
+		// switch between methods to write the file
+		switch( $method ) {
+			case 'w': 
+				$f = fopen($file,"w");
+				fwrite($f,$output);
+				fclose($f);
+			break;
+			
+			case 'w9': 
+				$gz_output = gzcompress($output, 9); 
+				$gz_file = gzopen($file, "w9");
+				gzwrite($gz_file, $gz_output);
+				gzclose($gz_file);
+			break;
+			
+		}
+	}
+}
+		
 
 // Original PHP code by Chirp Internet: www.chirp.com.au
 // Please acknowledge use of this code by including this header.

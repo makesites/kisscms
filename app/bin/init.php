@@ -60,7 +60,7 @@ if ($output = isStatic($url['path']) ) {
 // Including Files
 //===============================================
 function requireAll($folder='', $only=array(), $exclude=array(), $priority=array()) {
-if ($handle = opendir($folder)) {
+if (is_dir($folder) && false !== ($handle = opendir($folder))) {
     
 	// include everything unless explicitly specified
 	while (false !== ($file = readdir($handle))) {

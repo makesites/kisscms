@@ -31,8 +31,12 @@ class Section {
 	}
 	
 	
-	public static function view($view=false, $vars=false, $data=false){
-		$class =  static::getSection();
+	public static function view($view=false, $vars=false, $data=false, $class=false){
+		// static:: method only available for PHP>5.3
+		//$class =  static::getSection();
+		if(!$class){
+			$class = get_called_class();
+		}
 		// fallback for view is the controller name
 		if(!$file = getPath('views/sections/'. $view .'.php'))
 			$view  = strtolower( $class );
@@ -50,13 +54,15 @@ class Section {
 	
 	public static function ul($vars=false, $data=false){
 		$view = 'default';
-		static::view($view, $vars, $data);
+		$class = get_called_class();
+		Section::view($view, $vars, $data, $class);
 	}
 	
 	
 	public static function inline($vars=false, $data=false){
 		$view = 'inline';
-		static::view($view, $vars, $data);
+		$class = get_called_class();
+		Section::view($view, $vars, $data, $class);
 	}
 	
 	
@@ -180,11 +186,29 @@ class Tags extends Section {
 		$this->render();
 	}
 	
-	private function getItems($data){
+	private function getItems($data=false){
 		// create an array if we are provided with a comma delimited list
-		$tags = (!is_array($data)) ? explode(",",$data) : $data;
-
 		$items = array();
+		$tags = array();
+		
+		if( !$data ) {
+			// get the full list of tags
+			if( array_key_exists('db_pages', $GLOBALS) ){
+				$dbh = $GLOBALS['db_pages'];
+				$sql = 'SELECT tags FROM "pages" ORDER BY "date"';
+				$results = $dbh->query($sql);
+				
+				while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
+					$v_tags = explode(",", $v['tags']);
+					foreach($v_tags as $tag){ 
+						$tags[] = $tag;
+					}
+				} 
+			}
+		} else {
+			$tags = (!is_array($data)) ? explode(",",$data) : $data;
+		}
+		
 		// form the array in items format
 		foreach($tags as $tag){
 			// calculate the weight
@@ -197,25 +221,12 @@ class Tags extends Section {
 		return $items;
 	}
 
-	public static function cloud($vars=false){
+	public static function cloud($vars=false, $data=false){
 		// set the view
 		$view = 'tagcloud';
-		// get the data
-		if( array_key_exists('db_pages', $GLOBALS) ){
-			$dbh = $GLOBALS['db_pages'];
-			$sql = 'SELECT tags FROM "pages" ORDER BY "date"';
-			$results = $dbh->query($sql);
-			$items = array();
-			
-			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
-				$tags = explode(",", $v['tags']);
-				foreach($tags as $tag){ 
-					$items[] = $tag;
-				}
-			} 
+		$class = get_called_class();
 		// process the view
-		static::view($view, $vars, $items);
-		}
+		Section::view($view, $vars, $data, $class);
 	}
 	
 	public static function getSection(){

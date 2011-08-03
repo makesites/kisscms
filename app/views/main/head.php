@@ -14,4 +14,5 @@
 <link rel="stylesheet" href="/css/style.css">
 <link type="text/plain" rel="author" href="/humans.txt" />
 
-<script src="/js/libs/modernizr-1.7.min.js"></script>
+<script type="text/javascript" src="js/libs/require.js"></script>
+<script type="text/javascript" src="/js/libs/modernizr-1.7.min.js"></script>

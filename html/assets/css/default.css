@@ -94,6 +94,11 @@ header h1 a, header h1 a:hover, header h1 a:visited{
 	width: 35%;
 }
 
+canvas#tagcloud {
+	 width: 300px; 
+	 height: 150px;
+}
+
 .sidebar section {
 	margin: 8px 0;
 }

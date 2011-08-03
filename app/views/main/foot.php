@@ -1,4 +1,3 @@
-<script type="text/javascript" src="js/libs/require.js"></script>
 
 <script type="text/javascript">
 //Configure RequireJS

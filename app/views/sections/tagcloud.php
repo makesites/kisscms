@@ -1,8 +1,5 @@
-<section id="<?=$vars['id']?>" class="<?=$vars['class']?>">
-<? if(!empty($vars['h3'])){ ?>
-<h3 id="<?=$vars['h3-id']?>" class="<?=$vars['h3-class']?>"><?=$vars['h3']?></h3>
-<? } ?>
-<div id="tag_holder">
+<canvas id="<?=$vars['id']?>" class="<?=$vars['class']?>">
+<div id="tag-holder" class="hide">
 <? if(!empty($items)){ ?>
 <? foreach($items as $item){ ?>
 <? 	if( $item['title'] != ""){ ?>
@@ -11,4 +8,11 @@
 <? } 
 } ?>
 </div>
-</section>
+</canvas>
+<script type="text/javascript">
+require(['js/libs/jquery-1.5.1.min', 'js/plugins/jquery.tagcanvas.min'], function() {
+		$("#<?=$vars['id']?>").tagcanvas({
+			 depth : 0.75
+		}, "tag-holder");
+});
+</script>

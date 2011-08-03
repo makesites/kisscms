@@ -1,3 +1,3 @@
 <?php if(isset($_SESSION['admin'])){
-	include( __DIR__ . "/top-bar.php");
+	include( dirname(__FILE__) ."/top-bar.php");
 } ?>

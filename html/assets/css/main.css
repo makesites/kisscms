@@ -10,7 +10,7 @@ html {
 body {
 	font: 13px/18px Helvetica, Arial, sans-serif; 
 	font-size: 75%;
-	background: #fff url(../img/default/back.png) top center no-repeat; 
+	background: #fff url(../img/back.png) top center no-repeat; 
 	color: #444; 
 	text-align: center; 
 	overflow-y: scroll;
@@ -46,7 +46,7 @@ header #nav {
 header #nav ul {
 	height: 40px;
 	list-style-type: none;
-	background: url(../img/default/nav-logo.png) 8px 6px no-repeat;
+	background: url(../img/nav-logo.png) 8px 6px no-repeat;
 	margin: 0; 
 	padding: 0 0 0 50px;
 }
@@ -124,13 +124,13 @@ footer {
 	background: #fff;
 }
 ::-webkit-scrollbar-track-piece {
-	background: #eee url(../img/default/scrollbar-back.gif) 0 0 repeat-y;
+	background: #eee url(../img/scrollbar-back.gif) 0 0 repeat-y;
 }
 ::-webkit-scrollbar-thumb:vertical {
-	height: 50px; background: #ccc url(../img/default/scrollbar-tracker-back.gif) 0 0 repeat-y;
+	height: 50px; background: #ccc url(../img/scrollbar-tracker-back.gif) 0 0 repeat-y;
 }
 ::-webkit-scrollbar-thumb:vertical:hover {
-	background: #ccc url(../img/default/scrollbar-tracker-hover-back.gif) 0 0 repeat-y;
+	background: #ccc url(../img/scrollbar-tracker-hover-back.gif) 0 0 repeat-y;
 }
 ::-webkit-scrollbar-thumb:horizontal {
 	width: 50px; background: #ccc;

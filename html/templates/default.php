@@ -8,7 +8,7 @@
 	<? Template::head(); ?>
 	
     <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="<?=myUrl()?>/assets/css/default.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="<?=myUrl()?>/assets/css/main.css" type="text/css" media="screen" />
   
 </head>
 

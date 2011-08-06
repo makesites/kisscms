@@ -43,7 +43,8 @@ class Admin extends Controller {
 		//$this->data['body']['admin']= View::do_fetch( getPath('views/admin/login.php'), $this->data);
 		$data['view']= getPath('views/admin/login.php');
 	  	$this->data['body'][] = $data;
-
+		$this->data['template']= ADMIN_TEMPLATE;
+		
 		// display the page
 		Template::output($this->data);
 	  }
@@ -91,7 +92,8 @@ class Admin extends Controller {
 	  	//$this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);
 	  	$data['view']= getPath('views/admin/config.php');
 	  	$this->data['body'][] = $data;
-
+		$this->data['template']= ADMIN_TEMPLATE;
+		
 		// display the page
 		Template::output($this->data);
 	  }
@@ -106,11 +108,12 @@ class Admin extends Controller {
 		$data['path']= ( isset($path) ) ? implode("/", $path) : $_REQUEST['path'];
 		$data['tags']= "";
 		$data['view']= getPath('views/admin/edit_page.php');
-		$data['template']= $this->data['template']= DEFAULT_TEMPLATE;
+		$data['template']= DEFAULT_TEMPLATE;
 		//$this->data['admin']=isset($_SESSION['admin']) ? $_SESSION['admin'] : 0;
 		
 		//$this->data['body']['admin']= View::do_fetch( getPath('views/admin/edit_page.php'), $this->data);
 		$this->data['body'][] = $data;
+		$this->data['template']= ADMIN_TEMPLATE;
 		
 		// display the page
 		Template::output($this->data);
@@ -131,14 +134,15 @@ class Admin extends Controller {
 			$data['view'] = getPath('views/admin/edit_page.php');
 			$data['status']= $this->data['status']="edit";
 			// presentation variables
-			$data['template'] = $this->data['template'] = $page->get('template');
+			$data['template'] = $page->get('template');
 		} else {
 			$data['status']= $this->data['status']="error";
 			$data['view'] = getPath('views/admin/error.php');
 		}
-			$this->data['body'][] = $data;
+		
 		// Now render the output
-	  	//$this->data['body']['admin']= View::do_fetch( getPath('views/'.$this->data['view']), $this->data);
+	  	$this->data['body'][] = $data;
+		$this->data['template']= ADMIN_TEMPLATE;
 		
 		// display the page
 		Template::output($this->data);

@@ -15,7 +15,9 @@ class Tag extends Controller {
 		
 		$this->tag = $params;
 		
-		$this->data['status'] = 'tag-page';
+		$this->data['config'] = $GLOBALS['config'];
+		
+		$this->data['status'] = 'tag';
 		
 		// load the index
 		$this->render();
@@ -26,8 +28,8 @@ class Tag extends Controller {
 		// get the page details stored in the database
 		$this->requestAllPages();
 		
-		// add the config in the data object
-		$this->data['config'] = $GLOBALS['config'];
+		// define the rendereing template
+		$this->data['template']= LISTINGS_TEMPLATE;
 		
 		// display the page
 		Template::output($this->data);

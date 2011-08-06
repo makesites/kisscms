@@ -28,6 +28,9 @@ define('DEFAULT_ROUTE', $GLOBALS['config']['main']['default_route']);
 define('DEFAULT_ACTION', $GLOBALS['config']['main']['default_action']);
 
 define('DEFAULT_TEMPLATE', $GLOBALS['config']['main']['default_template']);
+define("ADMIN_TEMPLATE", "admin.php");
+define("LISTINGS_TEMPLATE", "listings.php");
+
 
 define('DB_PAGES', $GLOBALS['config']['main']['db_pages']); 
 

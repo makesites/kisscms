@@ -1,5 +1,14 @@
 # www.robotstxt.org/
 # www.google.com/support/webmasters/bin/answer.py?hl=en&answer=156449
 
+User-agent: Googlebot-Image
+Disallow: /
+User-agent: yahoo-mmcrawler
+Disallow: /
+User-agent: psbot
+Disallow: /
 User-agent: *
-
+Disallow: /cgi-bin/
+Disallow: /assets/
+Disallow: /templates/
+Sitemap: /sitemap.xml

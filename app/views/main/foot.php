@@ -7,6 +7,11 @@ require({
     priority: ['js/libs/jquery-1.5.1.min']
 });
 
+// open external links in new window 
+$('a[rel*=external]').click( function() { 
+	window.open(this.href, '_blank'); return false; 
+});
+
 </script>
 
 <!--[if lt IE 7 ]>

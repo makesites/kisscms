@@ -10,7 +10,7 @@
 </div>
 </canvas>
 <script type="text/javascript">
-require(['<?=myUrl()?>/js/libs/jquery-1.5.1.min', '<?=myUrl()?>/js/plugins/jquery.tagcanvas.min'], function() {
+require(['<?=myUrl()?>/js/libs/jquery-1.5.1.min.js', '<?=myUrl()?>/js/plugins/jquery.tagcanvas.min.js'], function() {
 		$("#<?=$vars['id']?>").tagcanvas({
 			 depth : 0.75
 		}, "tag-holder");

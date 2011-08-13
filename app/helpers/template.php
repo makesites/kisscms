@@ -69,7 +69,12 @@ class Template extends KISS_View {
 	}
 	
 	function getTemplate(){
-		$file = (array_key_exists('template', $this->vars) && is_file(TEMPLATES.$this->vars['template'])) ? TEMPLATES.$this->vars['template'] : TEMPLATES.DEFAULT_TEMPLATE;
+		// support for mobile template
+		if(array_key_exists('IS_MOBILE', $GLOBALS) && $GLOBALS['IS_MOBILE'] == true && is_file(TEMPLATES."mobile.php") ){ 
+			$file = TEMPLATES."mobile.php";
+		} else {
+			$file = (array_key_exists('template', $this->vars) && is_file(TEMPLATES.$this->vars['template'])) ? TEMPLATES.$this->vars['template'] : TEMPLATES.DEFAULT_TEMPLATE;
+		}
 		return $file;
 	}
 	

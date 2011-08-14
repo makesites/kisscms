@@ -21,6 +21,10 @@ class Meta {
 	function description(){
 		echo $GLOBALS['config']['main']['site_description'];
 	}
+	
+	function url(){
+		echo "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+	}
 }
 
 ?>

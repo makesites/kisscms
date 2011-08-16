@@ -194,6 +194,17 @@ function myUrl($path='',$fullurl=true){
 }
 
 
+function myCDN(){
+	if (defined("CDN")){
+		// first check if we have already defined a CDN
+		return CDN;
+	} else {
+		// fallback to the domain name
+		return myUrl();
+	}
+}
+
+
 // find all files with a certain name
 function findFiles($filename) {
 	$return = array();

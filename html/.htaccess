@@ -7,10 +7,27 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 #
-#If you are editing httpd.conf use something like the below
+# If you are editing httpd.conf use something like the below
 #
 #<Directory "/path/to/your/folder">
 #RewriteEngine On
 #RewriteCond $1 !^(index\.php|css|img|js|favicon\.ico|robots\.txt)
 #RewriteRule ^(.*)$ /index.php/$1 [L]
 #</Directory>
+
+#
+# If your server is Apache and has the mod_deflate module installed 
+# you can enable gzip compression with the following lines
+#
+#AddOutputFilterByType DEFLATE text/html text/plain text/xml
+#AddOutputFilterByType DEFLATE text/css application/x-javascript
+#AddOutputFilterByType DEFLATE text/css text/html text/plain text/xml text/javascript
+
+# 
+# Use this to disable Etags and add expiry headers on Apache
+# 
+#<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)(\.gz)?$">
+#Header set Expires "Thu, 15 Apr 2012 20:00:00 GMT"
+#Header unset ETag
+#FileETag None
+#</FilesMatch>

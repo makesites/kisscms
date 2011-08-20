@@ -201,6 +201,6 @@ function custom_error($msg='') {
 // Srart the controller
 //===============================================s
 
-$output = new $controller( 'controllers/',WEB_FOLDER,'main','index');
+$output = new $controller( 'controllers/', WEB_FOLDER, DEFAULT_ROUTE, DEFAULT_ACTION);
 
 ?>

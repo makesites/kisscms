@@ -64,8 +64,8 @@ class Controller extends KISS_Controller {
 
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function route_request() {
-		$controller = DEFAULT_ROUTE;
-		$function = DEFAULT_ACTION;
+		$controller = $this->default_controller;
+		$function = $this->default_function;
 		$class = strtolower( get_class($this) );
 		$params = array();
 
@@ -80,7 +80,12 @@ class Controller extends KISS_Controller {
 				$params = array_slice($p,1);
 			}
 		} else {
-			$params = $p;
+			if (isset($p[0]) && method_exists($this, $p[0])) {
+				$function=$p[0];
+				$params = array_slice($p,1);
+			} else {
+				$params = $p;
+			}
 		}
 		
 		// finally convert the params to a string if they are only one element

@@ -148,11 +148,13 @@ function requireOnly($folder='', $only=array() ){
 	foreach($only as $file){
 		
 		if( defined("APP") ){
-			$app = array_merge( $app, glob(APP."$folder/*/$file",GLOB_BRACE) );
+			$search = glob(APP."$folder/*/$file",GLOB_BRACE);
+			$app = array_merge( $app, (array)$search );
 			if(!$app) $app = array();
 		}	
 		if( defined("BASE") ){
-			$base = array_merge( $base, glob(BASE."$folder/*/$file",GLOB_BRACE) );
+			$search = glob(BASE."$folder/*/$file",GLOB_BRACE);
+			$base = array_merge( $base, (array)$search );
 			if(!$base) $base = array();
 			// compare the files and exclude all the APP overrides 
 			foreach($base as $key=>$file){

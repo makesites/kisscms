@@ -64,8 +64,8 @@ class Controller extends KISS_Controller {
 
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function route_request() {
-		$controller = $this->default_controller;
-		$function = $this->default_function;
+		$controller = DEFAULT_ROUTE;
+		$function = DEFAULT_ACTION;
 		$class = strtolower( get_class($this) );
 		$params = array();
 

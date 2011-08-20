@@ -36,8 +36,7 @@ class Config extends Model {
 	$dbh= $this->getdbh();
 	$sql = "CREATE TABLE $name(key,value)";
     $results = $dbh->prepare($sql);
-	print_r( $sql );
-    //$results->bindValue(1,$username);
+	//$results->bindValue(1,$username);
     $results->execute();	
   }
   
@@ -79,7 +78,7 @@ class Config extends Model {
 			foreach ($rs as $key => $val)
 				if (isset($myclass->rs[$key]))
 					$myclass->rs[$key] = is_scalar($myclass->rs[$key]) ? $val : unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val);
-				// this part is awefully hardcoded to achieve the desirable array strucutre...
+				// this part is awfully hardcoded to achieve the desirable array structure...
 				$arr[ $myclass->rs['key'] ]= $myclass->rs['value'];
 		}
 		return $arr;

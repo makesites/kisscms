@@ -10,28 +10,16 @@
 //- plugins init.php in the app/base folder
 //- plugins init.php in the plugins folder
 
-if( defined("APP") ){
-	// by default load the mvc.php first
-	requireAll( APP."lib/" );
-	requireAll( APP."helpers/", null, null, array("mvc.php") );
-	requireAll( APP."models/" );
-}
-if( defined("BASE") ){
-	requireAll( BASE."lib/" );
-	requireAll( BASE."helpers/", null, null, array("mvc.php") );
-	requireAll( BASE."models/" );
-}
-
-requireAll( dirname(__FILE__)."/", null, array("init.php") );
-
-if( defined("APP") && is_dir(APP."plugins/") ){
-	requireAll( APP."plugins/", array("/bin/init.php"));
-}
-if( defined("BASE") && is_dir(BASE."plugins/") ){
-	requireAll( BASE."plugins/", array("/bin/init.php"));
-}
+requireAll( "lib" );
+// by default load the mvc.php first
+requireAll( "helpers", null, array("mvc.php") );
+requireAll( "models" );
+// include config and other initiators
+requireAll( dirname(__FILE__), array("init.php") );
+// include plugins
+requireOnly( "plugins", array("bin/init.php") );
 if( defined("PLUGINS") ){
-	requireAll( PLUGINS, array("/bin/init.php"));
+	requireOnly( PLUGINS, array("bin/init.php"));
 }
 
 
@@ -59,48 +47,116 @@ if ($output = isStatic($url['path']) ) {
 //===============================================
 // Including Files
 //===============================================
-function requireAll($folder='', $only=array(), $exclude=array(), $priority=array()) {
-if (is_dir($folder) && false !== ($handle = opendir($folder))) {
-    
-	// include everything unless explicitly specified
-	while (false !== ($file = readdir($handle))) {
-		if ($file == '.' || $file == '..' || $file == '.DS_Store') { 
-		  continue; 
+function requireAll($folder='', $exclude=array(), $priority=array()){
+	
+	// find all the files in the APP, BASE and the folder
+	$files = $app = $base = $exception = $priorities = array();
+	
+	// all the files that have a full path
+	$files = glob("$folder/*",GLOB_BRACE);
+	
+	// all the files in the exception list
+	if( is_array($exclude) ){
+		foreach($exclude as $file){ 
+			$exception = glob("{*}$folder/$file",GLOB_BRACE);
+			$exception = ( defined("APP") ) ? array_merge( $exception, glob(APP."$folder/$file",GLOB_BRACE) ) : $exception;
+			$exception = ( defined("BASE") ) ? array_merge( $exception, glob(BASE."$folder/$file",GLOB_BRACE) ) : $exception;
 		}
-		// first give priority to the $priority array
-		if( count( $priority ) > 0 ){
-			foreach( $priority as $target ){
-				if(file_exists($folder.$target)){
-					require_once( $folder.$target );
-					
-				}
-			}	
+	}
+	// all the files in the priority list
+	if( is_array($priority) ){
+		foreach($priority as $file){ 
+			$priorities = glob("$folder/$file",GLOB_BRACE);
+			$priorities = ( defined("APP") ) ? array_merge( $priorities, glob(APP."$folder/$file",GLOB_BRACE) ) : $priorities;
+			$priorities = ( defined("BASE") ) ? array_merge( $priorities, glob(BASE."$folder/$file",GLOB_BRACE) ) : $priorities;
 		}
-		// include only the files in the $only array
-		if( count( $only ) > 0 ){ 
-			foreach( $only as $target ){
-				if(file_exists($folder.$file.$target)){
-					require_once( $folder.$file.$target );
-				}
+	}
+
+	
+	// look into the app folder
+	if( defined("APP") ){
+		$app = glob(APP."$folder/*",GLOB_BRACE);
+	}
+	
+	// look into the base folder
+	if( defined("BASE") ){
+		$base = glob(BASE."$folder/*",GLOB_BRACE);
+		// compare the files and exclude all the APP overrides 
+		foreach($base as $key=>$file){
+			// remove the path
+			$target = substr($file,strlen(BASE));
+			// see if the target exists in the app folder
+			if(file_exists(APP.$target)){
+				// remove it from the array
+				$base[$key] = null;
 			}
-		// exclude all the files in the $exclude array
-		} elseif( count( $exclude ) > 0 ){
-			foreach( $exclude as $target ){
-				if ($file != $target && file_exists($folder.$file)) {				
-		  			require_once( $folder.$file );
-				}
-			}
-		} else {
-			if(file_exists($folder.$file)){
-				require_once( $folder.$file );
-			}	
 		}
 	}
 	
-    closedir($handle);
-}  
+	
+	// merge all the arrays together
+	$files = array_merge( $files, $base, $app );
+
+	// remove all the files in the exclude list
+	foreach($exception as $key=>$delete){
+		if(in_array($delete, $files)){
+			// remove it from the array
+			$files[$key] = null;
+		}
+	}
+	
+	// require the $priority files first
+	foreach($priorities as $key=>$file){ 
+		if(in_array($file, $files)){
+			// include it first
+			require_once( $file );
+		}
+	}
+	
+	// require all the rest of the files
+	foreach($files as $file){ 
+		require_once( $file );
+	}
 }
 
+function requireOnly($folder='', $only=array() ){
+	
+	// find all the files in the APP, BASE and the folder
+	$files = $app = $base = array();
+	
+	// all the files that have a full path
+	$files = glob("$folder/*",GLOB_BRACE);
+	
+	foreach($only as $file){
+		
+		if( defined("APP") ){
+			$app = array_merge( $app, glob(APP."$folder/*/$file",GLOB_BRACE) );
+		}	
+		if( defined("BASE") ){
+			$base = array_merge( $base, glob(BASE."$folder/*/$file",GLOB_BRACE) );
+			// compare the files and exclude all the APP overrides 
+			foreach($base as $key=>$file){
+				// remove the path
+				$target = substr($file,strlen(BASE));
+				// see if the target exists in the app folder
+				if(file_exists(APP.$target)){
+					// remove it from the array
+					$base[$key] = null;
+				}
+			}
+		}
+		
+		// merge all the arrays together
+		$files = array_merge( $files, $base, $app );
+
+	}
+	
+	// require all the files found
+	foreach($files as $file){ 
+		require_once( $file );
+	}
+	
+}
 
 //===============================================
 // Uncaught Exception Handling

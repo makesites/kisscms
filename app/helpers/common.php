@@ -186,9 +186,11 @@ function myUrl($path='',$fullurl=true){
 			$url .= ":".$_SERVER['SERVER_PORT'];
 		}
 	}
+	// add the web folder
+	$url .= WEB_FOLDER;
 	// add path if available
 	if( $path != '' ){ 
-		$url .= WEB_FOLDER.$path;
+		$url .= $path;
 	}
   	return $url;
 }

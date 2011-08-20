@@ -36,7 +36,7 @@ class Admin extends Controller {
 
 	  if($login == true) {
 		$_SESSION['admin']="true";
-		header('Location: '.myUrl('', true));
+		header('Location: '.myUrl());
 		exit();
 	  } else {
 		// display login form
@@ -53,7 +53,7 @@ class Admin extends Controller {
 
 	function logout() {
 	  unset($_SESSION['admin']);
-	  header('Location: '.myUrl('', true));
+	  header('Location: '.myUrl());
 	  exit();
 	}
 
@@ -86,7 +86,7 @@ class Admin extends Controller {
 		$humans = $this->humansText();
 		
 		// redirect back to the configuration page
-		header('Location: '.myUrl('admin/config', true));
+		header('Location: '.myUrl('admin/config'));
 	  } else {
 	  	// show the configuration
 	  	//$this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);
@@ -155,7 +155,7 @@ class Admin extends Controller {
 		if( $validate == true ){
 			$this->save($id);
 		}
-		header('Location: '.myUrl($_REQUEST['path'], true));
+		header('Location: '.myUrl($_REQUEST['path']));
 
 	}
 	
@@ -195,7 +195,7 @@ class Admin extends Controller {
 			$page=new Page($id);
 			$page->delete();
 		} 
-		header('Location: '.myUrl('', true));
+		header('Location: '.myUrl());
 	}
 
 	function humansText(){

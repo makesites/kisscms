@@ -46,14 +46,14 @@ define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/');
 //===============================================
 // Start the controller
 //===============================================
-if (defined("APP")){ 
+if (defined("APP") && is_file(APP.'bin/init.php')){ 
 	// find the clone file first
 	require(APP.'bin/init.php');
-} elseif (defined("BASE")) {
+} elseif (defined("BASE") && is_file(BASE.'bin/init.php')) {
 	// find the core file second
 	require(BASE.'bin/init.php');
 } else {
-	quit("Please define the app path in your index file");
+	quit("Website Offile");
 }
 
 ?>

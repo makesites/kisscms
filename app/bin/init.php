@@ -54,21 +54,36 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	
 	// all the files that have a full path
 	$files = glob("$folder/*",GLOB_BRACE);
-	
+	if(!$files) $files = array();
+
 	// all the files in the exception list
 	if( is_array($exclude) ){
 		foreach($exclude as $file){ 
 			$exception = glob("{*}$folder/$file",GLOB_BRACE);
-			$exception = ( defined("APP") ) ? array_merge( $exception, glob(APP."$folder/$file",GLOB_BRACE) ) : $exception;
-			$exception = ( defined("BASE") ) ? array_merge( $exception, glob(BASE."$folder/$file",GLOB_BRACE) ) : $exception;
+			if(!$exception) $exception = array();
+			if( defined("APP") ){ 
+				$search = glob(APP."$folder/$file",GLOB_BRACE);
+				$exception =  array_merge( $exception, (array)$search );
+			}
+			if( defined("BASE") ){ 
+				$search = glob(BASE."$folder/$file",GLOB_BRACE);
+				$exception = array_merge( $exception, (array)$search );
+			}
 		}
 	}
 	// all the files in the priority list
 	if( is_array($priority) ){
 		foreach($priority as $file){ 
-			$priorities = glob("$folder/$file",GLOB_BRACE);
-			$priorities = ( defined("APP") ) ? array_merge( $priorities, glob(APP."$folder/$file",GLOB_BRACE) ) : $priorities;
-			$priorities = ( defined("BASE") ) ? array_merge( $priorities, glob(BASE."$folder/$file",GLOB_BRACE) ) : $priorities;
+			$priorities = (array)glob("$folder/$file",GLOB_BRACE);
+			if(!$priorities) $priorities = array();
+			if( defined("APP") ){ 
+				$search = glob(APP."$folder/$file",GLOB_BRACE);
+				$priorities =  array_merge( $priorities, (array)$search );
+			}
+			if( defined("BASE") ){ 
+				$search = glob(BASE."$folder/$file",GLOB_BRACE);
+				$priorities = array_merge( $priorities, (array)$search );
+			}
 		}
 	}
 
@@ -76,11 +91,13 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	// look into the app folder
 	if( defined("APP") ){
 		$app = glob(APP."$folder/*",GLOB_BRACE);
+		if(!$app) $app = array();
 	}
 	
 	// look into the base folder
 	if( defined("BASE") ){
 		$base = glob(BASE."$folder/*",GLOB_BRACE);
+		if(!$base) $base = array();
 		// compare the files and exclude all the APP overrides 
 		foreach($base as $key=>$file){
 			// remove the path
@@ -109,13 +126,13 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	foreach($priorities as $key=>$file){ 
 		if(in_array($file, $files)){
 			// include it first
-			require_once( $file );
+			if( is_file( $file )) require_once( $file );
 		}
 	}
 	
 	// require all the rest of the files
 	foreach($files as $file){ 
-		require_once( $file );
+		if( is_file( $file )) require_once( $file );
 	}
 }
 
@@ -126,14 +143,17 @@ function requireOnly($folder='', $only=array() ){
 	
 	// all the files that have a full path
 	$files = glob("$folder/*",GLOB_BRACE);
-	
+	if(!$files) $files = array();
+
 	foreach($only as $file){
 		
 		if( defined("APP") ){
 			$app = array_merge( $app, glob(APP."$folder/*/$file",GLOB_BRACE) );
+			if(!$app) $app = array();
 		}	
 		if( defined("BASE") ){
 			$base = array_merge( $base, glob(BASE."$folder/*/$file",GLOB_BRACE) );
+			if(!$base) $base = array();
 			// compare the files and exclude all the APP overrides 
 			foreach($base as $key=>$file){
 				// remove the path
@@ -152,8 +172,8 @@ function requireOnly($folder='', $only=array() ){
 	}
 	
 	// require all the files found
-	foreach($files as $file){ 
-		require_once( $file );
+	foreach($files as $file){
+		if( is_file( $file )) require_once( $file );
 	}
 	
 }

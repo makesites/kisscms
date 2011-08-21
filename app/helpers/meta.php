@@ -22,8 +22,14 @@ class Meta {
 		echo $GLOBALS['config']['main']['site_description'];
 	}
 	
-	function url(){
-		echo "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+	function url($query=false){
+		$url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+		
+		if( $query ){ 
+			echo $url;
+		} else {
+			echo "http://" . $_SERVER['SERVER_NAME'] . parse_url($url, PHP_URL_PATH);
+		}
 	}
 }
 

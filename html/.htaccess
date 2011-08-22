@@ -1,4 +1,5 @@
-AddHandler php5latest-script .php
+#AddHandler php5latest-script .php
+AddHandler php5-script .php
 
 RewriteEngine On
 RewriteBase /

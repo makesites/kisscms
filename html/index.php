@@ -32,16 +32,17 @@ define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/');
 // find if this is running from localhost
 //define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
 
-//if(IS_LOCALHOST){
+/*
+if(IS_LOCALHOST){
 // include a BASE constant here if this is a clone site
-//	define('BASE', APP);
-//} else {
+	define('BASE', APP);
+} else {
 // include a BASE constant here if this is a clone site
-//	define('BASE', APP);
+	define('BASE', APP);
 // the url of your cdn, if you're using one
-//	define('CDN', 'http://' . $_SERVER['SERVER_NAME'] . '/'); 
-//}
-
+	define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . '/'); 
+}
+*/
 
 //===============================================
 // Start the controller
@@ -53,7 +54,7 @@ if (defined("APP") && is_file(APP.'bin/init.php')){
 	// find the core file second
 	require(BASE.'bin/init.php');
 } else {
-	quit("Website Offile");
+	quit("Website Offline");
 }
 
 ?>

@@ -55,6 +55,7 @@ class Main extends Controller {
 		} else {
 			return false;			
 		}
+
 	}
 	
 	function requestCategoryPages() {
@@ -65,8 +66,7 @@ class Main extends Controller {
 		$view = getPath('views/main/category.php');
 		
 		if( count($pages) > 0 ){ 
-			foreach( $pages as $p ){
-				$data = $p->rs;
+			foreach( $pages as $data ){
 				$data['view'] = $view;
 				$this->data['body'][] = $data;
 			}
@@ -74,7 +74,7 @@ class Main extends Controller {
 		} else {
 			return false;
 		}
-
+		
 	}
 	
 

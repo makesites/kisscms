@@ -19,7 +19,6 @@ class Model extends KISS_Model  {
 //===============================================
 // Database Connection
 //===============================================
-
 	protected function getdbh() {
 		// generate the name prefix
 		$db_name = "db_" . substr( $this->db, 0, stripos($this->db, ".") );
@@ -28,7 +27,21 @@ class Model extends KISS_Model  {
 			  $GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $this->db);
 			  //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
 			} catch (PDOException $e) {
-			  die('Connection failed: '.$e->getMessage());
+				// Continue logic on a specific error code (14: unable to open database file)
+				$error = (string)$e->getCode();
+				echo $error;
+				if( $error == "14" ){ 
+					// see if there is a data directory
+					if( !is_dir( DATA ) ){ 
+						// create the directory with write access
+						mkdir( DATA, 0666);
+						// refresh page to continue past the error
+						header("Location: /"); 
+						exit;
+					}
+				} else {
+			  		die('Connection failed: '.$e->getMessage());
+				}
 			}
 		}
 		return $GLOBALS[ $db_name ];
@@ -40,6 +53,67 @@ class Model extends KISS_Model  {
 		return htmlspecialchars($this->get($key));
 	}
 
+	
+	function create_table($name, $fields){
+		$dbh= $this->getdbh();
+		$sql = "CREATE TABLE $name($fields)";
+		$results = $dbh->prepare($sql);
+		//$results->bindValue(1,$username);
+		$results->execute();	
+	}
+	
+	function get_tables(){
+		//$tables = $this->retrieve_many('type="table"');
+		//foreach( $tables as $table ){ 
+		//$this->tablename = $table['name'];
+		//}
+		$dbh= $this->getdbh();
+		$sql = 'SELECT name FROM sqlite_master WHERE type="table"';
+		$results = $dbh->prepare($sql);
+		//$results->bindValue(1,$username);
+		$results->execute();
+		while ($tables = $results->fetch(PDO::FETCH_ASSOC)) {
+				if (!$tables)
+					return false;
+				foreach ($tables as $table)
+					if($table != 'sqlite_sequence'){
+						$this->tablename = $table;
+						$vars[$this->tablename] = $this->retrieve_many();
+					}
+			}
+		return $vars;
+	}
+
+
+	function retrieve_many($wherewhat='',$bindings='') {
+		$dbh=$this->getdbh();
+		if (is_scalar($bindings))
+			$bindings=$bindings ? array($bindings) : array();
+		$sql = 'SELECT * FROM '.$this->tablename;
+		if ($wherewhat)
+			$sql .= ' WHERE '.$wherewhat;
+		$stmt = $dbh->prepare($sql);
+		$stmt->execute($bindings);
+		$arr=array();
+		$class=get_class($this);
+		while ($rs = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$myclass = new $class($this->id, $this->tablename);
+			foreach ($rs as $key => $val)
+				if (isset($myclass->rs[$key]))
+					$myclass->rs[$key] = is_scalar($myclass->rs[$key]) ? $val : unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val);
+				$arr[]= $myclass->rs;
+		}
+		return $arr;
+	}
+	
+	
+	function get($key) {
+		if (isset($this->rs[$key]))
+			return $this->rs[$key];
+		else
+			return false;
+	}
+	
 }
 
 //===============================================================

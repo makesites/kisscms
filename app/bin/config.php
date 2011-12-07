@@ -5,7 +5,9 @@
 // KISSCMS Settings 
 //===============================================
 
-new Config();
+$config = new Config();
+$GLOBALS['config'] = $config->getConfig();
+//		$this->unregister();
 
 // Register variables
 Config::register("main", "site_name", "KISSCMS");

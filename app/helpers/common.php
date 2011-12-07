@@ -125,6 +125,10 @@ function getPath( $file ) {
 			return APP.$file;
 		// check the plugins folder
 		} elseif ( is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
+			// check if this is a plugin path
+			if (file_exists(BASE."plugins/".$file))
+				return BASE."plugins/".$file;
+			// check inside the plugins
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -143,6 +147,10 @@ function getPath( $file ) {
 			return BASE.$file;
 		// check the plugins folder
 		} elseif ( is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
+			// check if this is a plugin path
+			if (file_exists(BASE."plugins/".$file)) 
+				return BASE."plugins/".$file;
+			// check inside the plugins
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
@@ -175,6 +183,7 @@ function getPath( $file ) {
 	// nothing checks out...
 	return false;
 }
+
 
 function myUrl($path='',$fullurl=true){
 	$url = '';

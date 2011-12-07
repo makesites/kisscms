@@ -8,24 +8,21 @@ class Config extends Model {
 	parent::__construct('config.sqlite', $this->pkname, $this->tablename); //primary key = id; tablename = sqlite_master
 	$this->rs['key'] = '';
     $this->rs['value'] = '';
-	if($table=='sqlite_master')
-		// the whole config table and save it as a global variable
-		$GLOBALS['config'] = $this->getConfig();
   }
 
   static function register($table, $key, $value="") {
 	// stop if variable already available
 	if(array_key_exists($table, $GLOBALS['config']) && array_key_exists($key, $GLOBALS['config'][$table])) return false;
 	
-	$config = new Config(0, $table);
-	
 	// then check if the table exists
 	if(!array_key_exists($table, $GLOBALS['config'])){
+		$config = new Config(0, $table);
 		$config->create_table($table, "key,value");
 	}
 	
 	// just create the key
 	if( !array_key_exists($key, $GLOBALS['config'][$table])) {
+		$config = new Config(0, $table);
 		$config->set('key', "$key");
 		$config->set('value', "$value");
 		$config->create();
@@ -47,8 +44,21 @@ class Config extends Model {
 			  $config[$table][$row['key']] = $row['value'];
 		  }
 	  }
+	  // verify config against the setup 
+	  foreach( $config as $type => $properties ){  
+		$is_plugin = getPath( $type ."/bin/config.php");
+		$is_controller = getPath( "controllers/". $type .".php");
+		 // delete the config entry if no controller/plugin found
+	 	if( !$is_plugin && !$is_controller ){
+			unset($config[$type]);
+			$this->unregister($type);
+		}
+	  }
 	  return $config;
   }
 
+  function unregister($table=false){
+	  var_dump("here");
+  }
 }
 ?>

@@ -16,6 +16,7 @@ class Section {
 							'h5-id' => false,'h5-class' => false,
 							'ul' => false, 'ul-id' => false, 'ul-class' => false,
 							'li' => false, 'li-id' => false, 'li-class' => false,
+							'tag' => false,
 						);
 		
 		$this->view = $view;
@@ -119,17 +120,23 @@ class Menu extends Section {
 
 	function __construct($view=false, $vars=false, $data=false){
 		parent::__construct($view,$vars);
-		$this->data['items'] = $this->getItems();
+		$this->data['items'] = $this->getItems($data);
 		$this->render();
 	}
 	
-	private function getItems(){
+	private function getItems($data=false){
 		$items = array();
-		
+		$tag = $this->data['vars']['tag'];
+				
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
-			$sql = 'SELECT * FROM "pages" ORDER BY "id"';
+			$sql = 'SELECT * FROM "pages"';
+			if ($tag) { 
+				$sql .= ' WHERE tags LIKE "%'. $tag .'%"';
+			}
+			$sql .= ' ORDER BY "id"';
 			$results = $dbh->query($sql);
+			if( !$results ) return $items;
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
 				// pick only first level pages
 				$path = explode("/", $v['path'] );

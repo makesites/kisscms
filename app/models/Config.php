@@ -19,11 +19,9 @@ class Config extends Model {
 		$config = new Config(0, $table);
 		$config->create_table($table, "key,value");
 	}
-	var_dump($table);
-	var_dump($key);
-	
+
 	// just create the key
-	if( !array_key_exists($key, $GLOBALS['config'][$table])) {
+	if( array_key_exists($table, $GLOBALS['config']) && !array_key_exists($key, $GLOBALS['config'][$table])) {
 		$config = new Config(0, $table);
 		$config->set('key', "$key");
 		$config->set('value', "$value");

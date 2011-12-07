@@ -4,10 +4,8 @@ class Main extends Controller {
 
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function index( $params ) {
-		
 		// load the index
 		$this->render();
-
 	}
 
 	function render() {
@@ -35,8 +33,13 @@ class Main extends Controller {
 	function requestPage( ) {
 		
 		$data = array();
-		$page = new Page();
-		$page->get_page_from_path($this->data['path']);
+		// if there is no path, load the index
+		if( empty( $this->data['path'] ) ){
+			$page = new Page(1);
+		} else { 
+			$page = new Page();
+			$page->get_page_from_path($this->data['path']);
+		}
 		
 		// see if we have found a page
 		if( $page->get('id') ){
@@ -63,11 +66,10 @@ class Main extends Controller {
 		$page=new Page();
 		$page->tablename = "pages";
 		$pages = $page->retrieve_many("path like '". $this->data['path'] ."%'");
-		$view = getPath('views/main/category.php');
 		
 		if( count($pages) > 0 ){ 
 			foreach( $pages as $data ){
-				$data['view'] = $view;
+				$data['view'] = getPath('views/main/category.php');
 				$this->data['body'][] = $data;
 			}
 			return true;

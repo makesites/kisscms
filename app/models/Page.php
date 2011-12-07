@@ -29,7 +29,7 @@ class Page extends Model {
 
   function get_page_from_path( $uri ) {
     $dbh= $this->getdbh();
-    $sql = 'SELECT * FROM "pages" WHERE "path"="'. $uri . '" LIMIT 1';
+	$sql = 'SELECT * FROM "pages" WHERE "path"="'. $uri . '" LIMIT 1';
     $results = $dbh->prepare($sql);
     //$results->bindValue(1,$username);
     $results->execute();
@@ -59,7 +59,7 @@ class Page extends Model {
 	
 	// then check if the table exists
 	if(!is_array($table)){
-		$page->create_table("pages", "id,title,content,path,date,tags,template");
+		$page->create_table("pages", implode(",", array_keys( $page->rs )) );
 		
 	}
 	
@@ -79,8 +79,9 @@ class Page extends Model {
 	} else {
 		if($key)
 			$mypage = new Page($id);
-			$mypage->set("$key", "$value");
-			$mypage->update();
+			if( !$mypage->get("$key") )
+				$mypage->set("$key", "$value");
+				$mypage->update();
 	}
 			
   }

@@ -33,7 +33,7 @@ class Model extends KISS_Model  {
 					// see if there is a data directory
 					if( !is_dir( DATA ) ){ 
 						// create the directory with write access
-						mkdir( DATA, 0666);
+						mkdir( DATA, 0777);
 						// refresh page to continue past the error
 						header("Location: /"); 
 						exit;

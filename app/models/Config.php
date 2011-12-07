@@ -39,6 +39,8 @@ class Config extends Model {
 	  $config = array();
 	  // get the raw db output
 	  $table_rows = $this->get_tables();
+	  // exit if no config is returned
+	  if( !is_array( $table_rows ) ){ return false; }
 	  // clean up data in a better format
 	  foreach( $table_rows as $table => $rows ){
 		  foreach( $rows as $row ){

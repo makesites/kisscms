@@ -29,7 +29,6 @@ class Model extends KISS_Model  {
 			} catch (PDOException $e) {
 				// Continue logic on a specific error code (14: unable to open database file)
 				$error = (string)$e->getCode();
-				echo $error;
 				if( $error == "14" ){ 
 					// see if there is a data directory
 					if( !is_dir( DATA ) ){ 

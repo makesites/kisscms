@@ -10,7 +10,7 @@ class Config extends Model {
     $this->rs['value'] = '';
 	if($table=='sqlite_master')
 		// the whole config table and save it as a global variable
-		$GLOBALS['config'] = $this->get_tables();
+		$GLOBALS['config'] = $this->getConfig();
   }
 
   static function register($table, $key, $value="") {
@@ -32,6 +32,20 @@ class Config extends Model {
 		// save in the global object
 		$GLOBALS['config'][$table][$key] = $value;
 	}
+	
+  }
+  
+  function getConfig(){
+	  $config = array();
+	  // get the raw db output
+	  $table_rows = $this->get_tables();
+	  // clean up data in a better format
+	  foreach( $table_rows as $table => $rows ){
+		  foreach( $rows as $row ){
+			  $config[$table][$row['key']] = $row['value'];
+		  }
+	  }
+	  return $config;
   }
 
 }

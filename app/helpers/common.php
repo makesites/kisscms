@@ -206,9 +206,11 @@ function myUrl($path='',$fullurl=true){
 
 
 function myCDN(){
+	// first check if we have already defined a CDN
 	if (defined("CDN")){
-		// first check if we have already defined a CDN
-		return CDN;
+		// remove trailing slash, if any 
+		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		return $url;
 	} else {
 		// fallback to the domain name
 		return myUrl();

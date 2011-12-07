@@ -58,7 +58,10 @@ class Config extends Model {
   }
 
   function unregister($table=false){
-	  var_dump("here");
+	  if( $table ){ 
+	  	$result = $this->drop_table( $table );
+		// possibly do something with $result here
+	  }
   }
 }
 ?>

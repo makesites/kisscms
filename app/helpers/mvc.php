@@ -113,6 +113,18 @@ class Model extends KISS_Model  {
 			return false;
 	}
 	
+	function drop_table( $table ) {
+		if( $table ){ 
+			$dbh = $this->getdbh();
+			$sql = "DROP TABLE $table";
+			$stmt = $dbh->prepare($sql);
+			//$stmt->bindValue(1,$this->rs[$this->pkname]);
+			return $stmt->execute();
+		} else {
+			return false;
+		}
+	}
+	
 }
 
 //===============================================================

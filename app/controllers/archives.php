@@ -34,13 +34,11 @@ class Archives extends Controller {
 
 		$page=new Page();
 		$page->tablename = "pages";
-		$pages = $page->retrieve_many("date like '%".$this->date."%'");
+		$pages = $page->retrieve_many("date LIKE '%".$this->date."%'");
 		$view = getPath('views/archives/body.php');
-		
-		foreach( $pages as $p ){
-			$data = $p->rs;
-			$data['view'] = $view;
-			$this->data['body'][] = $data;
+		foreach( $pages as $page ){
+			$page['view'] = $view;
+			$this->data['body'][] = $page;
 		}
 
 	}

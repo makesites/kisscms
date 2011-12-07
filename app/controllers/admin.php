@@ -68,7 +68,7 @@ class Admin extends Controller {
 			$value = $v;
 			// only save the data that has changed
 			if( $GLOBALS["config"][$table][$key] != $v ){
-				$config = new Config($table);
+				$config = new Config(0, $table);
 				//$config->pkname = 'key';
 				$config->set('key', $key);
 				$config->set('value', $value);

@@ -53,12 +53,13 @@ class Model extends KISS_Model  {
 	}
 
 	
-	function create_table($name, $fields){
-		$dbh= $this->getdbh();
+	function create_table($name, $fields, $db=false){
+		$dbh = $this->getdbh();
 		$sql = "CREATE TABLE $name($fields)";
 		$results = $dbh->prepare($sql);
 		//$results->bindValue(1,$username);
-		$results->execute();	
+		if( $results != false ) 
+			$results->execute();	
 	}
 	
 	function get_tables(){

@@ -17,7 +17,8 @@ class Config extends Model {
 	// then check if the table exists
 	if(!array_key_exists($table, $GLOBALS['config'])){
 		$config = new Config(0, $table);
-		$config->create_table($table, implode(",", array_keys( $config->rs )));
+		$config->create_table($table, implode(",", array_keys( $config->rs )) );
+		$GLOBALS['config'][$table] = array();
 	}
 
 	// just create the key

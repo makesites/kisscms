@@ -9,10 +9,10 @@ $admin_username = (!isset($admin_username)) ? '' : $admin_username;
 <?php 
 	foreach( $GLOBALS['config'] as $controller=>$vars ){
 		echo '<fieldset name="'.$controller.'">';
-		echo '<legend>'. ucwords( $controller ) .'</legend>';
+		echo '<legend><h3>'. ucwords( $controller ) .'</h3></legend>';
     	foreach( $vars as $k=>$v ){
 			// $GLOBALS['language']['config'][$k]
-			echo '<label>' . $k . ':</label><input type="text" name="'. $controller .'|' . $k . '" value="' . $v . '" />' . "\n";
+			echo '<label>' . ucwords( str_replace("_", " ", $k )) . ':</label><input type="text" name="'. $controller .'|' . $k . '" value="' . $v . '" />' . "\n";
 		}
 		echo '</fieldset>';
 	}

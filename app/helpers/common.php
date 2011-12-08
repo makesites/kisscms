@@ -127,7 +127,7 @@ function getPath( $file ) {
 		} elseif ( is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
 			// check if this is a plugin path
 			if (file_exists(APP."plugins/".$file))
-				return BASE."plugins/".$file;
+				return APP."plugins/".$file;
 			// check inside the plugins
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') { 

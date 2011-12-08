@@ -155,6 +155,7 @@ class Admin extends Controller {
 	}
 	
 	function validate() {
+		// insert proper validation HERE
 		return true;
 	}
 

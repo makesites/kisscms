@@ -75,12 +75,13 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	
 	// all the files that have a full path
 	$files = glob("$folder/*",GLOB_BRACE);
+	
 	if(!$files) $files = array();
 
 	// all the files in the exception list
 	if( is_array($exclude) ){
 		foreach($exclude as $file){ 
-			$exception = glob("{*}$folder/$file",GLOB_BRACE);
+			$exception = glob("$folder/$file",GLOB_BRACE);
 			if(!$exception) $exception = array();
 			if( defined("APP") ){ 
 				$search = glob(APP."$folder/$file",GLOB_BRACE);
@@ -90,6 +91,7 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 				$search = glob(BASE."$folder/$file",GLOB_BRACE);
 				$exception = array_merge( $exception, (array)$search );
 			}
+			
 		}
 	}
 	// all the files in the priority list
@@ -136,11 +138,13 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	$files = array_merge( $files, $base, $app );
 
 	// remove all the files in the exclude list
-	foreach($exception as $key=>$delete){
-		if(in_array($delete, $files)){
+	foreach($exception as $key=>$file){
+	
+		if(in_array($file, $files)){
 			// remove it from the array
-			$files[$key] = null;
+			unset($files[array_search($file, $files)]);
 		}
+		
 	}
 	
 	// require the $priority files first

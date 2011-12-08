@@ -79,7 +79,9 @@ class Page extends Model {
 	} else {
 		if($key)
 			$mypage = new Page($id);
-			if( !$mypage->get("$key") )
+			$value = $mypage->get("$key");
+			// allow empty strings to be returned
+			if( empty($value) && $value != "" )
 				$mypage->set("$key", "$value");
 				$mypage->update();
 	}

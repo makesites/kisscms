@@ -10,6 +10,8 @@
 //- plugins init.php in the app/base folder
 //- plugins init.php in the plugins folder
 
+lookUpDirs();
+
 requireAll( "lib" );
 // by default load the mvc.php first
 requireAll( "helpers", null, array("mvc.php") );
@@ -43,6 +45,25 @@ if ($output = isStatic($url['path']) ) {
 	
 }
 //requestParserCustom($controller,$action,$params);
+
+
+
+// Lookup available dirs in our environment
+function lookUpDirs(){
+	
+	if( defined("APP") ){
+		// check if there is a directory in that location
+		if( is_dir( APP ) ){ 
+			// do nothing atm, this condition will evaluate just true in MOST cases
+		} else {
+			// create it if not
+			mkdir(APP, 0775);
+		}
+	}
+	
+	// in the future create a global array of dirs here to replace the "if app" & "if base" conditions
+}
+
 
 //===============================================
 // Including Files

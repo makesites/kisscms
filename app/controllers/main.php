@@ -17,8 +17,6 @@ class Main extends Controller {
 			$is_category = $this->requestCategoryPages();
 			if(!$is_category){
 				$this->requestNewPage();
-			} else {
-				$this->data['status'] = 'category';
 			}
 		}
 		// add the config in the data object
@@ -40,7 +38,7 @@ class Main extends Controller {
 			$page = new Page();
 			$page->get_page_from_path($this->data['path']);
 		}
-		
+
 		// see if we have found a page
 		if( $page->get('id') ){
 			// store the information of the page
@@ -52,6 +50,7 @@ class Main extends Controller {
 			
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
+			$this->data['status'] = 'page';
 			$this->data['body'][] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );
 			return true;
@@ -72,6 +71,7 @@ class Main extends Controller {
 				$data['view'] = getPath('views/main/category.php');
 				$this->data['body'][] = $data;
 			}
+			$this->data['status'] = 'category';
 			return true;
 		} else {
 			return false;
@@ -85,6 +85,7 @@ class Main extends Controller {
 		$data['status']= $this->data['status']="new";
 		$data['path']= $this->data['path'];
 		$data['view']= getPath('views/admin/confirm_new.php');
+		$this->data['status'] = 'page';
 		$this->data['body'][] = $data;
 	}
 	

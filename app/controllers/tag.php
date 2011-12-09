@@ -42,8 +42,7 @@ class Tag extends Controller {
 		$pages = $page->retrieve_many("tags like '%".$this->tag."%'");
 		$view = getPath('views/tag/body.php');
 		
-		foreach( $pages as $p ){
-			$data = $p->rs;
+		foreach( $pages as $data ){
 			$data['view'] = $view;
 			$this->data['body'][] = $data;
 		}

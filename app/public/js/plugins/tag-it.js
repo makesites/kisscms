@@ -111,9 +111,13 @@
 		
 		function load_tags (){
 			var tags = fl.val().split(",");
-			$(tags).each(function(){
-				create_choice (this);
-			});
+			if(tags == ""){ 
+				// do nothing
+			} else {
+				$(tags).each(function(){
+					create_choice (this);
+				});
+			}
 			
 		}
 		

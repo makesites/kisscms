@@ -19,7 +19,6 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 	<textarea id="content" name="content"><?=$content?></textarea>
 
 	<label for="tags">Tags</label>
-    
 	<input type="text" name="tags" id="tags" value="<?=$tags?>" />
 	
     <label for="template">Template</label>
@@ -29,9 +28,9 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 </form>
 
 <script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=myUrl('',true)?>/js/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=myUrl('',true)?>/js/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=myUrl('',true)?>/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=myCDN()?>js/libs/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=myCDN()?>js/libs/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?=myCDN()?>js/plugins/tag-it.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
 	$(document).ready(function(){

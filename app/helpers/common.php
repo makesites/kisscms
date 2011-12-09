@@ -38,16 +38,17 @@ function isStatic( $file ) {
 	if( $file == WEB_FOLDER) return false;
 	// FIX: clean webfolder from path before comparing
 	$file = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $file);
+	$root = rtrim($_SERVER['DOCUMENT_ROOT'],"/")."/";
 	
 	// check in the document root
-	if ( file_exists( $_SERVER['DOCUMENT_ROOT'].$file ) ) {
-		$target = $_SERVER['DOCUMENT_ROOT'].$file;
+	if ( file_exists( $root.$file ) ) {
+		$target = $root.$file;
 		return $target;
 	} 
 	// check in the app public folders
 	if( defined("APP") ){
-		if ( file_exists( APP."public".$file ) ) {
-			$target = APP."public".$file;
+		if ( file_exists( APP."public/".$file ) ) {
+			$target = APP."public/".$file;
 			return $target;
 		}
 		if (is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
@@ -55,8 +56,8 @@ function isStatic( $file ) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
 				} 
-				if ( is_dir($plugin) && file_exists( APP."plugins/".$plugin."/public".file ) ) {
-					$target = APP."plugins/".$plugin."/public".file;
+				if ( is_dir($plugin) && file_exists( APP."plugins/".$plugin."/public/".file ) ) {
+					$target = APP."plugins/".$plugin."/public/".file;
 					return $target;
 				}
 			}
@@ -64,8 +65,8 @@ function isStatic( $file ) {
 	}
 	// check in the base public folders
 	if( defined("BASE") ){
-		if ( file_exists( BASE."public".$file ) ) {
-			$target = BASE."public".$file;
+		if ( file_exists( BASE."public/".$file ) ) {
+			$target = BASE."public/".$file;
 			return $target;
 		}
 		if (is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
@@ -73,8 +74,8 @@ function isStatic( $file ) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
 				} 
-				if ( is_dir($plugin) && file_exists( BASE."plugins/".$plugin."/public".file ) ) {
-					$target = BASE."plugins/".$plugin."/public".file;
+				if ( is_dir($plugin) && file_exists( BASE."plugins/".$plugin."/public/".file ) ) {
+					$target = BASE."plugins/".$plugin."/public/".file;
 					return $target;	
 				}
 			}

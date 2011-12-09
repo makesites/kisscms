@@ -116,6 +116,9 @@ function getFile($filename) {
 		default: $ctype="text/html"; 
     } 
 
+	// FIX: exit if this is a directory
+	if( is_dir($filename) ) return false;
+	
 	$output = file_get_contents( $filename );
 	header("Content-Type: $ctype"); 
     return $output;

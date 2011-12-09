@@ -18,7 +18,7 @@
     <header>
     	<div id="nav" class="pink-gd r5"><? Menu::view(); ?></div>
         
-        <h1><a href="/"><?=$config['main']['site_name']?></a></h1>
+        <h1><a href="<?=myUrl()?>"><?=$config['main']['site_name']?></a></h1>
 
     </header>
     

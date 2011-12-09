@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
 <link rel="stylesheet" href="<?=myCDN()?>/css/style.css">
-<link type="text/plain" rel="author" href="/humans.txt" />
+<link type="text/plain" rel="author" href="<?=myUrl()?>/humans.txt" />
 
 <script type="text/javascript" src="<?=myCDN()?>/js/libs/require.js"></script>
 <script type="text/javascript" src="<?=myCDN()?>/js/libs/modernizr-1.7.min.js"></script>

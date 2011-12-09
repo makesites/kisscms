@@ -17,8 +17,8 @@
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-<link rel="stylesheet" href="<?=myCDN()?>css/style.css">
+<link rel="stylesheet" href="<?=myCDN()?>/css/style.css">
 <link type="text/plain" rel="author" href="/humans.txt" />
 
-<script type="text/javascript" src="<?=myCDN()?>js/libs/require.js"></script>
-<script type="text/javascript" src="<?=myCDN()?>js/libs/modernizr-1.7.min.js"></script>
+<script type="text/javascript" src="<?=myCDN()?>/js/libs/require.js"></script>
+<script type="text/javascript" src="<?=myCDN()?>/js/libs/modernizr-1.7.min.js"></script>

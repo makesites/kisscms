@@ -50,7 +50,7 @@ class Main extends Controller {
 			
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
-			$this->data['status'] = 'page';
+			$this->data['status'] = 'view-page';
 			$this->data['body'][] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );
 			return true;
@@ -71,7 +71,7 @@ class Main extends Controller {
 				$data['view'] = getPath('views/main/category.php');
 				$this->data['body'][] = $data;
 			}
-			$this->data['status'] = 'category';
+			$this->data['status'] = 'view-category';
 			return true;
 		} else {
 			return false;
@@ -85,7 +85,6 @@ class Main extends Controller {
 		$data['status']= $this->data['status']="new";
 		$data['path']= $this->data['path'];
 		$data['view']= getPath('views/admin/confirm_new.php');
-		$this->data['status'] = 'page';
 		$this->data['body'][] = $data;
 	}
 	

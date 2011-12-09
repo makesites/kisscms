@@ -1,7 +1,6 @@
 <div id="admin-topbar">
 	<h3><a href="http://kisscms.com/" title="Made with love...">KISSCMS</a></h3>
 	<ul>
-    <?=$status?>
 <?php if( !isset( $status ) ){ ?>
 		<li><a href="<?=myUrl("admin/edit/$id", true)?>">Edit page</a></li>
 <?php } elseif(  isset( $status ) && $status == "new" ) { ?>

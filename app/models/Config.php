@@ -12,10 +12,10 @@ class Config extends Model {
 
   static function register($table, $key, $value="") {
 	// stop if variable already available
-	if(array_key_exists($table, $GLOBALS['config']) && array_key_exists($key, $GLOBALS['config'][$table])) return false;
+	if($GLOBALS['config'] && array_key_exists($table, $GLOBALS['config']) && array_key_exists($key, $GLOBALS['config'][$table])) return false;
 	
 	// then check if the table exists
-	if(!array_key_exists($table, $GLOBALS['config'])){
+	if($GLOBALS['config'] && !array_key_exists($table, $GLOBALS['config'])){
 		$config = new Config(0, $table);
 		$config->create_table($table, implode(",", array_keys( $config->rs )) );
 		$GLOBALS['config'][$table] = array();

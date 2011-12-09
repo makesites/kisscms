@@ -36,7 +36,9 @@ function findController($url) {
 function isStatic( $file ) {
 	// FIX: Bail out if this is the root
 	if( $file == WEB_FOLDER) return false;
-	var_dump( $file );
+	// FIX: clean webfolder from path before comparing
+	$file = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $file);
+	
 	// check in the document root
 	if ( file_exists( $_SERVER['DOCUMENT_ROOT'].$file ) ) {
 		$target = $_SERVER['DOCUMENT_ROOT'].$file;

@@ -40,7 +40,7 @@ if(IS_LOCALHOST){
 // include a BASE constant here if this is a clone site
 	define('BASE', APP);
 // the url of your cdn, if you're using one
-	define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . '/'); 
+	define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . WEB_FOLDER); 
 }
 */
 

@@ -22,7 +22,7 @@ class Config extends Model {
 	}
 
 	// just create the key
-	if( array_key_exists($table, $GLOBALS['config']) && !array_key_exists($key, $GLOBALS['config'][$table])) {
+	if($GLOBALS['config'] && array_key_exists($table, $GLOBALS['config']) && !array_key_exists($key, $GLOBALS['config'][$table])) {
 		$config = new Config(0, $table);
 		$config->set('key', "$key");
 		$config->set('value', "$value");

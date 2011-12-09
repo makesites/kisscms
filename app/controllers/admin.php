@@ -86,6 +86,7 @@ class Admin extends Controller {
 	  	// show the configuration
 	  	//$this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);
 	  	$data['view']= getPath('views/admin/config.php');
+		$this->data['status']= "config";
 	  	$this->data['body'][] = $data;
 		$this->data['template']= ADMIN_TEMPLATE;
 		

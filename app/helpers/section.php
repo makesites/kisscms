@@ -54,7 +54,7 @@ class Section {
 	}
 	
 	public static function ul($vars=false, $data=false){
-		$view = 'default';
+		$view = 'ul';
 		$class = get_called_class();
 		Section::view($view, $vars, $data, $class);
 	}

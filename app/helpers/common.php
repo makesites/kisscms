@@ -15,21 +15,18 @@ function findController($url) {
 	// fix - remove last match if empty
 	if(isset($matches[count($matches)-1]) && $matches[count($matches)-1]==''){ array_pop( $matches ); }
 	// first match is always the contoller
-	$controller = (isset($matches[1])) ? $matches[1]: null;
+	$controller = (isset($matches[1])) ? $matches[1]: DEFAULT_ROUTE;
 	// check if the controller exists
 	$controllerfile= getPath('controllers/'.$controller.'.php');
 	if (preg_match('#^[A-Za-z0-9_-]+$#',$controller) && file_exists($controllerfile)){
-		// do nothing
+		// include the controller file 
+		require( $controllerfile );
+		// return the controller name with the first letter uppercase
+		return ucfirst( $controller );
 	} else {
-		// pass all other requests to the "main" controller
-		$controller= DEFAULT_ROUTE;
-		$controllerfile= getPath('controllers/'. DEFAULT_ROUTE .'.php');;
+		return false;
 	}
 	
-	// ultimately include the controller file 
-	require( $controllerfile );
-	// return the controller name with the first letter uppercase
-	return ucfirst( $controller );
 }
 
 // Get the output from the file in the public folders

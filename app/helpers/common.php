@@ -14,8 +14,8 @@ function findController($url) {
 	preg_match('#^([^/]+)/?(.*)$#', $requri, $matches);
 	// fix - remove last match if empty
 	if(isset($matches[count($matches)-1]) && $matches[count($matches)-1]==''){ array_pop( $matches ); }
-	// first match is always the contoller
-	$controller = (isset($matches[1]) && preg_match('#^[A-Za-z0-9_-]+$#', $matches[1])) ? $matches[1]: false;
+	// first match is always the contoller - add it if it exists, is made out of alphanumeric chars and is not empty...
+	$controller = (isset($matches[1]) && preg_match('#^[A-Za-z0-9_-]+$#', $matches[1]) && !empty($matches[1])) ? $matches[1]: false;
 	// check if the controller exists
 	$controllerfile = getPath('controllers/'.$controller.'.php');
 	// check if what we found is sane

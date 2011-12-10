@@ -24,7 +24,7 @@ function findController($url) {
 		$controller = DEFAULT_ROUTE;
 		$controllerfile = getPath('controllers/'.$controller.'.php');
 	}
-	var_dump($controller);
+	var_dump(DEFAULT_ROUTE);
 	// include the controller file 
 	require( $controllerfile );
 	// return the controller name with the first letter uppercase

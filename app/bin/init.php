@@ -198,7 +198,7 @@ function requireOnly($folder='', $only=array() ){
 	$files = $app = $base = $plugins = array();
 	
 	// all the files that have a full path
-	$files = glob("$folder/*",GLOB_BRACE);
+	$files = glob("$folder/$file",GLOB_BRACE);
 	if(!$files) $files = array();
 
 	foreach($only as $file){
@@ -207,14 +207,14 @@ function requireOnly($folder='', $only=array() ){
 			$search = glob(APP."$folder/$file",GLOB_BRACE);
 			if($search) $app = array_merge( $app, (array)$search );
 			// check the plugins subfolder
-			$search = glob(APP."plugins/$folder/$file",GLOB_BRACE);
+			$search = glob(APP."plugins/*/$folder/$file",GLOB_BRACE);
 			if($search) $app = array_merge( $app, (array)$search );
 		}	
 		if( defined("BASE") ){
 			$search = glob(BASE."$folder/$file",GLOB_BRACE);
 			if($search) $base = array_merge( $base, (array)$search );
 			// check the plugins subfolder
-			$search = glob(BASE."plugins/$folder/$file",GLOB_BRACE);
+			$search = glob(BASE."plugins/*/$folder/$file",GLOB_BRACE);
 			if($search) $base = array_merge( $base, (array)$search );
 
 			// compare the files and exclude all the APP overrides 

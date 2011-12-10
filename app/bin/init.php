@@ -13,17 +13,14 @@
 lookUpDirs();
 
 requireAll( "lib" );
-// by default load the mvc.php first
-requireAll( "helpers", null, array("mvc.php") );
+// by default load the mvc.php first - which should only be one!
+requireAll( "helpers", false, array("mvc.php") );
+// load all the models (dependent on helpers)
 requireAll( "models" );
-// include config and other initiators
-requireAll( dirname(__FILE__), array("init.php") );
-// include plugins
-requireOnly( "plugins", array("bin/init.php") );
-if( defined("PLUGINS") ){
-	requireOnly( PLUGINS, array("bin/init.php"));
-}
-
+// load all initializations
+requireOnly( "bin", array("init.php") );
+// load config and other initiators (dependent on helpers)
+requireAll( "bin", array("init.php") );
 
 
 //===============================================
@@ -37,12 +34,12 @@ session_start();
 //===============================================
 // first check if this is a "static" asset
 $url = parse_url( $_SERVER['REQUEST_URI'] );
+
 if ($output = isStatic($url['path']) ) {
 	echo getFile( $output );
 	exit;
 } else {
-	$controller = findController($url['path']);
-	
+	$controller = findController($url['path']);	
 }
 //requestParserCustom($controller,$action,$params);
 
@@ -71,11 +68,10 @@ function lookUpDirs(){
 function requireAll($folder='', $exclude=array(), $priority=array()){
 	
 	// find all the files in the APP, BASE and the folder
-	$files = $app = $base = $exception = $priorities = array();
+	$files = $app = $base = $plugins = $exception = $priorities = array();
 	
 	// all the files that have a full path
 	$files = glob("$folder/*",GLOB_BRACE);
-	
 	if(!$files) $files = array();
 
 	// all the files in the exception list
@@ -85,13 +81,24 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 			if(!$exception) $exception = array();
 			if( defined("APP") ){ 
 				$search = glob(APP."$folder/$file",GLOB_BRACE);
-				$exception =  array_merge( $exception, (array)$search );
+				if($search) $exception =  array_merge( $exception, (array)$search );
+				// check the plugins subfolder
+				$search = glob(APP."plugins/*/$folder/$file",GLOB_BRACE);
+				if($search) $exception =  array_merge( $exception, (array)$search );
 			}
 			if( defined("BASE") ){ 
 				$search = glob(BASE."$folder/$file",GLOB_BRACE);
-				$exception = array_merge( $exception, (array)$search );
+				if($search) $exception = array_merge( $exception, (array)$search );
+				// check the plugins subfolder
+				$search = glob(BASE."plugins/*/$folder/$file",GLOB_BRACE);
+				if($search) $exception =  array_merge( $exception, (array)$search );
 			}
-			
+			// check in the plugins directory
+			if( defined("PLUGINS")){
+				$search = glob(PLUGINS."*/$folder/$file",GLOB_BRACE);
+				if($search) $exception = array_merge( $exception, (array)$search );
+
+			}
 		}
 	}
 	// all the files in the priority list
@@ -101,11 +108,23 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 			if(!$priorities) $priorities = array();
 			if( defined("APP") ){ 
 				$search = glob(APP."$folder/$file",GLOB_BRACE);
-				$priorities =  array_merge( $priorities, (array)$search );
+				if($search) $priorities =  array_merge( $priorities, (array)$search );
+				// check the plugins subfolder
+				$search = glob(APP."plugins/*/$folder/$file",GLOB_BRACE);
+				if($search) $priorities =  array_merge( $priorities, (array)$search );
 			}
 			if( defined("BASE") ){ 
 				$search = glob(BASE."$folder/$file",GLOB_BRACE);
-				$priorities = array_merge( $priorities, (array)$search );
+				if($search) $priorities = array_merge( $priorities, (array)$search );
+				// check the plugins subfolder
+				$search = glob(BASE."plugins/*/$folder/$file",GLOB_BRACE);
+				if($search) $priorities =  array_merge( $priorities, (array)$search );
+			}
+			// check in the plugins directory
+			if( defined("PLUGINS")){
+				$search = glob(PLUGINS."*/$folder/$file",GLOB_BRACE);
+				if($search) $priorities =  array_merge( $priorities, (array)$search );
+
 			}
 		}
 	}
@@ -113,14 +132,21 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	
 	// look into the app folder
 	if( defined("APP") ){
-		$app = glob(APP."$folder/*",GLOB_BRACE);
-		if(!$app) $app = array();
+		$search = glob(APP."$folder/*",GLOB_BRACE);
+		if($search) $app = array_merge( $app, (array)$search );
+		// check the plugins subfolder
+		$search = glob(APP."plugins/*/$folder/*",GLOB_BRACE);
+		if($search) $app =  array_merge( $app, (array)$search );
 	}
-	
+
 	// look into the base folder
 	if( defined("BASE") ){
-		$base = glob(BASE."$folder/*",GLOB_BRACE);
-		if(!$base) $base = array();
+		$search = glob(BASE."$folder/*",GLOB_BRACE);
+		if($search) $base =  array_merge( $base, (array)$search );
+		// check the plugins subfolder
+		$search = glob(BASE."plugins/*/$folder/*",GLOB_BRACE);
+		if($search) $base =  array_merge( $base, (array)$search );
+		
 		// compare the files and exclude all the APP overrides 
 		foreach($base as $key=>$file){
 			// remove the path
@@ -128,14 +154,19 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 			// see if the target exists in the app folder
 			if(file_exists(APP.$target)){
 				// remove it from the array
-				$base[$key] = null;
+				unset($base[$key]);
 			}
 		}
+	}
+	// look into the plugins folder
+	if( defined("PLUGINS") ){
+		$plugins = glob(PLUGINS."*/$folder/*",GLOB_BRACE);
+		if(!$plugins) $plugins = array();
 	}
 	
 	
 	// merge all the arrays together
-	$files = array_merge( $files, $base, $app );
+	$files = array_merge( $files, $base, $app, $plugins );
 
 	// remove all the files in the exclude list
 	foreach($exception as $key=>$file){
@@ -164,7 +195,7 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 function requireOnly($folder='', $only=array() ){
 	
 	// find all the files in the APP, BASE and the folder
-	$files = $app = $base = array();
+	$files = $app = $base = $plugins = array();
 	
 	// all the files that have a full path
 	$files = glob("$folder/*",GLOB_BRACE);
@@ -173,14 +204,19 @@ function requireOnly($folder='', $only=array() ){
 	foreach($only as $file){
 		
 		if( defined("APP") ){
-			$search = glob(APP."$folder/*/$file",GLOB_BRACE);
-			$app = array_merge( $app, (array)$search );
-			if(!$app) $app = array();
+			$search = glob(APP."$folder/$file",GLOB_BRACE);
+			if($search) $app = array_merge( $app, (array)$search );
+			// check the plugins subfolder
+			$search = glob(APP."plugins/$folder/$file",GLOB_BRACE);
+			if($search) $app = array_merge( $app, (array)$search );
 		}	
 		if( defined("BASE") ){
-			$search = glob(BASE."$folder/*/$file",GLOB_BRACE);
-			$base = array_merge( $base, (array)$search );
-			if(!$base) $base = array();
+			$search = glob(BASE."$folder/$file",GLOB_BRACE);
+			if($search) $base = array_merge( $base, (array)$search );
+			// check the plugins subfolder
+			$search = glob(BASE."plugins/$folder/$file",GLOB_BRACE);
+			if($search) $base = array_merge( $base, (array)$search );
+
 			// compare the files and exclude all the APP overrides 
 			foreach($base as $key=>$file){
 				// remove the path
@@ -188,13 +224,16 @@ function requireOnly($folder='', $only=array() ){
 				// see if the target exists in the app folder
 				if(file_exists(APP.$target)){
 					// remove it from the array
-					$base[$key] = null;
+					unset($base[$key]);
 				}
 			}
 		}
-		
+		if( defined("PLUGINS") ){
+			$search = glob(PLUGINS."*/$folder/$file",GLOB_BRACE);
+			if($search) $plugins = array_merge( $plugins, (array)$search );
+		}
 		// merge all the arrays together
-		$files = array_merge( $files, $base, $app );
+		$files = array_merge( $files, $base, $app, $plugins );
 
 	}
 	

@@ -26,10 +26,12 @@ function findController($url) {
 			$controllerfile = getPath('controllers/'.$controller.'.php');
 		}
 	}
-	// include the controller file 
-	require( $controllerfile );
-	// return the controller name with the first letter uppercase
-	return ucfirst( $controller );
+	if( !empty( $controllerfile) ) {
+		// include the controller file 
+		require( $controllerfile );
+		// return the controller name with the first letter uppercase
+		return ucfirst( $controller );
+	}
 }
 
 // Get the output from the file in the public folders

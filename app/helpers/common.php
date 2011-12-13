@@ -21,8 +21,10 @@ function findController($url) {
 	// check if what we found is sane
 	if (!$controller || !file_exists($controllerfile)){
 		// find the default controller 
-		$controller = DEFAULT_ROUTE;
-		$controllerfile = getPath('controllers/'.$controller.'.php');
+		if( defined("DEFAULT_ROUTE") ){
+			$controller = DEFAULT_ROUTE;
+			$controllerfile = getPath('controllers/'.$controller.'.php');
+		}
 	}
 	// include the controller file 
 	require( $controllerfile );

@@ -239,7 +239,8 @@ function requireOnly($folder='', $only=array() ){
 	
 	// require all the files found
 	foreach($files as $file){
-		if( is_file( $file )) require_once( $file );
+		// finally exclude the file that is running
+		if( is_file( $file ) && $file != __FILE__ ) require_once( $file );
 	}
 	
 }

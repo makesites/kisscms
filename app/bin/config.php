@@ -5,7 +5,7 @@
 // KISSCMS Settings 
 //===============================================
 
-if( class_exists('Page') && method_exists(new Page(),'register')){ 
+if( class_exists('Config') && method_exists(new Config(),'register')){ 
 	$config = new Config();
 	$GLOBALS['config'] = $config->getConfig();
 	

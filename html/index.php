@@ -49,10 +49,10 @@ if(IS_LOCALHOST){
 //===============================================
 if (defined("APP") && is_file(APP.'bin/init.php')){ 
 	// find the clone file first
-	require(APP.'bin/init.php');
+	require_once(APP.'bin/init.php');
 } elseif (defined("BASE") && is_file(BASE.'bin/init.php')) {
 	// find the core file second
-	require(BASE.'bin/init.php');
+	require_once(BASE.'bin/init.php');
 } else {
 	quit("Website Offline");
 }

@@ -209,6 +209,10 @@ function myUrl($path='',$fullurl=true){
 	if( $path != '' ){ 
 		$url .= $path;
 	}
+	
+	// FIX: Remove the ending slash
+	$url = ( substr($url, -1) == "/" ) ? substr($url, 0, -1) : $url;
+	 
   	return $url;
 }
 

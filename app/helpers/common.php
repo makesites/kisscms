@@ -194,8 +194,6 @@ function getPath( $file ) {
 
 
 function url($file=''){
-	// remove leading slash, if any 
-	$file = ( substr($file, 0) == "/" ) ? substr($file, 1) : $file;
 	// get the full uri for the file
 	$uri = uri($file);
 	// check if it is a static
@@ -220,9 +218,11 @@ function url($file=''){
 }
 
 function uri($file=''){
+	// remove leading slash, if any 
+	$file = ( substr($file, 0) == "/" ) ? substr($file, 1) : $file;
 	// add the web folder
 	$uri = WEB_FOLDER;
-	// add path if available
+	// add file if available
 	if( $file != '' ){ 
 		$uri .= $file;
 	}	

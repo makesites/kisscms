@@ -217,7 +217,7 @@ function url($file=''){
 
 function uri($file=''){
 	// add the web folder
-	$uri .= WEB_FOLDER;
+	$uri = WEB_FOLDER;
 	// add path if available
 	if( $file != '' ){ 
 		$uri .= $file;

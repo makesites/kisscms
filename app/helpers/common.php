@@ -193,43 +193,36 @@ function getPath( $file ) {
 }
 
 
-function myUrl($path='',$fullurl=true){
-	$url = '';
-	// first check if we want the full url
-	if( $fullurl ){ 
-		$url = 'http://'.$_SERVER['SERVER_NAME'];
+function url($file=''){
+	$uri = uri($file);
+	if( isStatic( $uri ) && defined("CDN")){ 
+		// load the cdn address instead
+		// remove trailing slash, if any 
+		$server = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		
+	} else { 
+		// load the regular server address
+		$server = ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? 'http://'.substr($_SERVER['SERVER_NAME'], 0, -1) : 'http://'.$_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
 		if( $_SERVER['SERVER_PORT'] != "80" ){ 
-			$url .= ":".$_SERVER['SERVER_PORT'];
+			$server .= ":".$_SERVER['SERVER_PORT'];
 		}
-		//if( $_SERVER['REMOTE_PORT'] != 80 ){ 
-		//	$url .= ":".$_SERVER['REMOTE_PORT'];
-		//}
-	}
-	// add the web folder
-	$url .= WEB_FOLDER;
-	// add path if available
-	if( $path != '' ){ 
-		$url .= $path;
 	}
 	
-	// FIX: Remove the ending slash
-	$url = ( substr($url, -1) == "/" ) ? substr($url, 0, -1) : $url;
-	 
+	// add the uri
+	$url = $server . $uri;
+	
   	return $url;
 }
 
-
-function myCDN(){
-	// first check if we have already defined a CDN
-	if (defined("CDN")){
-		// remove trailing slash, if any 
-		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
-		return $url;
-	} else {
-		// fallback to the domain name
-		return myUrl();
-	}
+function uri($file=''){
+	// add the web folder
+	$uri .= WEB_FOLDER;
+	// add path if available
+	if( $file != '' ){ 
+		$uri .= $file;
+	}	
+	return $uri;
 }
 
 
@@ -420,6 +413,48 @@ function get_called_class($bt = false,$l = 1) {
     } 
 } 
 } 
+
+
+// DEPRECATED
+
+function myUrl($path='',$fullurl=true){
+	$url = '';
+	// first check if we want the full url
+	if( $fullurl ){ 
+		$url = 'http://'.$_SERVER['SERVER_NAME'];
+		// add server port to the domain if not the default one
+		if( $_SERVER['SERVER_PORT'] != "80" ){ 
+			$url .= ":".$_SERVER['SERVER_PORT'];
+		}
+		//if( $_SERVER['REMOTE_PORT'] != 80 ){ 
+		//	$url .= ":".$_SERVER['REMOTE_PORT'];
+		//}
+	}
+	// add the web folder
+	$url .= WEB_FOLDER;
+	// add path if available
+	if( $path != '' ){ 
+		$url .= $path;
+	}
+	
+	// FIX: Remove the ending slash
+	$url = ( substr($url, -1) == "/" ) ? substr($url, 0, -1) : $url;
+	 
+  	return $url;
+}
+
+
+function myCDN(){
+	// first check if we have already defined a CDN
+	if (defined("CDN")){
+		// remove trailing slash, if any 
+		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		return $url;
+	} else {
+		// fallback to the domain name
+		return myUrl();
+	}
+}
 
 
 

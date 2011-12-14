@@ -199,9 +199,12 @@ function myUrl($path='',$fullurl=true){
 	if( $fullurl ){ 
 		$url = 'http://'.$_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
-		if( $_SERVER['SERVER_PORT'] != 80 ){ 
+		if( $_SERVER['SERVER_PORT'] != "80" ){ 
 			$url .= ":".$_SERVER['SERVER_PORT'];
 		}
+		//if( $_SERVER['REMOTE_PORT'] != 80 ){ 
+		//	$url .= ":".$_SERVER['REMOTE_PORT'];
+		//}
 	}
 	// add the web folder
 	$url .= WEB_FOLDER;

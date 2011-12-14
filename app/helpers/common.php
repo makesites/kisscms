@@ -194,7 +194,11 @@ function getPath( $file ) {
 
 
 function url($file=''){
+	// remove leading slash, if any 
+	$file = ( substr($file, 0) == "/" ) ? substr($file, 1) : $file;
+	// get the full uri for the file
 	$uri = uri($file);
+	// check if it is a static
 	if( isStatic( $uri ) && defined("CDN")){ 
 		// load the cdn address instead
 		// remove trailing slash, if any 

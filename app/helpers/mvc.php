@@ -135,6 +135,16 @@ class Controller extends KISS_Controller {
 	
 	public $data;
 	
+	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
+		// add the config in the data object
+		$this->data['config'] = $GLOBALS['config'];
+		// set the template the controller is using
+		$classname = get_class($this);
+		$this->data['template']= ( is_file( TEMPLATES.$classname ) ) ? $classname .".php" : DEFAULT_TEMPLATE .".php";
+		
+		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
+	}
+	
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {		
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
@@ -214,6 +224,11 @@ class Controller extends KISS_Controller {
 		exit;
 	}
 
+	
+	function render() {
+		// display the page
+		Template::output($this->data);
+	}
 
 }
 

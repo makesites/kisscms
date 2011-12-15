@@ -139,8 +139,8 @@ class Controller extends KISS_Controller {
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		// set the template the controller is using
-		$classname = get_class($this);
-		$this->data['template']= ( is_file( TEMPLATES.$classname ) ) ? $classname .".php" : DEFAULT_TEMPLATE .".php";
+		$template = get_class($this) .".php";
+		$this->data['template']= ( is_file( TEMPLATES.$template ) ) ? $template : DEFAULT_TEMPLATE ;
 		
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}

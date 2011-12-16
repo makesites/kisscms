@@ -219,8 +219,13 @@ class Controller extends KISS_Controller {
 		$this->redirect('admin/login');
 	}
 
-	function redirect($path) {
-		header('Location: '.url($path));
+	function redirect($path, $window=false) {
+		if($window != "top"){ 
+			header('Location: '.url($path));
+		} else {
+			echo "<script type='text/javascript'>top.location.href = '". $path ."';</script>";
+		}
+		
 		exit;
 	}
 

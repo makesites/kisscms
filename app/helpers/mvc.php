@@ -163,13 +163,13 @@ class Controller extends KISS_Controller {
 	}
 
 	//This function maps the controller name and function name to the file location of the .php file to include
-	function route_request() {
+	function route_request( $route=false) {
 		$controller = $this->default_controller;
 		$function = $this->default_function;
 		$class = strtolower( get_class($this) );
 		$params = array();
 
-		$p = $this->request_uri_parts;
+		$p = ( !$route ) ? $this->request_uri_parts : $route;
 		//findController($url)
 		if (isset($p[0]) && $p[0] == $class) {
 			$controller=$p[0];
@@ -219,12 +219,11 @@ class Controller extends KISS_Controller {
 		$this->redirect('admin/login');
 	}
 
-	function redirect($url,$alertmsg='') {
-		header('Location: '.myUrl($url));
+	function redirect($path) {
+		header('Location: '.url($path));
 		exit;
 	}
 
-	
 	function render() {
 		// display the page
 		Template::output($this->data);

@@ -15,15 +15,15 @@ class Meta {
 	}
 	
 	function title(){
-		echo ( $GLOBALS['meta']['title'] ) ? $GLOBALS['meta']['title'] : $GLOBALS['config']['main']['site_name'];
+		echo ( array_key_exists('meta', $GLOBALS) && $GLOBALS['meta']['title'] ) ? $GLOBALS['meta']['title'] : $GLOBALS['config']['main']['site_name'];
 	}
 	
 	function description(){
-		echo ( $GLOBALS['meta']['description'] ) ? $GLOBALS['meta']['description'] : $GLOBALS['config']['main']['site_description'];
+		echo (  array_key_exists('meta', $GLOBALS) && $GLOBALS['meta']['description'] ) ? $GLOBALS['meta']['description'] : $GLOBALS['config']['main']['site_description'];
 	}
 	
 	function url($query=false){
-		if( $GLOBALS['meta']['url'] ) {
+		if(  array_key_exists('meta', $GLOBALS) && $GLOBALS['meta']['url'] ) {
 			echo $GLOBALS['meta']['url'];
 		} else {
 			$url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];

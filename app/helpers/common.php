@@ -219,7 +219,7 @@ function url($file=''){
 
 function uri($file=''){
 	// remove leading slash, if any 
-	$file = ( substr($file, 0) == "/" ) ? substr($file, 1) : $file;
+	$file = ( substr($file, 0, 1) == "/" ) ? substr($file, 1) : $file;
 	// add the web folder
 	$uri = WEB_FOLDER;
 	// add file if available

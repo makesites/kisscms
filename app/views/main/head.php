@@ -11,6 +11,7 @@
 <meta property="og:image" content="<?=url('/apple-touch-icon-114x114-precomposed.png')?>" />
 <meta property="og:site_name" content="<?=$config['main']['site_name']?>" />
 <meta property="og:description" content="<? Meta::description(); ?>" />
+<meta property="og:locale" content="en_US" />
 
 <base href="<?=url('/')?>" />
 

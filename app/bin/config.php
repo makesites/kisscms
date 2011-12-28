@@ -37,8 +37,9 @@ if( class_exists('Config') && method_exists(new Config(),'register')){
 }
 
 //===============================================
-// Debug
+// PHP.INI configuration
 //===============================================
+ini_set('session.gc_maxlifetime',300);
 ini_set('display_errors','On');
 error_reporting(E_ALL);
 

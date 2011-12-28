@@ -197,12 +197,12 @@ function requireOnly($folder='', $only=array() ){
 	// find all the files in the APP, BASE and the folder
 	$files = $app = $base = $plugins = array();
 	
-	// all the files that have a full path
-	$files = glob("$folder/$file",GLOB_BRACE);
-	if(!$files) $files = array();
-
 	foreach($only as $file){
 		
+		// all the files that have a full path
+		$files = glob("$folder/$file",GLOB_BRACE);
+		if(!$files) $files = array();
+
 		if( defined("APP") ){
 			$search = glob(APP."$folder/$file",GLOB_BRACE);
 			if($search) $app = array_merge( $app, (array)$search );

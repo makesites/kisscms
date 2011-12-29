@@ -10,10 +10,6 @@ class Archives extends Controller {
 		
 		$this->data['date'] = implode("-", $path);
 		
-		$this->data['config'] = $GLOBALS['config'];
-		
-		$this->data['status'] = 'archives';
-		
 		// load the index
 		$this->render();
 	}

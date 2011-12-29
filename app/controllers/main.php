@@ -19,10 +19,6 @@ class Main extends Controller {
 				$this->requestNewPage();
 			}
 		}
-		// add the config in the data object
-		$this->data['config'] = $GLOBALS['config'];
-		
-		//$this->data['body']['main']= View::do_fetch( getPath('views/main/body.php'), $this->data);
 		
 		// display the page
 		Template::output($this->data);
@@ -50,7 +46,6 @@ class Main extends Controller {
 			
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
-			$this->data['status'] = 'view-page';
 			$this->data['body'][] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );
 			return true;
@@ -71,7 +66,6 @@ class Main extends Controller {
 				$data['view'] = getPath('views/main/category.php');
 				$this->data['body'][] = $data;
 			}
-			$this->data['status'] = 'view-category';
 			return true;
 		} else {
 			return false;

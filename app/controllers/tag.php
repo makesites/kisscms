@@ -15,10 +15,6 @@ class Tag extends Controller {
 		
 		$this->tag = $params;
 		
-		$this->data['config'] = $GLOBALS['config'];
-		
-		$this->data['status'] = 'tag';
-		
 		// load the index
 		$this->render();
 	}

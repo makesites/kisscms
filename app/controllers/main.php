@@ -4,27 +4,30 @@ class Main extends Controller {
 
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function index( $params ) {
-		// load the index
+		
+		
+		// get the page details stored in the database
+		$is_page = $this->getPage();
+		$is_category = $this->getCategoryPages();
+		// check if this is a category page
+		if(!$is_page && !$is_category){
+				$this->getNewPage();
+		}
+		
+		// render the page
 		$this->render();
 	}
 
 	function render() {
-	
-		// get the page details stored in the database
-		$is_page = $this->requestPage();
-		// check if this is a category page
-		if(!$is_page){
-			$is_category = $this->requestCategoryPages();
-			if(!$is_category){
-				$this->requestNewPage();
-			}
-		}
+		// define a class accroding to the page type 
 		
+		//$this->data['style']= ;
+			
 		// display the page
 		Template::output($this->data);
 	}
 	
-	function requestPage( ) {
+	function getPage( ) {
 		
 		$data = array();
 		// if there is no path, load the index
@@ -55,7 +58,7 @@ class Main extends Controller {
 
 	}
 	
-	function requestCategoryPages() {
+	function getCategoryPages() {
 
 		$page=new Page();
 		$page->tablename = "pages";
@@ -74,12 +77,20 @@ class Main extends Controller {
 	}
 	
 
-	function requestNewPage( ) {
-		// forward to create a new page
-		$data['status']= $this->data['status']="new";
-		$data['path']= $this->data['path'];
-		$data['view']= getPath('views/admin/confirm_new.php');
-		$this->data['body'][] = $data;
+	function getNewPage() {
+		
+		if( array_key_exists('admin', $_SESSION) && $_SESSION['admin'] ){ 
+			// forward to create a new page
+			$data['status']= $this->data['status']="new";
+			$data['path']= $this->data['path'];
+			$data['view']= getPath('views/admin/confirm_new.php');
+			$this->data['body'][] = $data;
+		} else { 
+			// show 404 error if not loggedin
+			$data['view']= getPath('views/main/404.php');
+			$this->data['body'][] = $data;
+		} 
+		
 	}
 	
 

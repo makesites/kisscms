@@ -122,6 +122,10 @@ canvas#tagcloud {
 	margin: 8px 0;
 }
 
+article.error {display:block; text-align: left; width: 500px; margin: 0 auto; }
+article.error span[frown] { transform: rotate(90deg); display:inline-block; color: #bbb; }
+
+
 footer {
 	clear: both;
 	margin-top: 12px;
@@ -130,6 +134,7 @@ footer {
 	font-size: 0.8em;
 	
 }
+
 
 /* Scrollbar */
 ::-webkit-scrollbar {

@@ -141,9 +141,9 @@ class Menu extends Section {
 				// pick only first level pages
 				$path = explode("/", $v['path'] );
 				if(count($path) > 1){ 
-					$items[$path[0]] = array( 'url' =>  myUrl( $path[0], true ), 'title' => ucwords($path[0]) );
+					$items[$path[0]] = array( 'url' =>  url( $path[0] ), 'title' => ucwords($path[0]) );
 				} else {
-					$items[$v['path']] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] );
+					$items[$v['path']] = array( 'url' =>  url( $v['path'] ), 'title' => $v['title'] );
 				}
 			} 
 		}
@@ -169,10 +169,10 @@ class Breadcrumb extends Section {
 		$path = explode("/", $GLOBALS['path']);
 		//$title = $GLOBALS['title'];
 		// always include the homepage
-		$items[] = array("url"=> myUrl( "", false), "title" => "Home" );
+		$items[] = array("url"=> url(), "title" => "Home" );
 
 		foreach($path as $dir){
-			$items[] = array("url"=> myUrl( implode("/", $path) ), "title" => ucwords(end($path)));
+			$items[] = array("url"=> url( implode("/", $path) ), "title" => ucwords(end($path)));
 			array_pop($path);
 		}
 		return $items;
@@ -222,7 +222,7 @@ class Tags extends Section {
 			if(array_key_exists($tag, $items)){
 				$items[$tag]['weight'] += 1;
 			} else {
-				$items[$tag] = array( 'url' =>  myUrl( "tag/".$tag, true ), 'title' => $tag, 'weight' => 1 );
+				$items[$tag] = array( 'url' =>  url( "tag/".$tag, true ), 'title' => $tag, 'weight' => 1 );
 			}
 		}
 		return $items;
@@ -273,7 +273,7 @@ class Archive extends Section {
 				$title = date("F Y", $date );
 				$url = "archives/" . date("Y", $date ) ."/". date("m", $date ) ."/";
 				//$date =  = date("Y", v() );
-				$items[$title] = array( 'url' =>  myUrl( $url, true ), 'title' => $title );
+				$items[$title] = array( 'url' =>  url( $url ), 'title' => $title );
 			} 
 		}
 		$this->data['items'] = $items;
@@ -318,7 +318,7 @@ class LatestUpdates extends Section {
 			$sql = 'SELECT * FROM "pages" ORDER BY "date" DESC LIMIT 10';
 			$results = $dbh->query($sql);
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
-				$items[] = array( 'url' =>  myUrl( $v['path'], true ), 'title' => $v['title'] ." (". date("d-m-Y", strtotime($v['date'])) . ")" );
+				$items[] = array( 'url' =>  url( $v['path'] ), 'title' => $v['title'] ." (". date("d-m-Y", strtotime($v['date'])) . ")" );
 			} 
 		}
 		return $items;

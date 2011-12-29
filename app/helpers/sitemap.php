@@ -28,7 +28,7 @@ class Sitemap {
 	}
 	
 	function makeUrlString($item) {
-		$url = htmlentities( myUrl( $item['path'], true ), ENT_QUOTES, 'UTF-8');
+		$url = htmlentities( url( $item['path'] ), ENT_QUOTES, 'UTF-8');
 		return $url;
 	}
 	

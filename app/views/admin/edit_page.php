@@ -27,15 +27,13 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>
 
-<script src="http://code.jquery.com/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=myCDN()?>js/libs/jquery-ui-1.8.core-and-interactions.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=myCDN()?>js/libs/jquery-ui-1.8.autocomplete.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?=myCDN()?>js/plugins/tag-it.js" type="text/javascript" charset="utf-8"></script>
-
-<script>
+<script type="text/javascript">
+require(['<?=url('/js/libs/jquery-1.5.1.min.js')?>', '<?=url('/js/libs/jquery-ui-1.8.core-and-interactions.min.js')?>', '<?=url('/js/libs/jquery-ui-1.8.autocomplete.min.js')?>', '<?=url('/js/plugins/tag-it.js')?>'], function() {
 	$(document).ready(function(){
 		$("#tags").tagit({
 			availableTags: []
 		});
 	});
+
+});
 </script>

@@ -1,38 +1,39 @@
 ﻿KISSCMS - Content Management made Simple
 =======================================
-A Make Sites production (www.makesit.es)
-Lead Developer: Makis Tracend (makis.tracend@gmail.com)
-Website: http://www.kisscms.com
+A Make Sites production (www.makesites.org) 
+Lead Developer: Makis Tracend (makis@makesit.es) 
+Website: http://www.kisscms.com 
 
 Description
 -----------
-A CMS lightning fast to setup and easy to use. One of the main objectives is to create an environment where editing content is dead simple while at the same time it accomodating in extensibility and customization by lifting unecessary barriers. Although it's origin derives from KISSMVC, a simple PHP MVC framework, it's course is totally diverted and has independednt development. The architecture has also been greatily inspired by the Node.js and jQuery principles. 
+A CMS with minimal footprint written in PHP, following best practices in MVC architecture and with main objective to jump start web development by providing a clean and extensible environment. Highlights include an uncluttered administration area, a zero setup process, wiki-style page creation, a template engine with simplified methods and the automated installation for plugins/extensions. 
 
 
 Setup
 -----
-- Extract the archive and place the content of the kisscms folder wherever you want your website. 
-- The files in the "html" folder should be placed in your web root. All other files on level above it.
-- Open a browser and enter the address of your website. Sample content should already work with no further work.
-- Add "/admin" to your web address to be able to administer your site. Default username/password are: admin/pass 
+1. Extract the archive and place the content of the kisscms folder where you want your website to be located. 
+2. Place the files in the "html" folder should in your web root. All other folders one directory level above it.
+3. Open a browser and enter the address of your website. Sample content should already work with no further effort.
+4. Type "/admin" in your web address to enter the administration area. Default (username/password) are: ** admin / admin **
 
 
 Customization
------
-- Open "index.php" and update the paths according to your server setup. 
-...
+-------------
+The default setup is optimized for a new website with its own domain. If you want an altered setup, please open the file "html/index.php" in a text editor to modify the paths as it's apropriate. The html folder also contains web assets which you can freely modify to create your custom layout. The configuration of basic CMS options is located through the administration bar. For instructions how to extend the CMS with additional logic please refer to the "Reference" section.
 
 
 Upgrading
 ---------
-Although currently there isn't a stellar way of upgrading from previous versions, our aim is to create a simplified process that will require from you to update only the "app" folder of your site. More as we progress on this...
+If you haven't modified anything in the APP folder, upgrading should be as simple as replacing the APP folder with the latest version. For added security you can rename the old app folder and refer to is as a BASE folder so it will operate as a fallback. If you need further assisctance please send a support ticket through the issue tracker on github: 
+<http://github.com/makesites/kisscms/issues>
 
 
-Usage
------
-To create a page, simply enter the address, ex. "mypath/testpage" and in pure wiki-style, the prompt to create the new page will appear. To edit/delete a page you simply click on the corresponding topbar links, available when you are logged in as admin. To extend the website with your own plugins please visit the [kisscms-plugins](http://github.com/makesites/kisscms-plugins) repo which contains examples and walkthroughs how to create your own custom logic...
+Reference
+---------
+For further information how to manage your website, customize it's features and access the methods available to you please refer to the official documentation: 
+<http://kisscms.com/reference>
 
 
 Copyright
 ---------
-This work is released under the terms of the MIT License
+This work is released dual-licensed under the MIT/X11 license and the GNU General Public License (GPL)

@@ -98,10 +98,10 @@ class Admin extends Controller {
 	/*
 	*  CMS Actions
 	*/
-	function create($path=null) {
+	function create($path=false) {
 		
 		$data['status']= $this->data['status']="create";
-		$data['path']= ( isset($path) ) ? implode("/", $path) : $_REQUEST['path'];
+		$data['path']= ( $path ) ? $path : $_REQUEST['path'];
 		$data['tags']= "";
 		$data['view']= getPath('views/admin/edit_page.php');
 		$data['template']= DEFAULT_TEMPLATE;

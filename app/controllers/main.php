@@ -1,17 +1,17 @@
 <?php
 
 class Main extends Controller {
-
+	private $category = false;
+	
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function index( $params ) {
 		
-		
 		// get the page details stored in the database
 		$is_page = $this->getPage();
-		$is_category = $this->getCategoryPages();
+		$is_category = $this->getCategoryPages( $is_page );
 		// check if this is a category page
 		if(!$is_page && !$is_category){
-				$this->getNewPage();
+			$this->getNewPage();
 		}
 		
 		// render the page
@@ -19,9 +19,6 @@ class Main extends Controller {
 	}
 
 	function render() {
-		// define a class accroding to the page type 
-		
-		//$this->data['style']= ;
 			
 		// display the page
 		Template::output($this->data);
@@ -46,6 +43,8 @@ class Main extends Controller {
 			$data['content'] = stripslashes( $page->get('content') );
 			$data['tags'] = stripslashes( $page->get('tags') );
 			$data['date'] = strtotime( stripslashes( $page->get('date') ) );
+			// check if the page has been classified as a category
+			$this->category = strpos( $data['tags'], "category" );
 			
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
@@ -58,8 +57,10 @@ class Main extends Controller {
 
 	}
 	
-	function getCategoryPages() {
+	function getCategoryPages($is_page=false) {
 
+		if( $is_page && !$this->category ) return false; 
+		
 		$page=new Page();
 		$page->tablename = "pages";
 		$pages = $page->retrieve_many("path like '". $this->data['path'] ."%'");

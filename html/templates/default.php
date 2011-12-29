@@ -8,7 +8,7 @@
 	<? Template::head(); ?>
 	
     <link href='http://fonts.googleapis.com/css?family=Orbitron:400,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="<?=myUrl()?>/assets/css/main.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="<?=url("/assets/css/main.css")?>" type="text/css" media="screen" />
   
 </head>
 
@@ -16,9 +16,9 @@
 
   <div class="page">
     <header>
-    	<div id="nav" class="pink-gd r5"><? Menu::view(); ?></div>
+    	<div id="nav" class="pink-gd r5"><? Menu::ul(); ?></div>
         
-        <h1><a href="<?=myUrl()?>"><?=$config['main']['site_name']?></a></h1>
+        <h1><a href="<?=url()?>"><?=$config['main']['site_name']?></a></h1>
 
     </header>
     

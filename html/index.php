@@ -1,9 +1,9 @@
 <?php
-/*****************************************************************
+/********************************************************************************
 KISSCMS -  http://kisscms.com
-A Make Sites (www.makesit.es) production by Makis Tracend
-Licensed under the GNU - http://www.gnu.org/licenses/gpl-2.0.txt
-*****************************************************************/
+A Make Sites (www.makesites.org) production by Makis Tracend
+Dual-licensed under the MIT/X11 license and the GNU General Public License (GPL)
+********************************************************************************/
 
 //===============================================
 // PATHS
@@ -30,19 +30,19 @@ define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/');
 //define('PLUGINS', APP . 'plugins/');
 
 // find if this is running from localhost
-//define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
+define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
 
-/*
+
 if(IS_LOCALHOST){
-// include a BASE constant here if this is a clone site
-	define('BASE', APP);
+// include a BASE constant here if this is a clone site, when you are developing locally
+	//define('BASE', APP);
 } else {
-// include a BASE constant here if this is a clone site
-	define('BASE', APP);
-// the url of your cdn, if you're using one
-	define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . WEB_FOLDER); 
+// include a BASE constant here if this is a clone site, when publically released
+	//define('BASE', APP);
+// the url of your content delivery network, if you're using one
+	//define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . WEB_FOLDER); 
 }
-*/
+
 
 //===============================================
 // Start the controller

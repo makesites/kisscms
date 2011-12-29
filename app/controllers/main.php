@@ -13,6 +13,10 @@ class Main extends Controller {
 		if(!$is_page && !$is_category){
 			$this->getNewPage();
 		}
+		// FIX: add the new page link for category pages
+		if(!$is_page && $is_category){
+			$this->data['status']="new";
+		}
 		
 		// render the page
 		$this->render();
@@ -44,7 +48,7 @@ class Main extends Controller {
 			$data['tags'] = stripslashes( $page->get('tags') );
 			$data['date'] = strtotime( stripslashes( $page->get('date') ) );
 			// check if the page has been classified as a category
-			$this->category = strpos( $data['tags'], "category" );
+			$this->category = ( strpos( $data['tags'], "category" ) > -1) ? true : false;
 			
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
@@ -63,6 +67,10 @@ class Main extends Controller {
 		
 		$page=new Page();
 		$page->tablename = "pages";
+		
+		// add a leading slash to the path
+		$path = ( substr($this->data['path'], -1) == "/" ) ? $this->data['path'] : $this->data['path'].'/';
+		
 		$pages = $page->retrieve_many("path like '". $this->data['path'] ."%'");
 		
 		if( count($pages) > 0 ){ 

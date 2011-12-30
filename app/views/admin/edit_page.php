@@ -29,7 +29,7 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 </form>
 
 <script type="text/javascript">
-require(['<?=url('/js/libs/jquery-1.5.1.min.js')?>', '<?=url('/js/libs/jquery-ui-1.8.core-and-interactions.min.js')?>', '<?=url('/js/libs/jquery-ui-1.8.autocomplete.min.js')?>', '<?=url('/js/plugins/tag-it.js')?>'], function() {
+define(['jquery', '<?=url('/js/libs/jquery-ui-1.8.core-and-interactions.min.js')?>', '<?=url('/js/libs/jquery-ui-1.8.autocomplete.min.js')?>', '<?=url('/js/plugins/tag-it.js')?>'], function() {
 	$(document).ready(function(){
 		$("#tags").tagit({
 			availableTags: []

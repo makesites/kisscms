@@ -19,6 +19,7 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 	<textarea id="content" name="content"><?=$content?></textarea>
 
 	<label for="tags">Tags</label>
+    <p>(Separate tags with commas)</p>
 	<input type="text" name="tags" id="tags" value="<?=$tags?>" />
 	
     <label for="template">Template</label>

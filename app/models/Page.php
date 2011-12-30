@@ -59,8 +59,9 @@ class Page extends Model {
 	
 	// then check if the table exists
 	if(!is_array($table)){
-		$page->create_table("pages", implode(",", array_keys( $page->rs )) );
-		
+		//$page->create_table("pages", implode(",", array_keys( $page->rs )) );
+		// FIX: The id needs to be setup as autoincrement
+		$page->create_table("pages", "id INTEGER PRIMARY KEY ASC, title, content, path, date, tags, template");
 	}
 	
 	$sql = "SELECT * FROM 'pages' WHERE id='$id'";

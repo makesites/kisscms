@@ -33,8 +33,7 @@ class Section {
 	
 	
 	public static function view($view=false, $vars=false, $data=false, $class=false){
-		// static:: method only available for PHP>5.3
-		//$class =  static::getSection();
+		// get the called class if not defined
 		if(!$class){
 			$class = get_called_class();
 		}
@@ -85,10 +84,6 @@ class Section {
 		View::do_dump($this->view, $this->data);
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
-	
 }
 
 
@@ -110,9 +105,6 @@ class Copyright extends Section {
 		}
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 
@@ -150,9 +142,6 @@ class Menu extends Section {
 		return $items;
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 
@@ -177,10 +166,7 @@ class Breadcrumb extends Section {
 		}
 		return $items;
 	}
-	
-	public static function getSection(){
-		return __CLASS__;
-	}
+
 }
 
 
@@ -236,9 +222,6 @@ class Tags extends Section {
 		Section::view($view, $vars, $data, $class);
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 
@@ -249,9 +232,6 @@ class Pagination extends Section {
 		$this->render();
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 
@@ -280,9 +260,6 @@ class Archive extends Section {
 		$this->render();
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 
@@ -294,9 +271,6 @@ class Search extends Section {
 		$this->render();
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 
@@ -324,9 +298,6 @@ class LatestUpdates extends Section {
 		return $items;
 	}
 	
-	public static function getSection(){
-		return __CLASS__;
-	}
 }
 
 

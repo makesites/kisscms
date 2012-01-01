@@ -10,8 +10,6 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
 <p><?=$GLOBALS['language'][$status.'_description']?></p>
 
 <form class="cms-form clearfix" method="post" action="<?=$action?>">
-	<input type="hidden" name="path" value="<?=$path?>" />
-
 	<label for="title">Title</label>
 	<input type="text" id="title" name="title" value="<?=$title?>" />
 
@@ -25,6 +23,11 @@ $action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/u
     <label for="template">Template</label>
     <?=Template::doList($template);?>
     
+    <label for="content">Page URL</label>
+	<p><?=url("$path")?></p>
+	<input type="hidden" name="path" value="<?=$path?>" />
+
+	
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>
 

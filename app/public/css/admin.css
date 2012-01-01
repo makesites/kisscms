@@ -90,10 +90,12 @@ body{
 
 .cms-form  .button {
 	font-size: 24px;
+	font-weight: bold;
 }
 
-.cms-form  .button {
-	font-weight: bold;
+.cms-form  select {
+	font-size: 1.2em;
+	margin-bottom: 12px;
 }
 
 .cms-form  #edit-button {

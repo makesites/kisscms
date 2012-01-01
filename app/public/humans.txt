@@ -3,7 +3,7 @@
 
 
 /* TEAM */
-  Author: Your Name or Company  Site: http://localhost:90  
+  Author: Your Name or Company  Site: http://localhost  
 /* THANKS */
   Makis Tracend (http://makesit.es)
   

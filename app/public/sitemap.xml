@@ -4,30 +4,30 @@
 		http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  
 	<url>
-		<loc>http://localhost</loc>
-		<lastmod>2011-12-29T03:26:41+00:00</lastmod>
+		<loc>http://localhost/</loc>
+		<lastmod>2012-01-01T01:42:05+00:00</lastmod>
 		<changefreq>always</changefreq>
 		<priority>1</priority>
 	</url>
  
 	<url>
 		<loc>http://localhost/about</loc>
-		<lastmod>2011-12-29T03:26:41+00:00</lastmod>
-		<changefreq>always</changefreq>
+		<lastmod>2011-12-29T03:52:32+00:00</lastmod>
+		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
  
 	<url>
 		<loc>http://localhost/customization</loc>
 		<lastmod>2011-12-29T03:21:01+00:00</lastmod>
-		<changefreq>always</changefreq>
+		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
  
 	<url>
 		<loc>http://localhost/links</loc>
 		<lastmod>2011-12-29T00:11:01+00:00</lastmod>
-		<changefreq>hourly</changefreq>
+		<changefreq>daily</changefreq>
 		<priority>1</priority>
 	</url>
  

@@ -54,7 +54,7 @@ if (defined("APP") && is_file(APP.'bin/init.php')){
 	// find the core file second
 	require_once(BASE.'bin/init.php');
 } else {
-	quit("Website Offline");
+	die("Website Offline");
 }
 
 ?>

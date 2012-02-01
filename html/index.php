@@ -1,7 +1,7 @@
 <?php
 /********************************************************************************
 KISSCMS -  http://kisscms.com
-A Make Sites (www.makesites.org) production by Makis Tracend
+A Make Sites production (www.makesites.org) led by Makis Tracend
 Dual-licensed under the MIT/X11 license and the GNU General Public License (GPL)
 ********************************************************************************/
 
@@ -24,23 +24,31 @@ define('WEB_FOLDER','/');
 define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
 
-// Optional Attributes
-
-// Optional: you can set the location of your plugins - by default a subdir in the app folder
-//define('PLUGINS', APP . 'plugins/');
-
 // find if this is running from localhost
 define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
 
 
+// Optional Attributes
+
 if(IS_LOCALHOST){
+	
 // include a BASE constant here if this is a clone site, when you are developing locally
 	//define('BASE', APP);
+
+// you can set the location of your plugins - by default a subdir in the app folder
+	//define('PLUGINS', APP . 'plugins/');
+	
 } else {
+	
 // include a BASE constant here if this is a clone site, when publically released
 	//define('BASE', APP);
+
+// you can set the location of your plugins - by default a subdir in the app folder
+	//define('PLUGINS', APP . 'plugins/');
+
 // the url of your content delivery network, if you're using one
 	//define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . WEB_FOLDER); 
+	
 }
 
 

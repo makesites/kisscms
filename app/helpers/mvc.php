@@ -157,7 +157,12 @@ class Controller extends KISS_Controller {
 		// remove the "index.php" from the request
 		if( array_key_exists(0, $request_uri_parts) && $request_uri_parts[0] == "index.php" ){ array_shift( $request_uri_parts ); }
 		// add the query if available
-		if( !empty($url_parts['query']) ){ $request_uri_parts[] = $url_parts['query']; }
+		if( !empty($url_parts['query']) ){ 
+			$queries = explode("&", $url_parts['query']);
+			foreach( $queries as $query){ 
+				$request_uri_parts = array_merge( $request_uri_parts, explode("=", $query) );
+			}
+		}
 		$this->request_uri_parts = $request_uri_parts;
 		return $this;
 	}
@@ -188,9 +193,8 @@ class Controller extends KISS_Controller {
 			}
 		}
 		
-		// finally convert the params to a string if they are only one element
-		if( count($params)==0 ) $params = null;
-		if( count($params)==1 ) $params = implode($params);
+		// lastly convert the params in pairs
+		$params = $this->beatify_array( $params );
 		
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
@@ -233,7 +237,37 @@ class Controller extends KISS_Controller {
 		// display the page
 		Template::output($this->data);
 	}
-
+	
+	// this function takes an array and creates pairs of key-value
+	function beatify_array( $params ){
+		
+		// return null if there are no params
+		if( count($params)==0 ) {
+			$params = null;
+		// convert the params to a string if they are only one element
+		} else if( count($params)==1 ) {
+			$params = implode($params);
+		// create a new key/value array
+		} else {
+			
+			$newparams = array();
+			
+			foreach( $params as $num => $param ){
+				if( $num%2 == 0 ){
+					$key = $param;
+					$value = $params[$num+1];
+					// save the new key/value pair
+					$newparams[ $key ] = $value;
+				}
+			}
+			
+			// replace the given params
+			$params = $newparams;
+		}
+		
+		return $params;
+		
+	}
 }
 
 //===============================================================

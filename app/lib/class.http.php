@@ -12,6 +12,10 @@
  * @copyright   2007-2008 Md Emran Hasan
  * @link        http://www.phpfour.com/lib/http
  * @since       Version 0.1.1
+ * 
+ * Modifications:
+ * - Replaced eregi() method with preg_match_all
+ * - Disabled the CURLOPT_FOLLOWLOCATION flag
  */
 
 class Http
@@ -708,7 +712,7 @@ class Http
             
             curl_setopt($ch, CURLOPT_VERBOSE,        FALSE);                // Minimize logs
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);                // No certificate
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $this->redirect);      // Follow redirects
+            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $this->redirect);      // Follow redirects
             curl_setopt($ch, CURLOPT_MAXREDIRS,      $this->maxRedirect);   // Limit redirections to four
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);                 // Return in string
             

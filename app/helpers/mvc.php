@@ -163,6 +163,11 @@ class Controller extends KISS_Controller {
 				$request_uri_parts = array_merge( $request_uri_parts, explode("=", $query) );
 			}
 		}
+		// adding POST params
+		foreach( $_POST as $key => $value ){
+			$request_uri_parts[] = $key;
+			$request_uri_parts[] = $value;
+		}
 		$this->request_uri_parts = $request_uri_parts;
 		return $this;
 	}
@@ -194,7 +199,7 @@ class Controller extends KISS_Controller {
 		}
 		
 		// lastly convert the params in pairs
-		$params = $this->beatify_array( $params );
+		$params = $this->beautify_array( $params );
 		
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
@@ -239,7 +244,7 @@ class Controller extends KISS_Controller {
 	}
 	
 	// this function takes an array and creates pairs of key-value
-	function beatify_array( $params ){
+	function beautify_array( $params ){
 		
 		// return null if there are no params
 		if( count($params)==0 ) {

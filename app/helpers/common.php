@@ -463,11 +463,17 @@ function myCDN(){
 }
 
 // converts a query string to an associative array
-function query_to_array( $string ){
+function query_to_array( $string, $flat=false ){
 	$queries = array();
 	$pairs = explode("&", $string);
 	foreach( $pairs as $pair){ 
-		$queries = array_merge( $queries, explode("=", $pair) );
+		$kv = explode("=", $pair);
+		// if flat flag set then create a one-dimensional array
+		if( $flat ) { 
+			$queries = array_merge( $queries, $kv );
+		} else {  
+			$queries[ $kv[0] ] = $kv[1];
+		}
 	}
 	return $queries;
 }

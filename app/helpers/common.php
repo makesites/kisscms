@@ -462,6 +462,16 @@ function myCDN(){
 	}
 }
 
+// converts a query string to an associative array
+function query_to_array( $string ){
+	$queries = array();
+	$pairs = explode("&", $string);
+	foreach( $pairs as $pair){ 
+		$queries = array_merge( $queries, explode("=", $pair) );
+	}
+	return $queries;
+}
+
 
 
 /*

@@ -53,13 +53,13 @@ class Admin extends Controller {
 	}
 
 	
-	function config( $action=null) {
+	function config( $params=null) {
 
-	  if($action == "save" ){
-		// placeholder array for the submission
-		//$data = array();
-		// loop through all the data and reorganise them properly
-		foreach($_POST as $k=>$v){
+	  if($params['action'] == "save" ){
+		// remove the action param
+		unset($params['action']); 
+		// loop through all the other data and reorganise them properly
+		foreach($params as $k=>$v){
 			// get the controller from the field name
 			$name = explode("|", $k);
 			if(count($name) < 2) continue;
@@ -67,13 +67,14 @@ class Admin extends Controller {
 			$key = $name[1];
 			$value = $v;
 			// only save the data that has changed
-			if( $GLOBALS["config"][$table][$key] != $v ){
+			if( $GLOBALS["config"][$table][$key] != $value ){
 				$config = new Config(0, $table);
 				//$config->pkname = 'key';
 				$config->set('key', $key);
 				$config->set('value', $value);
 				$config->update();
-				$GLOBALS["config"][$table][$key] = $v;
+				// update memory
+				$GLOBALS["config"][$table][$key] = $value;
 			}
 			
 		}

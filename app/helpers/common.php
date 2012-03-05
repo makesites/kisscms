@@ -131,63 +131,26 @@ function getFile($filename) {
 function getPath( $file ) {
 	if (defined("APP")){ 
 		// find the clone file first
-		if (file_exists(APP.$file)){ 
-			return APP.$file;
+		if (file_exists(APP.$file)) return APP.$file;
 		// check the plugins folder
-		} elseif ( is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
-			// check if this is a plugin path
-			if (file_exists(APP."plugins/".$file))
-				return APP."plugins/".$file;
-			// check inside the plugins
-			while (false !== ($plugin = readdir($handle))) {
-				if ($plugin == '.' || $plugin == '..') { 
-				  continue; 
-				} 
-				if ( is_dir($plugin) && file_exists( APP."plugins/".$plugin."/".$file ) ) {
-					return APP."plugins/".$plugin."/".$file;
-				}
-			}
-			
-		}
+		$search = glob(APP."plugins/*/$file", GLOB_BRACE);
+		if($search) return array_pop($search);
 	}
 	// try the base folder if we didn't find anything
 	if( defined("BASE") ) {
 		// find the core file second
-		if (file_exists(BASE.$file)){ 
-			return BASE.$file;
+		if (file_exists(BASE.$file)) return BASE.$file;
 		// check the plugins folder
-		} elseif ( is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
-			// check if this is a plugin path
-			if (file_exists(BASE."plugins/".$file)) 
-				return BASE."plugins/".$file;
-			// check inside the plugins
-			while (false !== ($plugin = readdir($handle))) {
-				if ($plugin == '.' || $plugin == '..') { 
-				  continue; 
-				} 
-				if ( is_dir($plugin) && file_exists( BASE."plugins/".$plugin."/".$file ) ) {
-					return BASE."plugins/".$plugin."/".$file;
-				}
-			}
-			
-		}
+		$search = glob(BASE."plugins/*/$file", GLOB_BRACE);
+		if($search) return array_pop($search);
 	} 
 	// check the plugins folder if we still haven't found anything
 	if( defined("PLUGINS") ){
 		// find the core file second
-		if (file_exists(PLUGINS.$file)){ 
-			return PLUGINS.$file;
+		if (file_exists(PLUGINS.$file)) return PLUGINS.$file;
 		// check the plugins folder
-		} elseif ($handle = opendir(PLUGINS)) {
-			while (false !== ($plugin = readdir($handle))) {
-				if ($plugin == '.' || $plugin == '..') { 
-				  continue; 
-				} 
-				if ( is_dir($plugin) && file_exists( PLUGINS.$plugin."/".$file ) ) {
-					return PLUGINS.$plugin."/".$file;
-				}
-			}
-		}
+		$search = glob(PLUGINS."*/$file", GLOB_BRACE);
+		if($search) return array_pop($search);
 	} 
 	
 	// nothing checks out...

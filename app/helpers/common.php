@@ -292,6 +292,20 @@ function writeFile($file = false, $output=false, $method='w'){
 }
 		
 
+
+// clean submitted input
+function clean( $data ){
+	if( is_array($data) ){
+		foreach($data as $k=>$v){
+			$data[$k] = trim(filter_var($v, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+		}
+	} else {
+		$data = trim(filter_var($data, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+	}
+	return $data;
+}
+
+
 // Original PHP code by Chirp Internet: www.chirp.com.au
 // Please acknowledge use of this code by including this header.
 

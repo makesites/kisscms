@@ -2,7 +2,7 @@
 // create a fallback for the variables we are using
 $title = (!isset($title)) ? '' : $title; 
 $content = (!isset($content)) ? '' : $content; 
-$action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/update/$id", true); 
+$action = ( $status == "create" ) ? myUrl("admin/update", true) : myUrl("admin/update/id/$id", true); 
 ?>
 
 <h2><?=$GLOBALS['language'][$status.'_title']?></h2>

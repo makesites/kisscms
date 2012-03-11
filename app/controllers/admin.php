@@ -99,10 +99,10 @@ class Admin extends Controller {
 	/*
 	*  CMS Actions
 	*/
-	function create($path=false) {
+	function create($params=false) {
 		
 		$data['status']= $this->data['status']="create";
-		$data['path']= ( $path ) ? $path : $_REQUEST['path'];
+		$data['path']= ( array_key_exists("path", $params) ) ? $params["path"] : clean($_REQUEST['path']);
 		$data['tags']= "";
 		$data['view']= getPath('views/admin/edit_page.php');
 		$data['template']= DEFAULT_TEMPLATE;
@@ -145,12 +145,12 @@ class Admin extends Controller {
 		Template::output($this->data);
 	}
 
-	function update($id=null) {
+	function update($params=null) {
 		
 		$validate = $this->validate();
 		// see if we have found a page
 		if( $validate == true ){
-			$this->save($id);
+			$this->save($params);
 		}
 		header('Location: '.myUrl($_REQUEST['path']));
 
@@ -161,24 +161,25 @@ class Admin extends Controller {
 		return true;
 	}
 
-	function save($id=null) {
+	function save($params=null) {
 
-		if( $id ){
+		if( array_key_exists("id", $params) ){
 			// Update existing page 
-			$page=new Page($id);
-			$page->set('title', $_POST['title']);
-			$page->set('content', $_POST['content']);
-			$page->set('tags', $_POST['tags']);
-			$page->set('template', $_POST['template']);
+			$page=new Page($params['id']);
+			$page->set('title', $params['title']);
+			$page->set('content', $params['content']);
+			$page->set('tags', $params['tags']);
+			$page->set('template', $params['template']);
 			$page->update();
 		} else {
+			var_dump( $_POST['path'] );
 			// Create new page 
 			$page=new Page();
-			$page->set('title', $_POST['title']);
-			$page->set('content', $_POST['content']);
-			$page->set('tags', $_POST['tags']);
-			$page->set('template', $_POST['template']);
-			$page->set('path', $_POST['path']);
+			$page->set('title', $params['title']);
+			$page->set('content', $params['content']);
+			$page->set('tags', $params['tags']);
+			$page->set('template', $params['template']);
+			$page->set('path', $params['path']);
 			$page->create();
 		}
 		

@@ -132,7 +132,8 @@ function getPath( $file ) {
 	if (defined("APP")){ 
 		// find the clone file first
 		if (file_exists(APP.$file)) return APP.$file;
-		// check the plugins folder
+		if (file_exists(APP."plugins/$file")) return APP."plugins/$file";
+		// check the plugins folder - return the first match
 		$search = glob(APP."plugins/*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);
 	}
@@ -140,6 +141,7 @@ function getPath( $file ) {
 	if( defined("BASE") ) {
 		// find the core file second
 		if (file_exists(BASE.$file)) return BASE.$file;
+		if (file_exists(BASE."plugins/$file")) return BASE."plugins/$file";
 		// check the plugins folder
 		$search = glob(BASE."plugins/*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);

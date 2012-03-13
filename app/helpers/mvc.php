@@ -72,6 +72,7 @@ class Model extends KISS_Model  {
 		$results = $dbh->prepare($sql);
 		//$results->bindValue(1,$username);
 		$results->execute();
+		$vars = array();
 		while ($tables = $results->fetch(PDO::FETCH_ASSOC)) {
 				if (!$tables)
 					return false;

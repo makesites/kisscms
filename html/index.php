@@ -5,6 +5,10 @@ A Make Sites production (www.makesites.org) led by Makis Tracend
 Dual-licensed under the MIT/X11 license and the GNU General Public License (GPL)
 ********************************************************************************/
 
+
+// Set to true to enable debug mode (where supported) 
+define('DEBUG',true);
+
 //===============================================
 // PATHS
 //===============================================

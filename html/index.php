@@ -6,8 +6,11 @@ Dual-licensed under the MIT/X11 license and the GNU General Public License (GPL)
 ********************************************************************************/
 
 
-// Set to true to enable debug mode (where supported) 
-define('DEBUG',true);
+//===============================================
+// ENVIRONMENT SETUP
+//===============================================
+$env = json_decode( file_get_contents("../env.json") );
+
 
 //===============================================
 // PATHS
@@ -27,33 +30,28 @@ define('WEB_FOLDER','/');
 // full path of where the templates reside
 define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
-
-// find if this is running from localhost
-define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
-
-
-// Optional Attributes
-
-if(IS_LOCALHOST){
-	
-// include a BASE constant here if this is a clone site, when you are developing locally
-	//define('BASE', APP);
-
-// you can set the location of your plugins - by default a subdir in the app folder
-	//define('PLUGINS', APP . 'plugins/');
-	
-} else {
-	
-// include a BASE constant here if this is a clone site, when publically released
-	//define('BASE', APP);
-
-// you can set the location of your plugins - by default a subdir in the app folder
-	//define('PLUGINS', APP . 'plugins/');
-
-// the url of your content delivery network, if you're using one
-	//define('CDN', 'http://cdn.' . $_SERVER['SERVER_NAME'] . WEB_FOLDER); 
+// Process enviromental variables (from env.json)
+foreach( $env as $domain => $setup ){ 
+	// check the domain against each set
+	if( strpos($_SERVER['SERVER_NAME'], $domain) !== false ){ 
+		// available options: base, plugins, cdn, debug
+		// - include a BASE constant here if this is a clone site
+		if( !empty($setup->base) ) 		eval("define('BASE', 		'$setup->base');");
+		// - you can set the location of your plugins - by default a subdir in the app folder
+		if( !empty($setup->plugins) ) 	eval("define('PLUGINS', 	'$setup->plugins');");
+		if( !empty($setup->cdn) ) 		eval("define('CDN', 		'$setup->cdn');");
+		if( !empty($setup->debug) ) 	eval("define('DEBUG', 		'$setup->debug');");
+		break;
+	}
+		var_dump(DEBUG);
 	
 }
+
+// Other Constants
+// - find if this is running from localhost
+define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
+// - set to true to enable debug mode (where supported) 
+if(!defined("DEBUG")) define('DEBUG', false);
 
 
 //===============================================
@@ -66,7 +64,7 @@ if (defined("APP") && is_file(APP.'bin/init.php')){
 	// find the core file second
 	require_once(BASE.'bin/init.php');
 } else {
-	die("Website Offline");
+	die("Environment varialbes not setup properly. Open env.json and edit as needed...");
 }
 
 ?>

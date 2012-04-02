@@ -9,7 +9,21 @@ Dual-licensed under the MIT/X11 license and the GNU General Public License (GPL)
 //===============================================
 // ENVIRONMENT SETUP
 //===============================================
-$env = json_decode( file_get_contents("../env.json") );
+
+$ENV = (file_exists("../env.json")) ? json_decode( file_get_contents("../env.json") ): array();
+
+// Process enviromental variables (from env.json)
+foreach( $ENV as $domain => $properties ){ 
+	// check the domain against each set
+	if( strpos($_SERVER['SERVER_NAME'], $domain) !== false ){ 
+		// available options: base, plugins, cdn, debug (sdk)
+		foreach( $properties as $key=>$value ){ 
+			if( !empty($value) ) eval("define('".strtoupper($key)."', '$value');");
+		}
+		// exit if we found a match
+		break;
+	}	
+}
 
 
 //===============================================
@@ -30,29 +44,21 @@ define('WEB_FOLDER','/');
 // full path of where the templates reside
 define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
-// Process enviromental variables (from env.json)
-foreach( $env as $domain => $properties ){ 
-	// check the domain against each set
-	if( strpos($_SERVER['SERVER_NAME'], $domain) !== false ){ 
-		// available options: base, plugins, cdn, debug (sdk)
-		foreach( $properties as $key=>$value ){ 
-			if( !empty($value) ) eval("define('".strtoupper($key)."', '$value');");
-		}
-		// exit if we found a match
-		break;
-	}	
-}
 
-// Other Constants
-// - find if this is running from localhost
+//===============================================
+// OTHER CONSTANTS
+//===============================================
+
+// find if this is running from localhost
 define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
-// - set to true to enable debug mode (where supported) 
+// set to true to enable debug mode (where supported) 
 if(!defined("DEBUG")) define('DEBUG', false);
 
 
 //===============================================
-// Start the controller
+// INITIALIZATION
 //===============================================
+
 if (defined("APP") && is_file(APP.'bin/init.php')){ 
 	// find the clone file first
 	require_once(APP.'bin/init.php');

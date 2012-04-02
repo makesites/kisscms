@@ -31,20 +31,16 @@ define('WEB_FOLDER','/');
 define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
 
 // Process enviromental variables (from env.json)
-foreach( $env as $domain => $setup ){ 
+foreach( $env as $domain => $properties ){ 
 	// check the domain against each set
 	if( strpos($_SERVER['SERVER_NAME'], $domain) !== false ){ 
-		// available options: base, plugins, cdn, debug
-		// - include a BASE constant here if this is a clone site
-		if( !empty($setup->base) ) 		eval("define('BASE', 		'$setup->base');");
-		// - you can set the location of your plugins - by default a subdir in the app folder
-		if( !empty($setup->plugins) ) 	eval("define('PLUGINS', 	'$setup->plugins');");
-		if( !empty($setup->cdn) ) 		eval("define('CDN', 		'$setup->cdn');");
-		if( !empty($setup->debug) ) 	eval("define('DEBUG', 		'$setup->debug');");
+		// available options: base, plugins, cdn, debug (sdk)
+		foreach( $properties as $key=>$value ){ 
+			if( !empty($value) ) eval("define('".strtoupper($key)."', '$value');");
+		}
+		// exit if we found a match
 		break;
-	}
-		var_dump(DEBUG);
-	
+	}	
 }
 
 // Other Constants

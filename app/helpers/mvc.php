@@ -261,6 +261,8 @@ class Controller extends KISS_Controller {
 			foreach( $params as $num => $param ){
 				if( $num%2 == 0 ){
 					$key = $param;
+					// stop if there is no more params
+					if( empty( $params[$num+1] ) ) continue;
 					$value = $params[$num+1];
 					// save the new key/value pair
 					$newparams[ $key ] = $value;

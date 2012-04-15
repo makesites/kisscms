@@ -6,9 +6,14 @@ class Archives extends Controller {
 	public $date;
 	
 	//This function maps the controller name and function name to the file location of the .php file to include
-	function index( $path ) {
+	function index( $params ) {
 		
-		$this->data['date'] = implode("-", $path);
+		// data is being passed as a key-value pair
+		foreach( $params as $k => $v ){ 
+			$this->data['date'] = $k ."-". $v;
+			// only loop throught he first item
+			break;
+		}
 		
 		// load the index
 		$this->render();
@@ -30,7 +35,7 @@ class Archives extends Controller {
 
 		$page=new Page();
 		$page->tablename = "pages";
-		$pages = $page->retrieve_many("date LIKE '%".$this->date."%'");
+		$pages = $page->retrieve_many("date LIKE '%".$this->data['date']."%'");
 		$view = getPath('views/archives/body.php');
 		
 		foreach( $pages as $data ){

@@ -400,6 +400,21 @@ function get_called_class($bt = false,$l = 1) {
 } 
 
 
+// Backwards compatibility
+
+// In PHP 5.4, you can use JSON_UNESCAPED_SLASHES:
+//echo json_encode($this->stream, JSON_UNESCAPED_SLASHES);
+// Otherwise, you have to do some trivial post-processing	
+function json_encode_escaped($string){
+	$find = array('\\/', "\n");
+	$use = array('/', "");
+	return str_replace($find, $use, json_encode($string));
+}
+
+
+
+
+
 // DEPRECATED
 
 function myUrl($path='',$fullurl=true){
@@ -456,6 +471,7 @@ function query_to_array( $string, $flat=false ){
 	}
 	return $queries;
 }
+
 
 
 

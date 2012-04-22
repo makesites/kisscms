@@ -154,7 +154,7 @@ class Controller extends KISS_Controller {
 		if( substr($url, -1) == "/" ) $url = substr($url, 0, -1);
 		// parse the URL
 		$url_parts = parse_url($url);
-		$requri = $url_parts['path'];
+		$requri = ( array_key_exists("path", $url_parts) ) ? $url_parts['path'] : "";
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
 		if (strpos($requri,$this->web_folder)===0)
 			$requri=substr($requri,strlen($this->web_folder));

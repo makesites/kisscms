@@ -1,20 +1,26 @@
 <?php
 class Page extends Model {
 
-  function __construct($id=0, $table='pages') {
-    $this->id = $id;
+  function __construct($id=false, $table='pages') {
+    // configuration
 	$this->pkname = 'id';
 	$this->tablename = $table;
-	parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
-    $this->rs['id'] = '';
+	// the model
+	$this->rs['id'] = '';
     $this->rs['title'] = '';
     $this->rs['content'] = '';
     $this->rs['path'] = '';
     $this->rs['date']= '';
     $this->rs['tags']= '';
     $this->rs['template']= '';
-    if ($id)
+	// initiate parent constructor
+	parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
+    // retrieve the specific page (if available)
+    if ($id){ 
       $this->retrieve($id);
+	  $this->id = $id;
+	}
+	
   }
 
   function create() {
@@ -82,9 +88,10 @@ class Page extends Model {
 			$mypage = new Page($id);
 			$value = $mypage->get("$key");
 			// allow empty strings to be returned
-			if( empty($value) && $value != "" )
+			if( empty($value) && $value != "" ){ 
 				$mypage->set("$key", "$value");
 				$mypage->update();
+			}
 	}
 			
   }

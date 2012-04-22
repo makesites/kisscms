@@ -1,11 +1,12 @@
 
 /* Tags */
 html, body {
-	height: 100%;
 	margin: 0;
 }
+
 html {
-	overflow-y: hidden;
+	height: 100%;
+	overflow-y: scroll;
 }
 
 body {
@@ -13,8 +14,7 @@ body {
 	font-size: 75%;
 	background: #fff url(../img/back.png) top center no-repeat; 
 	color: #444; 
-	text-align: center; 
-	overflow-y: scroll;
+	text-align: center;
 }
 
 p, h2, h3, h4 {

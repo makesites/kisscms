@@ -148,10 +148,14 @@ class Controller extends KISS_Controller {
 	
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {		
-		// remove the first slash from the URI so the controller is always the first item in the array (later)
+		// form the url
 		$url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+		// remove the trailing slash, if any
+		if( substr($url, -1) == "/" ) $url = substr($url, 0, -1);
+		// parse the URL
 		$url_parts = parse_url($url);
 		$requri = $url_parts['path'];
+		// remove the first slash from the URI so the controller is always the first item in the array (later)
 		if (strpos($requri,$this->web_folder)===0)
 			$requri=substr($requri,strlen($this->web_folder));
 		$request_uri_parts = $requri ? explode('/',$requri) : array();

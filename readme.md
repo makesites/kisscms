@@ -4,6 +4,8 @@ A Make Sites production (www.makesites.org)
 Lead Developer: Makis Tracend (makis@makesit.es) 
 Website: http://www.kisscms.com 
 
+Current stable: [v1.1](https://github.com/makesites/kisscms/zipball/v1.1)
+
 Description
 -----------
 A CMS with minimal footprint written in PHP, following best practices in MVC architecture and with main objective to jump start web development by providing a clean and extensible environment. Highlights include an uncluttered administration area, a zero setup process, wiki-style page creation, a template engine with simplified methods and the automated installation for plugins/extensions. 

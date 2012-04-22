@@ -53,7 +53,7 @@ class Admin extends Controller {
 	}
 
 	
-	function config( $params=null) {
+	function config( $params=array() ) {
 
 	  if($params['action'] == "save" ){
 		// remove the action param
@@ -145,7 +145,7 @@ class Admin extends Controller {
 		Template::output($this->data);
 	}
 
-	function update($params=null) {
+	function update( $params=array() ) {
 		
 		$validate = $this->validate();
 		// see if we have found a page
@@ -161,25 +161,30 @@ class Admin extends Controller {
 		return true;
 	}
 
-	function save($params=null) {
+	function save( $params=array() ) {
 
+		// define/filter the data set
+		$fields = array("id", "title", "content", "tags", "template");
+		$data = array_fill_keys($fields, "");
+		$data = array_merge($data, $params);
+		
 		if( array_key_exists("id", $params) ){
 			// Update existing page 
-			$page=new Page($params['id']);
-			$page->set('title', $params['title']);
-			$page->set('content', $params['content']);
-			$page->set('tags', $params['tags']);
-			$page->set('template', $params['template']);
+			$page=new Page($data['id']);
+			$page->set('title', 	$data['title']);
+			$page->set('content', 	$data['content']);
+			$page->set('tags', 		$data['tags']);
+			$page->set('template', 	$data['template']);
 			$page->update();
 		} else {
-			var_dump( $_POST['path'] );
+			var_dump( $params );
 			// Create new page 
 			$page=new Page();
-			$page->set('title', $params['title']);
-			$page->set('content', $params['content']);
-			$page->set('tags', $params['tags']);
-			$page->set('template', $params['template']);
-			$page->set('path', $params['path']);
+			$page->set('title', 	$data['title']);
+			$page->set('content', 	$data['content']);
+			$page->set('tags', 		$data['tags']);
+			$page->set('template', 	$data['template']);
+			$page->set('path', 		$data['path']);
 			$page->create();
 		}
 		

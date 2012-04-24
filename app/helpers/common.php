@@ -472,6 +472,14 @@ function query_to_array( $string, $flat=false ){
 	return $queries;
 }
 
+function ksort_recursive(&$array, $sort_flags = SORT_REGULAR) {
+    if (!is_array($array)) return false;
+    ksort($array, $sort_flags);
+    foreach ($array as &$arr) {
+        ksort_recursive($arr, $sort_flags);
+    }
+    return true;
+}
 
 
 

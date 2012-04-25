@@ -17,7 +17,14 @@ class Template extends KISS_View {
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
 		$GLOBALS['foot'] = $template->get("foot");
-		return parent::do_dump($template->file, $template->vars);
+		// compile the page with the existing data
+		$output = parent::do_fetch($template->file, $template->vars);
+		// post-process
+		// - check if any minification is necessary
+		$output = $template->minify($output);
+		// output the final markup
+		echo $output;
+		
 	}
 	
 	function head( $vars=false ){
@@ -66,6 +73,86 @@ class Template extends KISS_View {
 			 $data[$section] = View::do_fetch( $view, $this->vars);
 		}
 		return $data;
+	}
+	
+	function minify( $html ){
+		// don't try to minify when we are in debug mode
+		if(DEBUG || !class_exists("PhpClosure")) return $html;
+		
+		// Legacy regular expression to match minified scripts
+		//$temp = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
+		
+		$dom = new DOMDocument;
+		$dom->preserveWhiteSpace = false; 
+		@$dom->loadHTML($html);
+ 		
+		$scripts = $dom->getElementsByTagName('script');
+ 		
+		$minify = array();
+		$delete = array(); 
+		
+		// find all the scripts that need to be minified
+		foreach ($scripts as $script){
+			$type = $script->getAttribute('data-type');
+			
+			if( strpos($type, "google-closure") ){
+				// capture attributes
+				$group = $script->getAttribute('data-group');
+				$order = (int) $script->getAttribute('data-order');
+				$src = $script->getAttribute('src');
+				// order the scripts (if available)
+				if( $order ) {
+					$minify[$group][$order] = $src;
+				} else { 
+					$minify[$group][] = $src;
+				}
+				// queue to delete
+				$delete[] = $script; 
+							
+			}
+
+		}
+		// remove the scripts from the dom
+		foreach( $delete as $tag ){ 
+		  $tag->parentNode->removeChild($tag); 
+		} 
+		// sort results
+		ksort_recursive( $minify );
+		
+		// FIX: create the dir if not available
+		if( !is_dir( APP. "public/assets/js/" ) ) mkdir(APP. "public/assets/js/", 0775, true);
+		
+		// call google-closure
+		foreach( $minify as $name=>$group ){
+			
+			$min = new Minify();
+			// loop through the group and add the files
+			foreach( $group as $file ){
+				$script = ( !strpos($file, "http") ) ? $_SERVER['DOCUMENT_ROOT'] . $file : $file;
+				$min->add( $script );
+			}
+			
+			$min->quiet()
+   				->hideDebugInfo()
+				//->advancedMode()
+				//->simpleMode()
+   				->whitespaceOnly()
+				->useClosureLibrary()
+   				->cacheDir( APP. "public/assets/js/" )
+   				->setFile( $name.".min" )
+   				->create();
+			
+			// create the script reference
+			//var_dump( "/assets/js/" . $name.".min" );
+		
+		}
+		
+		$output =  $dom->saveHTML();
+		
+		// TEMP: for now replacingcomments with script tags (use require.js in the future)
+		$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="/assets/js/${1}.min.js"></script>', $output);
+		
+		return $output;
 	}
 	
 	function getTemplate(){

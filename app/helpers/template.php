@@ -112,10 +112,15 @@ class Template extends KISS_View {
 			}
 
 		}
+		
+		// FIX: stop if the are no libraries to minify
+		if( !count($minify)) return $dom->saveHTML();
+		
 		// remove the scripts from the dom
 		foreach( $delete as $tag ){ 
 		  $tag->parentNode->removeChild($tag); 
 		} 
+		
 		// sort results
 		ksort_recursive( $minify );
 		
@@ -124,7 +129,6 @@ class Template extends KISS_View {
 		
 		// call google-closure
 		foreach( $minify as $name=>$group ){
-			
 			$min = new Minify();
 			// loop through the group and add the files
 			foreach( $group as $file ){

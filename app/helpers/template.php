@@ -76,9 +76,6 @@ class Template extends KISS_View {
 	}
 	
 	function minify( $html ){
-		// don't try to minify when we are in debug mode
-		if(DEBUG || !class_exists("PhpClosure")) return $html;
-		
 		// Legacy regular expression to match minified scripts
 		//$temp = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
 		
@@ -136,14 +133,20 @@ class Template extends KISS_View {
 				$min->add( $script );
 			}
 			
-			$min->quiet()
-   				->hideDebugInfo()
-				//->advancedMode()
-				//->simpleMode()
-   				->whitespaceOnly()
-				->useClosureLibrary()
-   				->cacheDir( APP. "public/assets/js/" )
-   				->setFile( $name.".min" )
+			$min->cacheDir( APP. "public/assets/js/" )
+   				->setFile( $name.".min" );
+				
+			if( !DEBUG ){ 
+				$min->quiet()
+   					->hideDebugInfo();
+			}
+   			
+			// condition the method of minification here...
+			//->advancedMode()
+			//->simpleMode()
+			//->whitespaceOnly()
+   			$min->simpleMode()
+				//->useClosureLibrary()
    				->create();
 			
 			// create the script reference
@@ -156,7 +159,8 @@ class Template extends KISS_View {
 		// TEMP: for now replacingcomments with script tags (use require.js in the future)
 		$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="/assets/js/${1}.min.js"></script>', $output);
 		
-		return $output;
+		// if in debug mode return the original html
+		return ( DEBUG ) ? $html : $output;
 	}
 	
 	function getTemplate(){

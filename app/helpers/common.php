@@ -481,7 +481,33 @@ function ksort_recursive(&$array, $sort_flags = SORT_REGULAR) {
     return true;
 }
 
+function encode($string="",$base=36,$key="KISSCMS") {
+    $key = sha1($key);
+    $strLen = strlen($string);
+    $keyLen = strlen($key);
+    for ($i = 0; $i < $strLen; $i++) {
+        $ordStr = ord(substr($string,$i,1));
+        if ($j == $keyLen) { $j = 0; }
+        $ordKey = ord(substr($key,$j,1));
+        $j++;
+        $hash .= strrev(base_convert(dechex($ordStr + $ordKey),16,$base));
+    }
+    return $hash;
+}
 
+function decode($string="",$base=36,$key="KISSCMS") {
+    $key = sha1($key);
+    $strLen = strlen($string);
+    $keyLen = strlen($key);
+    for ($i = 0; $i < $strLen; $i+=2) {
+        $ordStr = hexdec(base_convert(strrev(substr($string,$i,2)),$base,16));
+        if ($j == $keyLen) { $j = 0; }
+        $ordKey = ord(substr($key,$j,1));
+        $j++;
+        $hash .= chr($ordStr - $ordKey);
+    }
+    return $hash;
+}
 
 /*
 function redirect($url,$alertmsg='') {

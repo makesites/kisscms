@@ -482,6 +482,9 @@ function ksort_recursive(&$array, $sort_flags = SORT_REGULAR) {
 }
 
 function encode($string="",$base=36,$key="KISSCMS") {
+	// variables
+	$j=0;
+	$hash="";
     $key = sha1($key);
     $strLen = strlen($string);
     $keyLen = strlen($key);
@@ -496,6 +499,9 @@ function encode($string="",$base=36,$key="KISSCMS") {
 }
 
 function decode($string="",$base=36,$key="KISSCMS") {
+    // variables
+	$j=0;
+	$hash="";
     $key = sha1($key);
     $strLen = strlen($string);
     $keyLen = strlen($key);

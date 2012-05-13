@@ -76,8 +76,6 @@ class Template extends KISS_View {
 	}
 	
 	function minify( $html ){
-		// Legacy regular expression to match minified scripts
-		//$temp = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
 		
 		$dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false; 
@@ -96,12 +94,13 @@ class Template extends KISS_View {
 				// capture attributes
 				$group = $script->getAttribute('data-group');
 				$order = (int) $script->getAttribute('data-order');
+				$encode = $script->getAttribute('data-encode');
 				$src = $script->getAttribute('src');
 				// order the scripts (if available)
 				if( $order ) {
-					$minify[$group][$order] = $src;
+					$minify[$group][$order] = array( "src" => $src, "encode" => $encode);
 				} else { 
-					$minify[$group][] = $src;
+					$minify[$group][] = array( "src" => $src, "encode" => $encode);
 				}
 				// queue to delete
 				$delete[] = $script; 
@@ -127,10 +126,13 @@ class Template extends KISS_View {
 		// call google-closure
 		foreach( $minify as $name=>$group ){
 			$min = new Minify();
+			// get th eencoding from the first member of the group
+			$first = current($group);
+			$encode = $first["encode"];
 			// loop through the group and add the files
-			foreach( $group as $file ){
-				$script = ( !strpos($file, "http") ) ? $_SERVER['DOCUMENT_ROOT'] . $file : $file;
-				$min->add( $script );
+			foreach( $group as $script ){
+				$file = ( !strpos($script["src"], "http") ) ? $_SERVER['DOCUMENT_ROOT'] . $script["src"] : $script["src"];
+				$min->add( $file );
 			}
 			
 			$min->cacheDir( APP. "public/assets/js/" )
@@ -142,25 +144,41 @@ class Template extends KISS_View {
 			}
    			
 			// condition the method of minification here...
-			//->advancedMode()
-			//->simpleMode()
-			//->whitespaceOnly()
-   			$min->simpleMode()
-				//->useClosureLibrary()
-   				->create();
+			switch( $encode ){ 
+				case "whitespace": 
+					$min->whitespaceOnly();
+				break;
+				case "simple": 
+					$min->simpleMode();
+				break;
+				case "advanced": 
+					$min->advancedMode();
+				break;
+				default: 
+					$min->simpleMode();
+				break;
+			
+			}
+			
+			//->useClosureLibrary()
+   			$min->create();
 			
 			// create the script reference
 			//var_dump( "/assets/js/" . $name.".min" );
 		
 		}
 		
-		$output =  $dom->saveHTML();
-		
+		// Unfortunately this messes up javascript templates
+		//$output =  $dom->saveHTML();
+		$output =  $html;
+		// Legacy regular expression to match minified scripts
+		$output = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
 		// TEMP: for now replacingcomments with script tags (use require.js in the future)
-		$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="/assets/js/${1}.min.js"></script>', $output);
+		$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="'. myCDN() .'/assets/js/${1}.min.js"></script>', $output);
 		
 		// if in debug mode return the original html
-		return ( DEBUG ) ? $html : $output;
+		//return ( DEBUG ) ? $html : $output;
+		return $output;
 	}
 	
 	function getTemplate(){

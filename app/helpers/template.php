@@ -22,7 +22,7 @@ class Template extends KISS_View {
 		// post-process
 		// - check if any minification is necessary
 		$output = $template->minify($output);
-		// output the final markup
+		// output the final markup - clear whitespace (if not in debug mode)
 		echo $output;
 		
 	}
@@ -178,7 +178,8 @@ class Template extends KISS_View {
 		
 		// if in debug mode return the original html
 		//return ( DEBUG ) ? $html : $output;
-		return $output;
+		// output the final markup - clear whitespace (if not in debug mode)
+		return ( DEBUG ) ? $output : $this->trimWhitespace( $output );
 	}
 	
 	function getTemplate(){
@@ -233,6 +234,12 @@ class Template extends KISS_View {
 			return false;
 		}			
 	}
+	
+	function trimWhitespace( $string ){
+		// replace multiple spaces with one
+		return preg_replace( '/\s+/', ' ', $string );
+	}
+  
 }
 
 ?>

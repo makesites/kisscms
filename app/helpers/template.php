@@ -171,11 +171,12 @@ class Template extends KISS_View {
 		// Unfortunately this messes up javascript templates
 		//$output =  $dom->saveHTML();
 		$output =  $html;
-		// Legacy regular expression to match minified scripts
-		$output = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
-		// TEMP: for now replacingcomments with script tags (use require.js in the future)
-		$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="'. myCDN() .'/assets/js/${1}.min.js"></script>', $output);
-		
+		if ( !DEBUG ){ 
+			// Legacy regular expression to match minified scripts
+			$output = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
+			// TEMP: for now replacingcomments with script tags (use require.js in the future)
+			$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="'. myCDN() .'/assets/js/${1}.min.js"></script>', $output);
+		}
 		// if in debug mode return the original html
 		//return ( DEBUG ) ? $html : $output;
 		// output the final markup - clear whitespace (if not in debug mode)

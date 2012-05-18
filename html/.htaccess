@@ -1,6 +1,9 @@
 #AddHandler php5latest-script .php
 AddHandler php5-script .php
 
+# Application Cache manifest files (defined with the right mime-type)
+AddType text/cache-manifest .appcache
+
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f

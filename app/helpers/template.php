@@ -175,7 +175,7 @@ class Template extends KISS_View {
 			// Legacy regular expression to match minified scripts
 			$output = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
 			// TEMP: for now replacingcomments with script tags (use require.js in the future)
-			$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="'. myCDN() .'/assets/js/${1}.min.js"></script>', $output);
+			$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="'. myCDN() .'/assets/js/${1}.min.js" defer="defer"></script>', $output);
 		}
 		// if in debug mode return the original html
 		//return ( DEBUG ) ? $html : $output;

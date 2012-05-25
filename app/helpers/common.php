@@ -308,6 +308,12 @@ function beautify($string, $block='.', $ucwords=true)
   return $string;
 }
 
+// get the "pure" request URI (compared to the web folder)
+function request_uri(){
+ return preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
+}
+
+
 /**
  * Function to calculate date or time difference.
  * 

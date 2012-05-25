@@ -167,7 +167,7 @@ function url($file=''){
 	if( isStatic( $uri ) && defined("CDN")){ 
 		// load the cdn address instead
 		// remove trailing slash, if any 
-		$server = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		$domain = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
 		
 	} else { 
 		// check if this is a secure connection
@@ -176,7 +176,7 @@ function url($file=''){
 		$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
 		/*if( $_SERVER['SERVER_PORT'] != "80" && $_SERVER['SERVER_PORT'] != "443" ){ 
-			$server .= ":".$_SERVER['SERVER_PORT'];
+			$domain .= ":".$_SERVER['SERVER_PORT'];
 		}*/
 	}
 	

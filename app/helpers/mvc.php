@@ -142,6 +142,8 @@ class Controller extends KISS_Controller {
 		// set the template the controller is using
 		$template = strtolower( get_class($this) ) .".php";
 		$this->data['template']= ( is_file( TEMPLATES.$template ) ) ? $template : DEFAULT_TEMPLATE ;
+		// generic redirection for secure connections (assuming that ssl is on port 443)
+		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '.url( request_uri() ) );
 		
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}

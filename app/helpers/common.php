@@ -171,7 +171,7 @@ function url($file=''){
 		
 	} else { 
 		// check if this is a secure connection
-		$domain = ( $_SERVER['SERVER_PORT'] == "443" ) ? 'https://' : 'http://';
+		$domain = ( $_SERVER['SERVER_PORT'] == "443" || (defined('SSL') && SSL) ) ? 'https://' : 'http://';
 		// load the regular server address
 		$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one

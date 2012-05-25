@@ -170,16 +170,18 @@ function url($file=''){
 		$server = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
 		
 	} else { 
+		// check if this is a secure connection
+		$domain = ( $_SERVER['SERVER_PORT'] == "443" ) ? 'https://' : 'http://';
 		// load the regular server address
-		$server = ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? 'http://'.substr($_SERVER['SERVER_NAME'], 0, -1) : 'http://'.$_SERVER['SERVER_NAME'];
+		$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
-		if( $_SERVER['SERVER_PORT'] != "80" ){ 
+		/*if( $_SERVER['SERVER_PORT'] != "80" && $_SERVER['SERVER_PORT'] != "443" ){ 
 			$server .= ":".$_SERVER['SERVER_PORT'];
-		}
+		}*/
 	}
 	
 	// add the uri
-	$url = $server . $uri;
+	$url = $domain . $uri;
 	
   	return $url;
 }

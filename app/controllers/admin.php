@@ -177,7 +177,6 @@ class Admin extends Controller {
 			$page->set('template', 	$data['template']);
 			$page->update();
 		} else {
-			var_dump( $params );
 			// Create new page 
 			$page=new Page();
 			$page->set('title', 	$data['title']);

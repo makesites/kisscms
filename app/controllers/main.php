@@ -53,6 +53,8 @@ class Main extends Controller {
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
 			$this->data['body'][] = $data;
+			// FIX #38: copy data of "static" pages in a seperate array for easy access
+			$this->data['_page'] = $data;
 			$this->data['template'] = stripslashes( $page->get('template') );
 			return true;
 		} else {

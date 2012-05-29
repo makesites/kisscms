@@ -24,8 +24,8 @@ class Archives extends Controller {
 		// get the page details stored in the database
 		$this->requestAllPages();
 		
-		// define the rendereing template
-		$this->data['template']= LISTINGS_TEMPLATE;
+		// define the rendering template
+		if( !$this->data['template'] ) $this->data['template'] = LISTINGS_TEMPLATE;
 		
 		// display the page
 		Template::output($this->data);

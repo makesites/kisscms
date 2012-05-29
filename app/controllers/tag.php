@@ -25,7 +25,7 @@ class Tag extends Controller {
 		$this->requestAllPages();
 		
 		// define the rendereing template
-		$this->data['template']= LISTINGS_TEMPLATE;
+		if( !$this->data['template'] ) $this->data['template'] = LISTINGS_TEMPLATE;
 		
 		// display the page
 		Template::output($this->data);

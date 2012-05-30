@@ -202,8 +202,15 @@ class Tags extends Section {
 			$tags = (!is_array($data)) ? explode(",",$data) : $data;
 		}
 		
+		//$filter = array( if( $item['title'] != "" && strpos( $item['title'], "menu-" ) == false && $item['title'] != "category" ){
 		// form the array in items format
-		foreach($tags as $tag){
+		foreach($tags as $k=>$tag){
+			// filter out specific tags
+			// - empty tags
+			// - tags that start with "menu-"
+			// - specific tags: "category"...
+			if ( preg_match("/^$|^menu-|^category$/", $tag) ) continue;
+			
 			// calculate the weight
 			if(array_key_exists($tag, $items)){
 				$items[$tag]['weight'] += 1;
@@ -211,6 +218,7 @@ class Tags extends Section {
 				$items[$tag] = array( 'url' =>  url( "tag/".$tag, true ), 'title' => $tag, 'weight' => 1 );
 			}
 		}
+		
 		return $items;
 	}
 

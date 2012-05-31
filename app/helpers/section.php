@@ -312,16 +312,23 @@ class Body extends Section {
 	
 	function __construct($view=false, $vars=false, $data=false){
 		parent::__construct($view,$vars);
-		// 
+		// find the requested controller from the path
 		$class = findController( $this->data["vars"]["path"] );
-		$this->data['items'] = $class::getBody( $this->data["vars"]["path"] );
+		// get the data for the specific URI
+		$this->data['items'] = $class::getBody($this->data["vars"]["path"]);
+		// currently override the view set by the parent section class
+		//$this->view = ( $view ) ? getPath('views/'.$class.'/body-'.$view.'.php') : getPath('views/'.$class.'/body.php');
+		$this->view = getPath('views/'. strtolower($class).'/body.php');
+		// render the section
 		$this->render();
 	}
 	
 	// override default rendering method to render each piec eof content with their respective view...
 	function render(){	
+		// check if we have defined a view
 		foreach( $this->data['items'] as $item){ 
-			View::do_dump($item['view'], $item);
+			$view = ( !$this->view ) ? $item['view'] : $this->view;
+			View::do_dump($view, $item);
 		}
 	}
 }

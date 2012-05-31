@@ -45,7 +45,24 @@ class Tag extends Controller {
 
 	}
 	
-
+	public static function getBody( $path ) {
+		// pls replace strng $path with proper params array (make parameter generation more abstruct)
+		$items = array();
+		$tag = preg_replace('#^tag/#', '', $path);
+		
+		$page=new Page();
+		$page->tablename = "pages";
+		$pages = $page->retrieve_many("tags like '%".$tag."%'");
+		$view = getPath('views/tag/body.php');
+		
+		foreach( $pages as $data ){
+			$data['view'] = $view;
+			$items[] = $data;
+		}
+		
+		return $items;
+	}
+	
 }
 
 

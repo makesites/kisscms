@@ -16,7 +16,7 @@ class Section {
 							'h5-id' => false,'h5-class' => false,
 							'ul' => false, 'ul-id' => false, 'ul-class' => false,
 							'li' => false, 'li-id' => false, 'li-class' => false,
-							'tag' => false,
+							'tag' => false, 'path' => false
 						);
 		
 		$this->view = $view;
@@ -37,13 +37,12 @@ class Section {
 		if(!$class){
 			$class = get_called_class();
 		}
-		// fallback for view is the controller name
-		if(!$file = getPath('views/sections/'. $view .'.php'))
-			$view  = strtolower( $class );
-			// fallback to the default view
-			if(!$file = getPath('views/sections/'. $view .'.php'))
-				$view  = 'default';
-				$file = getPath('views/sections/'. $view .'.php');
+		// 1st fallback - a view named as the section class name
+		if(!$file = getPath('views/sections/'. $view .'.php')) $view  = strtolower( $class );
+		// 2nd fallback - use the default view
+		if(!$file = getPath('views/sections/'. $view .'.php')) $view  = 'default';
+		
+		$file = getPath('views/sections/'. $view .'.php');
 		// save the view we found
 		$view = $file;
 		
@@ -308,5 +307,23 @@ class LatestUpdates extends Section {
 	
 }
 
+// output the body section of any other page (provided that the relevant controller supports the getBody() method)
+class Body extends Section {
+	
+	function __construct($view=false, $vars=false, $data=false){
+		parent::__construct($view,$vars);
+		// 
+		$class = findController( $this->data["vars"]["path"] );
+		$this->data['items'] = $class::getBody( $this->data["vars"]["path"] );
+		$this->render();
+	}
+	
+	// override default rendering method to render each piec eof content with their respective view...
+	function render(){	
+		foreach( $this->data['items'] as $item){ 
+			View::do_dump($item['view'], $item);
+		}
+	}
+}
 
 ?>

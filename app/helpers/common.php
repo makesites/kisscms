@@ -27,8 +27,8 @@ function findController($url) {
 		}
 	}
 	if( !empty( $controllerfile) ) {
-		// set the controller file as a constant for later use
-		define("CONTROLLER", $controller);
+		// set the controller file as a constant for later use (only do it the first time...)
+		if( !defined("CONTROLLER") ) define("CONTROLLER", $controller);
 		// include the controller file 
 		require( $controllerfile );
 		// return the controller name with the first letter uppercase

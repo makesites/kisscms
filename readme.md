@@ -1,10 +1,11 @@
-﻿KISSCMS - Content Management made Simple
+﻿KISSCMS - Content Management made Simple 
+[![Build Status](https://secure.travis-ci.org/makesites/kisscms.png)](http://travis-ci.org/makesites/kisscms)
 =======================================
 A Make Sites production (www.makesites.org) 
 Lead Developer: Makis Tracend (makis@makesit.es) 
 Website: http://www.kisscms.com 
 
-Current stable: [v1.1](https://github.com/makesites/kisscms/zipball/v1.1)
+Current stable: [v1.2](https://github.com/makesites/kisscms/zipball/v1.2)
 
 Description
 -----------

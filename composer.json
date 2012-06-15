@@ -2,7 +2,7 @@
     "name": "makesites/kisscms",
     "type": "library",
     "description": "Content Management made Simple",
-    "keywords": ["cms","kiss","free"],
+    "keywords": ["kisscms","cms","os","free"],
     "homepage": "http://kisscms.com",
     "license": "MIT",
     "authors": [
@@ -24,5 +24,8 @@
             "type": "vcs",
             "url": "http://github.com/makesites/kisscms"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {"KISSCMS": "./"}
+    }
 }

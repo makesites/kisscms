@@ -16,7 +16,10 @@ before_script:
 
 # omitting "script:" will default to phpunit
 # use the $DB env variable to determine the phpunit.xml to use
-script: phpunit --configuration test/phpunit.xml --coverage-text
+script: 
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev
+  - phpunit --configuration test/phpunit.xml --coverage-text
 
 # configure notifications (email, IRC, campfire etc)
 notifications:

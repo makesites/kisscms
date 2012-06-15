@@ -1,11 +1,11 @@
 ﻿KISSCMS - Content Management made Simple 
-[![Build Status](https://secure.travis-ci.org/makesites/kisscms.png)](http://travis-ci.org/makesites/kisscms)
 =======================================
 A Make Sites production (www.makesites.org) 
 Lead Developer: Makis Tracend (makis@makesit.es) 
 Website: http://www.kisscms.com 
 
 Current stable: [v1.2](https://github.com/makesites/kisscms/zipball/v1.2)
+[![Build Status](https://secure.travis-ci.org/makesites/kisscms.png)](http://travis-ci.org/makesites/kisscms)
 
 Description
 -----------
@@ -14,7 +14,9 @@ A CMS with minimal footprint written in PHP, following best practices in MVC arc
 
 Setup
 -----
-1. Extract the archive and place the content of the kisscms folder where you want your website to be located. 
+KISSCMS may be installed using Composer (getcomoser.org) or by cloning it from its Github repository. 
+
+1. Extract the archive and place the contents of the folder where you want your website to be located. 
 2. Place the files in the "html" folder should in your web root. All other folders one directory level above it.
 3. Open a browser and enter the address of your website. Sample content should already work with no further effort.
 4. Type "/admin" in your web address to enter the administration area. Default (username/password) are: ** admin / admin **

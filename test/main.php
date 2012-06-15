@@ -1,6 +1,8 @@
 <?php
 
-class Main extends PHPUnit_Framework_TestCase
+use Mockery as m;
+
+class MainTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PDO
@@ -14,7 +16,7 @@ class Main extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        
+        m::close();
     }
 
     public function testMain()

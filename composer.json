@@ -24,8 +24,5 @@
             "type": "vcs",
             "url": "http://github.com/makesites/kisscms"
         }
-    ],
-    "autoload": {
-        "psr-0": {"KISSCMS": "./"}
-    }
+    ]
 }

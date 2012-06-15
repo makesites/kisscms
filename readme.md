@@ -14,7 +14,7 @@ A CMS with minimal footprint written in PHP, following best practices in MVC arc
 
 Setup
 -----
-KISSCMS may be installed using Composer (getcomoser.org) or by cloning it from its Github repository. 
+KISSCMS may be installed using Composer (getcomposer.org) or by cloning it from its Github repository. 
 
 1. Extract the archive and place the contents of the folder where you want your website to be located. 
 2. Place the files in the "html" folder should in your web root. All other folders one directory level above it.

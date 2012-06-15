@@ -1,6 +1,6 @@
 <?php
 
-class MainTest extends PHPUnit_Framework_TestCase
+class Main extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PDO

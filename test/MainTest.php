@@ -1,6 +1,6 @@
 <?php
 
-use Mockery as m;
+//use Mockery as m;
 
 class MainTest extends PHPUnit_Framework_TestCase
 {
@@ -16,7 +16,7 @@ class MainTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        m::close();
+        //m::close();
     }
 
     public function testMain()

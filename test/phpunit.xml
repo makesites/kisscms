@@ -12,8 +12,8 @@
          syntaxCheck="false"
 >
     <testsuites>
-        <testsuite name="KISSCMS Test Suite">
-            <directory>../test/</directory>
+        <testsuite name="MainTest">
+            <directory>./</directory>
         </testsuite>
     </testsuites>
 

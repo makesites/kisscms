@@ -66,7 +66,7 @@ if (defined("APP") && is_file(APP.'bin/init.php')){
 	// find the core file second
 	require_once(BASE.'bin/init.php');
 } else {
-	die("Environment varialbes not setup properly. Open env.json and edit as needed...");
+	die("Environment variables not setup properly. Open env.json and edit as needed...");
 }
 
 ?>

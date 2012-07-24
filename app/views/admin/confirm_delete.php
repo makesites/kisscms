@@ -4,7 +4,7 @@
 
 <p>Do you want to proceed?</p>
 
-<form action="<?=myUrl("admin/delete")?>">
+<form action="<?=url("admin/delete")?>">
 <input type="hidden" name="path" value="<?=$path?>">
 <input type="submit" value="Delete" />
 </form>

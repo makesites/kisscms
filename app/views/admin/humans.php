@@ -4,7 +4,7 @@
 
 /* TEAM */
   Author: <?=$config['main']['site_author']?>
-  Site: <?=myUrl('', true)?>
+  Site: <?=url('', true)?>
   
 /* THANKS */
   Makis Tracend (http://makesit.es)

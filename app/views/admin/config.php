@@ -5,7 +5,7 @@ $admin_username = (!isset($admin_username)) ? '' : $admin_username;
 
 <h2>Configuration</h2>
 
-<form class="cms-form clearfix" method="post" action="<?=myUrl('admin/config/action/save')?>">
+<form class="cms-form clearfix" method="post" action="<?=url('admin/config/action/save')?>">
 <?php 
 	foreach( $GLOBALS['config'] as $controller=>$vars ){
 		echo '<fieldset name="'.$controller.'">';

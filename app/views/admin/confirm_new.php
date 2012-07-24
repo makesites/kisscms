@@ -4,7 +4,7 @@
 
 <p>Would you like to create it now?</p>
 
-<form action="<?=myUrl("admin/create")?>" method="POST">
+<form action="<?=url("admin/create")?>" method="POST">
 <input type="hidden" name="path" value="<?=$path?>">
 <input type="submit" value="Create" />
 </form>

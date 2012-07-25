@@ -172,15 +172,7 @@ class Controller extends KISS_Controller {
 				$request_uri_parts = array_merge( $request_uri_parts, explode("=", $query) );
 			}
 		}
-		// handle requests encoded as application/json 
-		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
-     		$_POST = json_decode(file_get_contents("php://input"));
-		}
-		// adding POST params
-		foreach( $_POST as $key => $value ){
-			$request_uri_parts[] = $key;
-			$request_uri_parts[] = $value;
-		}
+		
 		$this->request_uri_parts = $request_uri_parts;
 		return $this;
 	}
@@ -211,8 +203,9 @@ class Controller extends KISS_Controller {
 			}
 		}
 		
+		
 		// lastly convert the params in pairs
-		$params = $this->beautify_array( $params );
+		$params = $this->normalize_params( $params );
 		
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
@@ -257,32 +250,48 @@ class Controller extends KISS_Controller {
 	}
 	
 	// this function takes an array and creates pairs of key-value
-	function beautify_array( $params ){
+	function normalize_params( $params ){
+		
+		// create a new key/value array
+		$newparams = array();
+		
+		foreach( $params as $num => $param ){
+			if( $num%2 == 0 ){
+				// stop if there is no more params
+				if( empty( $params[$num+1] ) ){
+					 $newparams[] = $param;
+					 continue;
+				}
+				$key = $param;
+				$value = $params[$num+1];
+				// save the new key/value pair
+				$newparams[ $key ] = $value;
+			}
+		}
+		
+		// replace the given params
+		$params = $newparams;
+	
+		// handle requests encoded as application/json 
+		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
+     		$_POST = json_decode(file_get_contents("php://input"));
+		}
+		// adding POST params
+		foreach( $_POST as $k => $v ){
+			if( array_key_exists( $k, $params) ) {
+				$params[$k] = array_merge( $params[$k], $v );
+			} else {
+				$params[$k] = $v;
+			}
+		}
+		
 		
 		// return null if there are no params
 		if( count($params)==0 ) {
-			$params = null;
+			$params = NULL;
 		// convert the params to a string if they are only one element
 		} else if( count($params)==1 ) {
 			$params = implode($params);
-		// create a new key/value array
-		} else {
-			
-			$newparams = array();
-			
-			foreach( $params as $num => $param ){
-				if( $num%2 == 0 ){
-					$key = $param;
-					// stop if there is no more params
-					if( empty( $params[$num+1] ) ) continue;
-					$value = $params[$num+1];
-					// save the new key/value pair
-					$newparams[ $key ] = $value;
-				}
-			}
-			
-			// replace the given params
-			$params = $newparams;
 		}
 		
 		return $params;

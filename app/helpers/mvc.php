@@ -172,6 +172,10 @@ class Controller extends KISS_Controller {
 				$request_uri_parts = array_merge( $request_uri_parts, explode("=", $query) );
 			}
 		}
+		// handle requests encoded as application/json 
+		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
+     		$_POST = json_decode(file_get_contents("php://input"));
+		}
 		// adding POST params
 		foreach( $_POST as $key => $value ){
 			$request_uri_parts[] = $key;

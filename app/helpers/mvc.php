@@ -85,7 +85,14 @@ class Model extends KISS_Model  {
 		return $vars;
 	}
 
-
+	function merge($arr) {
+		if (!is_array($arr))
+			return false;
+		foreach ($arr as $key => $val)
+			$this->set($key, $val);
+		return $this;
+	}
+	
 	function retrieve_many($wherewhat='',$bindings='') {
 		$dbh=$this->getdbh();
 		if (is_scalar($bindings))
@@ -107,7 +114,6 @@ class Model extends KISS_Model  {
 		return $arr;
 	}
 	
-	
 	function get($key) {
 		if (isset($this->rs[$key]))
 			return $this->rs[$key];
@@ -115,6 +121,17 @@ class Model extends KISS_Model  {
 			return false;
 	}
 	
+	function getAll(){
+		// override in models to add exceptions...
+		$array = array();
+		foreach($this->rs as $k=>$v){
+			$result = $this->get($k);
+			// don't add data that 's returned as 'false'
+			if( $result ) $array[$k] = $result;
+		}
+		return $array;
+	}
+
 	function drop_table( $table ) {
 		if( $table ){ 
 			$dbh = $this->getdbh();

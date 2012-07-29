@@ -60,8 +60,8 @@ function isStatic( $file ) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
 				} 
-				if ( is_dir($plugin) && file_exists( APP."plugins/".$plugin."/public/".file ) ) {
-					$target = APP."plugins/".$plugin."/public/".file;
+				if ( is_dir(APP."plugins/".$plugin) && file_exists( APP."plugins/".$plugin."/public/".$file ) ) {
+					$target = APP."plugins/".$plugin."/public/".$file;
 					return $target;
 				}
 			}
@@ -78,8 +78,8 @@ function isStatic( $file ) {
 				if ($plugin == '.' || $plugin == '..') { 
 				  continue; 
 				} 
-				if ( is_dir($plugin) && file_exists( BASE."plugins/".$plugin."/public/".file ) ) {
-					$target = BASE."plugins/".$plugin."/public/".file;
+				if ( is_dir(BASE."plugins/".$plugin) && file_exists( BASE."plugins/".$plugin."/public/".$file ) ) {
+					$target = BASE."plugins/".$plugin."/public/".$file;
 					return $target;	
 				}
 			}

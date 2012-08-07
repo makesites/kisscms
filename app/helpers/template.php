@@ -294,7 +294,7 @@ class Template extends KISS_View {
 						$GLOBALS['client']['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
 					
 				// add the shim, if any
-				if( !empty($attr['data']['deps']) ) 
+				if( !empty($attr['data']['deps']) )
 					$GLOBALS['client']['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
 				
 			}
@@ -386,7 +386,8 @@ class Template extends KISS_View {
 				// fix nested empty arrays manually
 				if( implode($attributes) == "") $attributes = array();
 			}
-			$attr['data'][$key] = array_unique( $attributes );
+			// pickup only the unique values (and reset the keys)
+			$attr['data'][$key] = array_values( array_unique( $attributes ) );
 		}
 		
 		return $attr;

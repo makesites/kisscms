@@ -19,8 +19,8 @@ class Template extends KISS_View {
 		$GLOBALS['foot'] = $template->get("foot");
 		// compile the page with the existing data
 		$output = parent::do_fetch($template->file, $template->vars);
-		// post-process (in debug don't post process)
-		if( !DEBUG ) $output = $template->process($output);
+		// post-process (in debug with limited features)
+		$output = $template->process($output);
 		// output the final markup - clear whitespace (if not in debug mode)
 		echo $output;
 		
@@ -192,7 +192,7 @@ class Template extends KISS_View {
 		$output =  $dom->saveHTML();
 		
 		// output the final markup - clear whitespace
-		return $this->trimWhitespace( $output );
+		return ( DEBUG ) ? $html : $this->trimWhitespace( $output );
 		
 	}
 	
@@ -382,7 +382,6 @@ class Template extends KISS_View {
 			foreach($element as $k =>$v){
 				$attribute = ( is_array($v) ) ? $v : explode(",", $v) ;
 				$attributes = array_merge( $attributes, array_unique($attribute) );
-				
 			}
 			$attr['data'][$key] = array_unique( $attributes );
 		}

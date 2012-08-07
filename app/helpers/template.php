@@ -161,15 +161,15 @@ class Template extends KISS_View {
 		
 		// write config file
 		$client_sign = md5($client);
-		$file_sign = (is_file(APP. "public/js/script.js")) ? md5_file(APP. "public/js/script.js") : NULL;
+		$file_sign = (is_file(APP. "public/js/client.js")) ? md5_file(APP. "public/js/client.js") : NULL;
 		
-		$client_src=url("/js/script.js");
+		$client_src=url("/js/client.js");
 		
 		// check md5 signature
 		if($client_sign == $file_sign){ 
 			// do nothing
 		} else {
-			$write = file_put_contents( APP. "public/js/script.js", $this->trimWhitespace($client) );
+			$write = file_put_contents( APP. "public/js/client.js", $this->trimWhitespace($client) );
 			// force the caching to reload the client
 			$client_src = $client_src ."?time=". time();
 		}

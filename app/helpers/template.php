@@ -369,8 +369,11 @@ class Template extends KISS_View {
 		foreach($attr['data'] as $key =>$element){
 			$attributes = array();
 			// don't process items that are already collapsed
-			if( !is_array( $element ) ) continue;
-		
+			if( !is_array( $element ) ) {
+				// explode the string (in case it has comma seperated values)
+				if( strpos($element, ",") ) $attr['data'][$key] = explode(",", $element);
+				continue;
+			}
 			foreach($element as $k =>$v){
 				$attribute = ( is_array($v) ) ? $v : explode(",", $v) ;
 				$attributes = array_merge( $attributes, array_unique($attribute) );
@@ -378,7 +381,7 @@ class Template extends KISS_View {
 			}
 			$attr['data'][$key] = array_unique( $attributes );
 		}
-			
+		
 		return $attr;
 	}
 	

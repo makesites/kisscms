@@ -280,16 +280,21 @@ class Template extends KISS_View {
 
 			} else {
 				// check the require parameters...
-				if( $attr['data']['minify'] ) {
+				if( !empty($attr['data']['path']) ){
+					$name = $attr['data']['path'];
+				} elseif( $attr['data']['minify'] ) {
 					$name = $name .".min";
 				}
+				
 				// push the name of the groups as the dependency
 				array_push( $GLOBALS['client']['require']['deps'], $name);
 				
+				if( !empty($attr['data']['path']) ) 
+						$GLOBALS['client']['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
+					
 				// add the shim, if any
 				if( !empty($attr['data']['deps']) ) 
-					$GLOBALS['client']['require']['shim'][$name] = $attr['data']['deps'];
-				
+					$GLOBALS['client']['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
 				
 			}
 			

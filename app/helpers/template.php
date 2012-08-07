@@ -216,10 +216,11 @@ class Template extends KISS_View {
 			}
 			
 			$min		->cacheDir( APP. "public/". $GLOBALS['client']['require']['baseUrl'] )
-						->setFile( $name.".min" )
-						->quiet()
+						->setFile( $name.".min" );
+			if( !DEBUG){
+			$min		->quiet()
 						->hideDebugInfo();
-							
+			}
 			// condition the method of minification here...
 			switch( $encode ){ 
 				case "whitespace": 

@@ -382,6 +382,8 @@ class Template extends KISS_View {
 			foreach($element as $k =>$v){
 				$attribute = ( is_array($v) ) ? $v : explode(",", $v) ;
 				$attributes = array_merge( $attributes, array_unique($attribute) );
+				// fix nested empty arrays manually
+				if( implode($attributes) == "") $attributes = array();
 			}
 			$attr['data'][$key] = array_unique( $attributes );
 		}

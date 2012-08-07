@@ -19,9 +19,8 @@ class Template extends KISS_View {
 		$GLOBALS['foot'] = $template->get("foot");
 		// compile the page with the existing data
 		$output = parent::do_fetch($template->file, $template->vars);
-		// post-process
-		// - check if any minification is necessary
-		$output = $template->minify($output);
+		// post-process (in debug don't post process)
+		if( !DEBUG ) $output = $template->process($output);
 		// output the final markup - clear whitespace (if not in debug mode)
 		echo $output;
 		
@@ -75,74 +74,152 @@ class Template extends KISS_View {
 		return $data;
 	}
 	
-	function minify( $html ){
+	
+	function process( $html ){
 		
+		// setup 
+		$client = "";
+		$group = array();
+		$remove = array();
+		// make this a config option?
+		$baseUrl = "/assets/js/";
+		// precaution(s) in case this is the first time we are accessing the client globals (not needed?)
+		if( !isset($GLOBALS['client']) ) $GLOBALS['client'] = array();
+		if( !isset($GLOBALS['client']['require']) ) $GLOBALS['client']['require'] = array();
+		// FIX: create the dir if not available
+		if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
+		if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
+		
+		// default require strucure
+		$GLOBALS['client']['require'] = array(
+			"baseUrl" => $baseUrl, 
+			"paths" => array(),
+			"shim" => array(),
+			"deps" => array()
+		);
+		
+		// map the dom
 		$dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false; 
 		@$dom->loadHTML($html);
  		
+		// filter the scripts
 		$scripts = $dom->getElementsByTagName('script');
  		
-		$minify = array();
-		$delete = array(); 
-		
-		// find all the scripts that need to be minified
+		// check the script attributes
 		foreach ($scripts as $script){
-			$type = $script->getAttribute('data-type');
+			// check out for the supported script attributes
+			$data = array();
+			$data['path'] = $script->getAttribute('data-path');
+			$data['deps'] = $script->getAttribute('data-deps');
+			$data['group'] = $script->getAttribute('data-group');
+			$data['order'] = (int) $script->getAttribute('data-order');
+			$data['encode'] = $script->getAttribute('data-encode');
+			$type = $script->getAttribute('type');
+			$src = $script->getAttribute('src');
 			
-			if( strpos($type, "google-closure") ){
-				// capture attributes
-				$group = $script->getAttribute('data-group');
-				$order = (int) $script->getAttribute('data-order');
-				$encode = $script->getAttribute('data-encode');
-				$src = $script->getAttribute('src');
-				// order the scripts (if available)
-				if( $order ) {
-					$minify[$group][$order] = array( "src" => $src, "encode" => $encode);
-				} else { 
-					$minify[$group][] = array( "src" => $src, "encode" => $encode);
-				}
-				// queue to delete
-				$delete[] = $script; 
-							
+			// register types
+			$data['minify'] = strpos($type, "google-closure") > 0 || !empty($data['encode']);
+			$data['require'] = strpos($type, "require") > 0 || !empty($data['path']);
+			
+			// leave standard types alone
+			if( !$data['minify'] && !$data['require']) continue;
+		
+			
+			// if script processed in any way, remove from the DOM
+			$remove[] = $script;
+			
+			// if no src add to the config file
+			if( empty($src) && $data['require'] ) {
+				$client .= $script->textContent;
+				// no further processing required
+				continue;
 			}
-
+			
+			//get the name from the script src
+			$name = substr( str_replace( array($baseUrl, url() ),"", $src), 0, -3);
+			
+			// there is no grouping if there's no minification :P
+			if( $data['minify'] && !empty($data['group']) ) {
+				$group[$data['group']][] = array( "src" => $src, "data" => $data );
+			} else { 
+				// maybe pick the file name as the group name instead...
+				$group[$name][] = array( "src" => $src, "data" => $data );
+			}
+			
+			
 		}
 		
-		// FIX: stop if the are no libraries to minify
-		if( !count($minify)) return $dom->saveHTML();
+		// process minification
+		$this->minify( $group );
 		
-		// remove the scripts from the dom
-		foreach( $delete as $tag ){ 
-		  $tag->parentNode->removeChild($tag); 
-		} 
+		// process require configuration
+		$dom = $this->config( $group, $dom );
+		
+		// prepend the client string
+		$client = "var KISSCMS = ". json_encode_escaped($GLOBALS['client']) ."; " . $client;
+		
+		// write config file
+		$client_sign = md5($client);
+		$file_sign = (is_file(APP. "public/js/script.js")) ? md5_file(APP. "public/js/script.js") : NULL;
+		
+		$client_src=url("/js/script.js");
+		
+		// check md5 signature
+		if($client_sign == $file_sign){ 
+			// do nothing
+		} else {
+			$write = file_put_contents( APP. "public/js/script.js", $this->trimWhitespace($client) );
+			// force the caching to reload the client
+			$client_src = $client_src ."?time=". time();
+		}
+		// in any case include the client script 
+		// get the main require js
+		$main = $dom->getElementById("require-main");
+		// render a standard script tag
+		$script = $dom->createElement('script');
+		$script->setAttribute("type", "text/javascript");
+		$script->setAttribute("src", $client_src);
+		$script->setAttribute("defer", "defer");
+		// prepend all scripts before the main require js
+		$main->parentNode->insertBefore($script, $main);
+		
+		// remove all modified scripts
+		foreach($remove as $script){
+			$script->parentNode->removeChild($script); 
+		}
+		
+		$output =  $dom->saveHTML();
+		
+		// output the final markup - clear whitespace
+		return $this->trimWhitespace( $output );
+		
+	}
+	
+	function minify( $scripts ){
 		
 		// sort results
-		ksort_recursive( $minify );
-		
-		// FIX: create the dir if not available
-		if( !is_dir( APP. "public/assets/js/" ) ) mkdir(APP. "public/assets/js/", 0775, true);
+		//ksort_recursive( $minify );
 		
 		// call google-closure
-		foreach( $minify as $name=>$group ){
-			$min = new Minify();
-			// get th eencoding from the first member of the group
+		foreach( $scripts as $name=>$group ){
 			$first = current($group);
-			$encode = $first["encode"];
+			// go to next group if minify flag is not true
+			if( !$first["data"]['minify'] ) continue;
+			$min = new Minify();
+			// get the encoding from the first member of the group
+			$encode = $first["data"]["encode"];
 			// loop through the group and add the files
 			foreach( $group as $script ){
 				$file = ( !strpos($script["src"], "http") ) ? $_SERVER['DOCUMENT_ROOT'] . $script["src"] : $script["src"];
 				$min->add( $file );
 			}
 			
-			$min->cacheDir( APP. "public/assets/js/" )
-   				->setFile( $name.".min" );
-				
-			if( !DEBUG ){ 
-				$min->quiet()
-   					->hideDebugInfo();
-			}
-   			
+			$min		->cacheDir( APP. "public/". $GLOBALS['client']['require']['baseUrl'] )
+						->setFile( $name.".min" )
+						->quiet()
+						->hideDebugInfo();
+							
 			// condition the method of minification here...
 			switch( $encode ){ 
 				case "whitespace": 
@@ -162,27 +239,71 @@ class Template extends KISS_View {
 			
 			//->useClosureLibrary()
    			$min->create();
-			
-			// create the script reference
-			//var_dump( "/assets/js/" . $name.".min" );
-		
+				
 		}
 		
-		// Unfortunately this messes up javascript templates
-		//$output =  $dom->saveHTML();
-		$output =  $html;
-		if ( !DEBUG ){ 
-			// Legacy regular expression to match minified scripts
-			$output = preg_replace("/<script (.)*(google-closure)+(.)*>(.)*?<\/script>/", "", $output );
-			// TEMP: for now replacingcomments with script tags (use require.js in the future)
-			$output = preg_replace("/<!-- min: (\w+) -->/i", '<script type="text/javascript" src="'. myCDN() .'/assets/js/${1}.min.js" defer="defer"></script>', $output);
-		}
-		// if in debug mode return the original html
-		//return ( DEBUG ) ? $html : $output;
-		// output the final markup - clear whitespace (if not in debug mode)
-		return ( DEBUG ) ? $output : $this->trimWhitespace( $output );
 	}
 	
+	
+	function config( $scripts, $dom ){
+		
+		// first process the require.config.json for cdn libs
+		// add a config option for the location of this file? 
+		$file = APP. "public/require.config.json";
+		if( is_file( $file ) ) $json = file_get_contents( $file );
+		if( !empty( $json ) ) $libs = json_decode($json, true);
+		
+		if( !empty( $libs ) ){ 
+			// merge the libs with the client globals
+			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
+		}
+		
+		// get the main require js
+		$main = $dom->getElementById("require-main");
+		// loop through the scripts
+		foreach ($scripts as $name=>$group){
+			//$first = current($group);
+			$attr = $this->groupAttributes($group);
+			if( !$attr['data']['require'] ) {
+				if( $attr['data']['minify'] ) {
+					$file = url($GLOBALS['client']['require']['baseUrl'] . $name .".min.js");
+				} else {
+					$file = $attr["src"];
+				}
+				// render a standard script tag
+				$script = $dom->createElement('script');
+				$script->setAttribute("type", "text/javascript");
+				$script->setAttribute("src", $file);
+				$script->setAttribute("defer", "defer");
+				// prepend all scripts before the main require js
+				$main->parentNode->insertBefore($script, $main);
+
+			} else {
+				// check the require parameters...
+				if( $attr['data']['minify'] ) {
+					$name = $name .".min";
+				}
+				// push the name of the groups as the dependency
+				array_push( $GLOBALS['client']['require']['deps'], $name);
+				
+				// add the shim, if any
+				if( !empty($attr['data']['deps']) ) 
+					$GLOBALS['client']['require']['shim'][$name] = $attr['data']['deps'];
+				
+				
+			}
+			
+
+		}
+		
+		// return the DOM object
+		return $dom;
+		
+	}
+	
+	
+	
+	// Helpers
 	function getTemplate(){
 		// support for mobile template
 		if(array_key_exists('IS_MOBILE', $GLOBALS) && $GLOBALS['IS_MOBILE'] == true && is_file(TEMPLATES."mobile.php") ){ 
@@ -234,6 +355,31 @@ class Template extends KISS_View {
 		} else {
 			return false;
 		}			
+	}
+	
+	function groupAttributes($group){
+		
+		$attr = array();
+			
+		foreach($group as $element){
+			$attr = array_merge_recursive($attr, $element);
+		}
+		
+		// marge data values
+		foreach($attr['data'] as $key =>$element){
+			$attributes = array();
+			// don't process items that are already collapsed
+			if( !is_array( $element ) ) continue;
+		
+			foreach($element as $k =>$v){
+				$attribute = ( is_array($v) ) ? $v : explode(",", $v) ;
+				$attributes = array_merge( $attributes, array_unique($attribute) );
+				
+			}
+			$attr['data'][$key] = array_unique( $attributes );
+		}
+			
+		return $attr;
 	}
 	
 	function trimWhitespace( $string ){

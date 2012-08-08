@@ -173,16 +173,13 @@ class Template extends KISS_View {
 			// force the caching to reload the client
 			$client_src = $client_src ."?time=". time();
 		}
-		// in any case include the client script 
-		// get the main require js
-		$main = $dom->getElementById("require-main");
 		// render a standard script tag
 		$script = $dom->createElement('script');
 		$script->setAttribute("type", "text/javascript");
 		$script->setAttribute("src", $client_src);
 		$script->setAttribute("defer", "defer");
-		// prepend all scripts before the main require js
-		$main->parentNode->insertBefore($script, $main);
+		// include the script 
+		$dom = $this->updateDom($script, $dom);
 		
 		// remove all modified scripts
 		foreach($remove as $script){
@@ -259,8 +256,6 @@ class Template extends KISS_View {
 			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
 		}
 		
-		// get the main require js
-		$main = $dom->getElementById("require-main");
 		// loop through the scripts
 		foreach ($scripts as $name=>$group){
 			//$first = current($group);
@@ -276,8 +271,8 @@ class Template extends KISS_View {
 				$script->setAttribute("type", "text/javascript");
 				$script->setAttribute("src", $file);
 				$script->setAttribute("defer", "defer");
-				// prepend all scripts before the main require js
-				$main->parentNode->insertBefore($script, $main);
+				// add the new script in the dom
+				$dom = $this->updateDom($script, $main);
 
 			} else {
 				// check the require parameters...
@@ -391,6 +386,23 @@ class Template extends KISS_View {
 		}
 		
 		return $attr;
+	}
+	
+	function updateDom($tag, $dom){ 
+		// switch based on the type of tag (script,link)
+		// if link....
+		// else
+		// get the main require js
+		$main = $dom->getElementById("require-main");
+		$body = $dom->getElementsByTagName("body")->item(0);
+		
+		// prepend all scripts before the main require js
+		( empty($main) ) 
+					? $body->appendChild($tag)
+					: $main->parentNode->insertBefore($tag, $main);
+					
+		
+		return $dom;
 	}
 	
 	function trimWhitespace( $string ){

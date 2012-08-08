@@ -22,6 +22,22 @@ class Main extends Controller {
 		$this->render();
 	}
 
+	// Generic logout method
+	function logout() {
+		// destroy session
+		session_destroy();
+		
+		// remove cookie(s)
+		foreach($_COOKIE as $name=>$value){
+			unset($_COOKIE[$name]);
+			setcookie($name, NULL, -1); 
+		}
+		
+		// reload the site
+		header("Location: ". url());
+		
+	}
+	
 	function render() {
 			
 		// display the page

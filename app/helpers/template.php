@@ -79,6 +79,7 @@ class Template extends KISS_View {
 		
 		// setup 
 		$client = "";
+		$url = url();
 		$group = array();
 		$remove = array();
 		// make this a config option?
@@ -115,12 +116,13 @@ class Template extends KISS_View {
 			$data['group'] = $script->getAttribute('data-group');
 			$data['order'] = (int) $script->getAttribute('data-order');
 			$data['encode'] = $script->getAttribute('data-encode');
-			$type = $script->getAttribute('type');
-			$src = $script->getAttribute('src');
+			$type = $script->getAttribute('data-type');
+			// remove domain name from src (if entered)
+			$src = str_replace( $url,"/", $script->getAttribute('src') );
 			
 			// register types
-			$data['minify'] = strpos($type, "google-closure") > 0 || !empty($data['encode']);
-			$data['require'] = strpos($type, "require") > 0 || !empty($data['path']);
+			$data['minify'] = strpos($type, "google-closure") > -1 || !empty($data['encode']);
+			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
 			
 			// leave standard types alone
 			if( !$data['minify'] && !$data['require']) continue;

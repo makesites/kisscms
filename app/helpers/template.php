@@ -345,7 +345,8 @@ class Template extends KISS_View {
 		
 		if ($handle = opendir(TEMPLATES)) {
 			while (false !== ($template = readdir($handle))) {
-				if ($template == '.' || $template == '..') { 
+				#52: Skip files that start with a dot
+				if ( substr($template,0,1) == '.' ) { 
 				  continue; 
 				} 
 				if ( is_file(TEMPLATES.$template) ) {

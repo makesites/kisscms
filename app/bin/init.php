@@ -1,6 +1,39 @@
 <?php
 
 //===============================================
+// PATHS
+//===============================================
+
+// first check where the folders are located ( based on the location of env.json)
+define("SITE_ROOT", (file_exists("../env.json")) ? realpath("../") : realpath("./") );
+
+// where the app is located
+if(!defined("APP")) define('APP', SITE_ROOT.'/app/'); //with trailing slash pls
+
+// the location where the SQLite databases will be saved
+if(!defined("DATA")) define('DATA', SITE_ROOT.'/data/');
+
+// the location of the website in relation with the domain root
+// if not manually specified it is calculated based on the position of the index.php
+if(!defined("WEB_FOLDER")) define('WEB_FOLDER', substr( $_SERVER['PHP_SELF'], 0, strpos($_SERVER['PHP_SELF'], "index.php") ) );
+// alternatively use this if you do not have mod_rewrite enabled
+//define('WEB_FOLDER','/index.php/'); 
+
+// full path of where the templates reside
+if(!defined("TEMPLATES")) define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
+
+
+//===============================================
+// OTHER CONSTANTS
+//===============================================
+
+// find if this is running from localhost
+define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
+// set to true to enable debug mode (where supported) 
+if(!defined("DEBUG")) define('DEBUG', false);
+
+
+//===============================================
 // Includes
 //===============================================
 // follows this order: 
@@ -32,19 +65,19 @@ session_start();
 //===============================================
 // Routes
 //===============================================
-// first check if this is a "static" asset
 $url = parse_url( $_SERVER['REQUEST_URI'] );
-
+// first check if this is a "static" asset
 if ($output = isStatic($url['path']) ) {
 	echo getFile( $output );
 	exit;
 } else {
 	$controller = findController($url['path']);	
 }
-//requestParserCustom($controller,$action,$params);
 
 
-
+//===============================================
+// Helpers
+//===============================================
 // Lookup available dirs in our environment
 function lookUpDirs(){
 	

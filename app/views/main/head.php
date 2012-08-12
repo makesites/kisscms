@@ -21,4 +21,4 @@
 <link rel="stylesheet" href="<?=url('/css/style.css')?>">
 <link type="text/plain" rel="author" href="<?=url('/humans.txt')?>" />
 
-<script type="text/javascript" src="<?=url('/js/libs/modernizr-2.0.6.min.js')?>" defer="defer"></script>
+<script type="text/javascript" src="<?=url('/js/libs/modernizr-2.0.6.min.js')?>"></script>

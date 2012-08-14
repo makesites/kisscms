@@ -4,22 +4,23 @@
 // Template
 //===============================================================
 class Template extends KISS_View {
-
+	public $hash;
+	
 	//Example of overriding a constructor/method, add some code then pass control back to parent
 	function __construct($vars='') {
 		$this->vars = $vars;
+		$this->hash = $this->getHash("", $vars);
 		$file = $this->getTemplate();
 		parent::__construct($file,$vars);
 	}
 
 	function output($vars=''){
-		// first thing, check if there's a cached version of the template
-		$id = self::getHash("template_", $vars);
-		$cache = self::getCache( $id );
-		if($cache) { echo $cache; return; }
-		
-		// continue processing
 		$template = new Template($vars);
+		// first thing, check if there's a cached version of the template
+		$id = "template_". $template->hash;
+		$cache = self::getCache( $id );
+		if($cache && !DEBUG) { echo $cache; return; }
+		// continue processing
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
 		$GLOBALS['foot'] = $template->get("foot");
@@ -168,15 +169,15 @@ class Template extends KISS_View {
 		// prepend the client string
 		$client = "var KISSCMS = ". json_encode_escaped($GLOBALS['client']) ."; " . $client;
 		$client = $this->trimWhitespace($client);
-		$client_file = "client_". md5(session_id()) .".js";
+		$client_file = "client_". $this->hash .".js";
 		$cache = $this->getCache( $client_file );
 		
 		// write config file
 		$client_sign = md5($client);
 		$cache_sign = ($cache) ? md5($cache) : NULL;
 		
-		//$client_src=url("/js/client.js");
-		$client_src=url( $client_file );
+		// the client file should not be cached by the cdn
+		$client_src= "/". $client_file;
 		
 		// check md5 signature
 		if($client_sign == $cache_sign){ 
@@ -316,16 +317,20 @@ class Template extends KISS_View {
 	}
 	
 	// Helpers
-	function getHash( $prefix="" ){
+	function getHash( $prefix="", $vars=array() ){
+		// the hash is an expression of the variables compiled to render the template
+		// note that constantly updated values (like timestamps) should be avoided to allow the hash to be reproduced...
+		$string = serialize( $vars );
+		// ALTERNATE method
 		// the hash is a combination of :
 		// - the request url 
 		// - the request parameters
 		// - the session id
 		// - the user id (if available)
-		$string = $_SERVER['REQUEST_URI'];
-		$string .= serialize( $_REQUEST );
-		$string .= session_id();
-		if( isset($_SESSION['user']['id']) ) $string .= $_SESSION['user']['id'];
+		//$string = $_SERVER['REQUEST_URI'];
+		//$string .= serialize( $_REQUEST );
+		//$string .= session_id();
+		//if( isset($_SESSION['user']['id']) ) $string .= $_SESSION['user']['id'];
 		// generate a hash form the string
 		return $prefix . hash("md5", $string);
 	}

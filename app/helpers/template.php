@@ -13,6 +13,12 @@ class Template extends KISS_View {
 	}
 
 	function output($vars=''){
+		// first thing, check if there's a cached version of the template
+		$id = self::getHash("template_");
+		$cache = self::getCache( $id );
+		if($cache) { echo $cache; return; }
+		
+		// continue processing
 		$template = new Template($vars);
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
@@ -23,7 +29,8 @@ class Template extends KISS_View {
 		$output = $template->process($output);
 		// output the final markup - clear whitespace (if not in debug mode)
 		echo $output;
-		
+		// set the cache for later use
+		self::setCache( $id, $output);
 	}
 	
 	function head( $vars=false ){
@@ -160,20 +167,28 @@ class Template extends KISS_View {
 		
 		// prepend the client string
 		$client = "var KISSCMS = ". json_encode_escaped($GLOBALS['client']) ."; " . $client;
+		$client = $this->trimWhitespace($client);
+		$client_file = "client_". md5(session_id()) .".js";
+		$cache = $this->getCache( $client_file );
 		
 		// write config file
 		$client_sign = md5($client);
-		$file_sign = (is_file(APP. "public/js/client.js")) ? md5_file(APP. "public/js/client.js") : NULL;
+		$cache_sign = ($cache) ? md5($cache) : NULL;
 		
-		$client_src=url("/js/client.js");
+		//$client_src=url("/js/client.js");
+		$client_src=url( $client_file );
 		
 		// check md5 signature
-		if($client_sign == $file_sign){ 
+		if($client_sign == $cache_sign){ 
 			// do nothing
+			var_dump("SAME!!! : ". $client_sign);
 		} else {
-			$write = file_put_contents( APP. "public/js/client.js", $this->trimWhitespace($client) );
+			
+			// set the cache for later use
+			self::setCache( $client_file , $client);
+			//$write = file_put_contents( APP. "public/js/client.js",  );
 			// force the caching to reload the client
-			$client_src = $client_src ."?time=". time();
+			//$client_src = $client_src ."?time=". time();
 		}
 		// render a standard script tag
 		$script = $dom->createElement('script');
@@ -304,9 +319,30 @@ class Template extends KISS_View {
 		
 	}
 	
-	
-	
 	// Helpers
+	function getHash( $prefix="" ){
+		// the hash is a combination of :
+		// - the request url 
+		// - the request parameters
+		// - the session id
+		$string = $_SERVER['REQUEST_URI'];
+		$string .= serialize( $_REQUEST );
+		$string .= session_id();
+		//if( isset($_SESSION['user']['id']) ) $string .= $_SESSION['user']['id'];
+		// generate a hash form the string
+		return $prefix . hash("md5", $string);
+	}
+	function getCache($id ){
+		$cache = new Minify_Cache_File();
+		// check if the file is less then 5 min old
+		return ( $cache->isValid($id, time("now")-300) ) ? $cache->fetch($id) : false;
+	}
+	function setCache($id, $data){
+		$cache = new Minify_Cache_File();
+		$cache->store($id, $data);
+	}
+	
+	
 	function getTemplate(){
 		// support for mobile template
 		if(array_key_exists('IS_MOBILE', $GLOBALS) && $GLOBALS['IS_MOBILE'] == true && is_file(TEMPLATES."mobile.php") ){ 

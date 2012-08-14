@@ -94,6 +94,9 @@ function isStatic( $file ) {
 			return $target;
 		}
 	}
+	//lastly check the cache 
+	$cache = new Minify_Cache_File();
+	if( $cache->isValid($file, time("now")-300) ) return $cache->tmp() ."/". $file;
 	
 	// return false if there are no results
 	return false;

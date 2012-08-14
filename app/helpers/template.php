@@ -14,7 +14,7 @@ class Template extends KISS_View {
 
 	function output($vars=''){
 		// first thing, check if there's a cached version of the template
-		$id = self::getHash("template_");
+		$id = self::getHash("template_", $vars);
 		$cache = self::getCache( $id );
 		if($cache) { echo $cache; return; }
 		
@@ -181,14 +181,10 @@ class Template extends KISS_View {
 		// check md5 signature
 		if($client_sign == $cache_sign){ 
 			// do nothing
-			var_dump("SAME!!! : ". $client_sign);
 		} else {
 			
 			// set the cache for later use
 			self::setCache( $client_file , $client);
-			//$write = file_put_contents( APP. "public/js/client.js",  );
-			// force the caching to reload the client
-			//$client_src = $client_src ."?time=". time();
 		}
 		// render a standard script tag
 		$script = $dom->createElement('script');
@@ -325,17 +321,18 @@ class Template extends KISS_View {
 		// - the request url 
 		// - the request parameters
 		// - the session id
+		// - the user id (if available)
 		$string = $_SERVER['REQUEST_URI'];
 		$string .= serialize( $_REQUEST );
 		$string .= session_id();
-		//if( isset($_SESSION['user']['id']) ) $string .= $_SESSION['user']['id'];
+		if( isset($_SESSION['user']['id']) ) $string .= $_SESSION['user']['id'];
 		// generate a hash form the string
 		return $prefix . hash("md5", $string);
 	}
 	function getCache($id ){
 		$cache = new Minify_Cache_File();
-		// check if the file is less then 5 min old
-		return ( $cache->isValid($id, time("now")-300) ) ? $cache->fetch($id) : false;
+		// check if the file is less than an hour old 
+		return ( $cache->isValid($id, time("now")-3600) ) ? $cache->fetch($id) : false;
 	}
 	function setCache($id, $data){
 		$cache = new Minify_Cache_File();

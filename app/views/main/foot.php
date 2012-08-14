@@ -6,11 +6,12 @@
 
 <script type="text/javascript" data-type="require">
 
-if( typeof(KISSCMS) == "undefined"){ var KISSCMS = new Array(); } 
-KISSCMS['require']['callback'] = function(){ init(); };
-
+	if( typeof(KISSCMS) == "undefined"){ var KISSCMS = new Array(); KISSCMS['require'] = new Array(); } 
 <? if( DEBUG){ ?>
-var DEBUG = true;
+	var DEBUG = true;
+	window.onload = function(){ init(); };
+<? } else { ?>
+	KISSCMS['require']['callback'] = function(){ init(); };
 <? } ?>
 
 </script>

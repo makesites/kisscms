@@ -94,9 +94,9 @@ function isStatic( $file ) {
 			return $target;
 		}
 	}
-	//lastly check the cache 
+	//lastly check the cache (less than an hour old)
 	$cache = new Minify_Cache_File();
-	if( $cache->isValid($file, time("now")-300) ) return $cache->tmp() ."/". $file;
+	if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
 	
 	// return false if there are no results
 	return false;

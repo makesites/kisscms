@@ -91,7 +91,7 @@ class Template extends KISS_View {
 		$group = array();
 		$remove = array();
 		// make this a config option?
-		$baseUrl = "/assets/js/";
+		$baseUrl =  "assets/js/";
 		// precaution(s) in case this is the first time we are accessing the client globals (not needed?)
 		if( !isset($GLOBALS['client']) ) $GLOBALS['client'] = array();
 		if( !isset($GLOBALS['client']['require']) ) $GLOBALS['client']['require'] = array();
@@ -101,7 +101,7 @@ class Template extends KISS_View {
 		
 		// default require strucure
 		$GLOBALS['client']['require'] = array(
-			"baseUrl" => $baseUrl, 
+			"baseUrl" => WEB_FOLDER . $baseUrl, 
 			"paths" => array(),
 			"shim" => array(),
 			"deps" => array()
@@ -208,7 +208,8 @@ class Template extends KISS_View {
 	}
 	
 	function minify( $scripts ){
-		
+		// make this a config option?
+		$baseUrl =  "assets/js/";
 		// sort results
 		//ksort_recursive( $minify );
 		
@@ -222,11 +223,11 @@ class Template extends KISS_View {
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files
 			foreach( $group as $script ){
-				$file = ( !strpos($script["src"], "http") ) ? $_SERVER['DOCUMENT_ROOT'] . $script["src"] : $script["src"];
+				$file = ( !strpos($script["src"], "http") ) ? SITE_ROOT . $script["src"] : $script["src"];
 				$min->add( $file );
 			}
 			
-			$min		->cacheDir( APP. "public/". $GLOBALS['client']['require']['baseUrl'] )
+			$min		->cacheDir( APP. "public/". $baseUrl )
 						->setFile( $name.".min" );
 			if( !DEBUG){
 			$min		->quiet()

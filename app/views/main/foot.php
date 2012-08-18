@@ -5,15 +5,11 @@
 <![endif]-->
 
 <script type="text/javascript" data-type="require">
-
-	if( typeof(KISSCMS) == "undefined"){ var KISSCMS = new Array(); KISSCMS['require'] = new Array(); } 
 <? if( DEBUG){ ?>
-	var DEBUG = true;
 	window.onload = function(){ init(); };
 <? } else { ?>
 	KISSCMS['require']['callback'] = function(){ init(); };
 <? } ?>
-
 </script>
 
 <script id="require-main" type="text/javascript" data-main="<?=url("/assets/js/main.js")?>" src="<?=url("/js/libs/require.js")?>"  defer="defer"></script>

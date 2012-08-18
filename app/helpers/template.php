@@ -21,6 +21,7 @@ class Template extends KISS_View {
 		$cache = self::getCache( $id );
 		if($cache && !DEBUG) { echo $cache; return; }
 		// continue processing
+		$template->setupClient();
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
 		$GLOBALS['foot'] = $template->get("foot");
@@ -92,20 +93,9 @@ class Template extends KISS_View {
 		$remove = array();
 		// make this a config option?
 		$baseUrl =  "assets/js/";
-		// precaution(s) in case this is the first time we are accessing the client globals (not needed?)
-		if( !isset($GLOBALS['client']) ) $GLOBALS['client'] = array();
-		if( !isset($GLOBALS['client']['require']) ) $GLOBALS['client']['require'] = array();
 		// FIX: create the dir if not available
 		if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
 		if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
-		
-		// default require strucure
-		$GLOBALS['client']['require'] = array(
-			"baseUrl" => WEB_FOLDER . $baseUrl, 
-			"paths" => array(),
-			"shim" => array(),
-			"deps" => array()
-		);
 		
 		// map the dom
 		$dom = new DOMDocument;
@@ -166,8 +156,10 @@ class Template extends KISS_View {
 		// process require configuration
 		$dom = $this->config( $group, $dom );
 		
-		// prepend the client string
-		$client = "var KISSCMS = ". json_encode_escaped($GLOBALS['client']) ."; " . $client;
+		// render the global client vars
+		foreach( $GLOBALS['client'] as $k=>$v ){ 
+			$client .= "KISSCMS['$k'] = ". json_encode_escaped( $v ) .";";
+		}
 		$client = $this->trimWhitespace($client);
 		$client_file = "client_". $this->hash .".js";
 		$cache = $this->getCache( $client_file );
@@ -259,17 +251,6 @@ class Template extends KISS_View {
 	
 	
 	function config( $scripts, $dom ){
-		
-		// first process the require.config.json for cdn libs
-		// add a config option for the location of this file? 
-		$file = APP. "public/require.config.json";
-		if( is_file( $file ) ) $json = file_get_contents( $file );
-		if( !empty( $json ) ) $libs = json_decode($json, true);
-		
-		if( !empty( $libs ) ){ 
-			// merge the libs with the client globals
-			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
-		}
 		
 		// loop through the scripts
 		foreach ($scripts as $name=>$group){
@@ -377,6 +358,36 @@ class Template extends KISS_View {
 		return $section;
 	}
 	
+	// this method compiles vars that need to be available on the client
+	function setupClient(){
+		
+		// make this a config option?
+		$baseUrl =  "assets/js/";
+		// precaution(s) in case this is the first time we are accessing the client globals (not needed?)
+		if( !isset($GLOBALS['client']) ) $GLOBALS['client'] = array();
+		if( !isset($GLOBALS['client']['require']) ) $GLOBALS['client']['require'] = array();
+		// default require strucure
+		$GLOBALS['client']['require'] = array(
+			"baseUrl" => WEB_FOLDER . $baseUrl, 
+			"paths" => array(),
+			"shim" => array(),
+			"deps" => array()
+		);
+		
+		// currently there is no support for the require config during DEBUG
+		if( !DEBUG ){ 
+			// first process the require.config.json for cdn libs
+			// add a config option for the location of this file? 
+			$file = APP. "public/require.config.json";
+			if( is_file( $file ) ) $json = file_get_contents( $file );
+			if( !empty( $json ) ) $libs = json_decode($json, true);
+			
+			if( !empty( $libs ) ){ 
+				// merge the libs with the client globals
+				$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
+			}
+		}
+	}
 	
 	function doList( $selected=null){
 		

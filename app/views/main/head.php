@@ -21,4 +21,21 @@
 <link rel="stylesheet" href="<?=url('/css/style.css')?>">
 <link type="text/plain" rel="author" href="<?=url('/humans.txt')?>" />
 
+<script type="text/javascript"  data-type="require">
+	var KISSCMS = {};
+	
+<? if( DEBUG){ ?>
+
+	var DEBUG = true;
+	// raw out put of the clinet side vars
+	<? 
+		foreach( $GLOBALS['client'] as $k=>$v ){ 
+			echo "KISSCMS['$k'] = ". json_encode_escaped( $v ) .";";
+		}
+	?>
+	
+<? } ?>
+
+</script>
+
 <script type="text/javascript" src="<?=url('/js/libs/modernizr-2.0.6.min.js')?>"></script>

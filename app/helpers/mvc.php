@@ -169,28 +169,52 @@ class Controller extends KISS_Controller {
 	
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
 	function parse_http_request() {		
+		$request = array();
 		// form the url
 		$url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 		// remove the trailing slash, if any
 		if( substr($url, -1) == "/" ) $url = substr($url, 0, -1);
+		
 		// parse the URL
 		$url_parts = parse_url($url);
 		$requri = ( array_key_exists("path", $url_parts) ) ? $url_parts['path'] : "";
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
 		if (strpos($requri,$this->web_folder)===0)
 			$requri=substr($requri,strlen($this->web_folder));
-		$request_uri_parts = $requri ? explode('/',$requri) : array();
+		$request["uri_parts"] = $requri ? explode('/',$requri) : array();
 		// remove the "index.php" from the request
-		if( array_key_exists(0, $request_uri_parts) && $request_uri_parts[0] == "index.php" ){ array_shift( $request_uri_parts ); }
-		// add the query if available
+		if( array_key_exists(0, $request["uri_parts"]) && $request["uri_parts"][0] == "index.php" ){ array_shift( $request["uri_parts"] ); }
+		
+		// add GET params
 		if( !empty($url_parts['query']) ){ 
 			$queries = explode("&", $url_parts['query']);
+			$request["query"] = array();
 			foreach( $queries as $query){ 
-				$request_uri_parts = array_merge( $request_uri_parts, explode("=", $query) );
+				$request["query"] = array_merge( $request["query"], explode("=", $query) );
 			}
 		}
 		
-		$this->request_uri_parts = $request_uri_parts;
+		// add POST params
+		if( !empty($_POST) ){ 
+			$request["post"] = array();
+			foreach( $_POST as $k => $v ){
+				$request["post"][] = $k;
+				$request["post"][] = $v;
+			}
+		}
+		
+		// handle requests encoded as application/json 
+		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
+     		$json = json_decode(file_get_contents("php://input"));
+			$request["json"] = array();
+			foreach( $json as $k => $v ){
+				$request["json"][] = $k;
+				$request["json"][] = $v;
+			}
+		}
+		
+		$this->request_uri_parts =  $request;
+		
 		return $this;
 	}
 
@@ -199,30 +223,30 @@ class Controller extends KISS_Controller {
 		$controller = $this->default_controller;
 		$function = $this->default_function;
 		$class = strtolower( get_class($this) );
-		$params = array();
-
-		$p = ( !$route ) ? $this->request_uri_parts : $route;
-		//findController($url)
+		$request = $this->request_uri_parts;
+		$remove = array();
+		
+		$p = ( !$route ) ? array_collapse($request) : $route;
+		
 		if (isset($p[0]) && $p[0] == $class) {
 			$controller=$p[0];
+			$remove[] = $p[0];
 			if (isset($p[1]) && method_exists($this, $p[1])) {
 				$function=$p[1];
-				$params = array_slice($p,2);
-			} else {
-				$params = array_slice($p,1);
+				$remove[] = $p[1];
 			}
 		} else {
 			if (isset($p[0]) && method_exists($this, $p[0])) {
 				$function=$p[0];
-				$params = array_slice($p,1);
-			} else {
-				$params = $p;
+				$remove[] = $p[0];
 			}
 		}
 		
+		// remove the selected route from the request
+		$request = array_remove($request, $remove);
 		
 		// lastly convert the params in pairs
-		$params = $this->normalize_params( $params );
+		$params = $this->normalize_params( $request );
 		
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
@@ -270,39 +294,28 @@ class Controller extends KISS_Controller {
 	function normalize_params( $params ){
 		
 		// create a new key/value array
-		$newparams = array();
+		$normalized = array();
 		
-		foreach( $params as $num => $param ){
-			if( $num%2 == 0 ){
-				// stop if there is no more params
-				if( empty( $params[$num+1] ) ){
-					 $newparams[] = $param;
-					 continue;
+		//loop through the groups of params
+		foreach( $params as $type => $group ){
+			
+			while ( $param = current($group) ){
+				$next = next($group);
+				if( !$next ){
+					 $normalized[] = $param;
+				} else {
+					$key = $param;
+					$value = $next;
+					// save the new key/value pair
+					$normalized[ $key ] = $value;
+					next($group);
 				}
-				$key = $param;
-				$value = $params[$num+1];
-				// save the new key/value pair
-				$newparams[ $key ] = $value;
+				
 			}
 		}
-		
 		// replace the given params
-		$params = $newparams;
+		$params = $normalized;
 	
-		// handle requests encoded as application/json 
-		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
-     		$_POST = json_decode(file_get_contents("php://input"));
-		}
-		// adding POST params
-		foreach( $_POST as $k => $v ){
-			if( array_key_exists( $k, $params) ) {
-				$params[$k] = array_merge( $params[$k], $v );
-			} else {
-				$params[$k] = $v;
-			}
-		}
-		
-		
 		// return null if there are no params
 		if( count($params)==0 ) {
 			$params = NULL;

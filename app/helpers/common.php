@@ -201,6 +201,18 @@ function uri($file=''){
 	return $uri;
 }
 
+function cdn(){
+	// first check if we have already defined a CDN
+	if (defined("CDN")){
+		// remove trailing slash, if any 
+		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		return $url;
+	} else {
+		// fallback to the domain name
+		return url();
+	}
+}
+
 
 // find all files with a certain name
 function findFiles($filename) {

@@ -331,19 +331,30 @@ function request_uri(){
 }
 
 // collapse the elements of an array to the elements of it's children
-
-	function array_collapse( $params ){
-		$collapsed = array();
-		foreach( $params as $key => $val ){
-			if( is_array($val) ){ 
-				$collapsed = array_merge($collapsed, $val);
-			} else {
-				$collapsed[$key] = $val;
-			}
+function array_collapse( $params ){
+	$collapsed = array();
+	foreach( $params as $key => $val ){
+		if( is_array($val) ){ 
+			$collapsed = array_merge($collapsed, $val);
+		} else {
+			$collapsed[$key] = $val;
 		}
-		return $collapsed; 
 	}
-	
+	return $collapsed; 
+}
+
+// remove a set of elements from a multi-dimentional array
+function array_remove( $array, $values ){
+	foreach($array as $k=>$v){
+		if( is_array($v) ) {
+			$array[$k] = array_remove( $v, $values );
+		} else if( in_array( $v, $values) ){
+			unset($array[$k]);
+		}
+	}
+	return $array;
+}
+
 
 /**
  * Function to calculate date or time difference.

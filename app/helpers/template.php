@@ -137,7 +137,7 @@ class Template extends KISS_View {
 			}
 			
 			//get the name from the script src
-			$name = substr( str_replace( array($baseUrl, url(), cdn() ),"", $src), 0, -3);
+			$name = substr( str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src), 0, -3);
 			
 			// there is no grouping if there's no minification :P
 			if( $data['minify'] && !empty($data['group']) ) {
@@ -157,9 +157,8 @@ class Template extends KISS_View {
 		$dom = $this->config( $group, $dom );
 		
 		// render the global client vars
-		foreach( $GLOBALS['client'] as $k=>$v ){ 
-			$client .= "KISSCMS['$k'] = ". json_encode_escaped( $v ) .";";
-		}
+		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
+		
 		$client = $this->trimWhitespace($client);
 		$client_file = "client_". $this->hash .".js";
 		$cache = $this->getCache( $client_file );
@@ -216,8 +215,8 @@ class Template extends KISS_View {
 			// loop through the group and add the files
 			foreach( $group as $script ){
 				// the move the domain from the script (if available)
-				$script["src"] = str_replace( array(url(), cdn() ),"", $script["src"] );
-				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $script["src"];
+				$src = str_replace( array(url(), cdn() ),"", $script["src"] );
+				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
 				$min->add( $file );
 			}
 			

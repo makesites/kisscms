@@ -24,15 +24,24 @@
 <script type="text/javascript"  data-type="require">
 	var KISSCMS = {};
 	
+Object.extend = function(destination, source) {
+  for (var property in source) {
+    if (source[property] && source[property].constructor &&
+     source[property].constructor === Object) {
+      destination[property] = destination[property] || {};
+      arguments.callee(destination[property], source[property]);
+    } else {
+      destination[property] = source[property];
+    }
+  }
+  return destination;
+};
+
 <? if( DEBUG){ ?>
 
 	var DEBUG = true;
 	// raw out put of the clinet side vars
-	<? 
-		foreach( $GLOBALS['client'] as $k=>$v ){ 
-			echo "KISSCMS['$k'] = ". json_encode_escaped( $v ) .";";
-		}
-	?>
+	Object.extend(KISSCMS, <?=json_encode_escaped( $GLOBALS['client'] )?>);
 	
 <? } ?>
 

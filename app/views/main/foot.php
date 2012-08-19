@@ -8,7 +8,7 @@
 <? if( DEBUG){ ?>
 	window.onload = function(){ init(); };
 <? } else { ?>
-	KISSCMS['require']['callback'] = function(){ init(); };
+	Object.extend(KISSCMS, {"require":{"callback": function(){ init();} }});
 <? } ?>
 </script>
 

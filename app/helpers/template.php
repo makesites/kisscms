@@ -137,7 +137,7 @@ class Template extends KISS_View {
 			}
 			
 			//get the name from the script src
-			$name = substr( str_replace( array($baseUrl, url() ),"", $src), 0, -3);
+			$name = substr( str_replace( array($baseUrl, url(), cdn() ),"", $src), 0, -3);
 			
 			// there is no grouping if there's no minification :P
 			if( $data['minify'] && !empty($data['group']) ) {
@@ -169,7 +169,7 @@ class Template extends KISS_View {
 		$cache_sign = ($cache) ? md5($cache) : NULL;
 		
 		// the client file should not be cached by the cdn
-		$client_src= "/". $client_file;
+		$client_src= WEB_FOLDER. $client_file;
 		
 		// check md5 signature
 		if($client_sign == $cache_sign){ 
@@ -215,7 +215,9 @@ class Template extends KISS_View {
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files
 			foreach( $group as $script ){
-				$file = ( !strpos($script["src"], "http") ) ? SITE_ROOT . $script["src"] : $script["src"];
+				// the move the domain from the script (if available)
+				$script["src"] = str_replace( array(url(), cdn() ),"", $script["src"] );
+				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $script["src"];
 				$min->add( $file );
 			}
 			

@@ -201,15 +201,17 @@ function uri($file=''){
 	return $uri;
 }
 
-function cdn(){
+function cdn($file=''){
+	// get the full uri for the file
+	$uri = uri($file);
 	// first check if we have already defined a CDN
 	if (defined("CDN")){
 		// remove trailing slash, if any 
 		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
-		return $url;
+		return $url . $uri;
 	} else {
 		// fallback to the domain name
-		return url();
+		return url($file);
 	}
 }
 

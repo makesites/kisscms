@@ -330,6 +330,20 @@ function request_uri(){
  return preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
 }
 
+// collapse the elements of an array to the elements of it's children
+
+	function array_collapse( $params ){
+		$collapsed = array();
+		foreach( $params as $key => $val ){
+			if( is_array($val) ){ 
+				$collapsed = array_merge($collapsed, $val);
+			} else {
+				$collapsed[$key] = $val;
+			}
+		}
+		return $collapsed; 
+	}
+	
 
 /**
  * Function to calculate date or time difference.

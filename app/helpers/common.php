@@ -348,7 +348,7 @@ function array_remove( $array, $values ){
 	foreach($array as $k=>$v){
 		if( is_array($v) ) {
 			$array[$k] = array_remove( $v, $values );
-		} else if( in_array( $v, $values) ){
+		} else if( $v && in_array( $v, $values) ){
 			unset($array[$k]);
 		}
 	}

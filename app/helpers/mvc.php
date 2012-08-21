@@ -213,6 +213,7 @@ class Controller extends KISS_Controller {
 			}
 		}
 		
+		
 		$this->request_uri_parts =  $request;
 		
 		return $this;
@@ -301,7 +302,7 @@ class Controller extends KISS_Controller {
 			
 			while ( $param = current($group) ){
 				$next = next($group);
-				if( !$next ){
+				if( $next === false ){
 					 $normalized[] = $param;
 				} else {
 					$key = $param;
@@ -313,12 +314,13 @@ class Controller extends KISS_Controller {
 				
 			}
 		}
+		
 		// replace the given params
 		$params = $normalized;
-	
-		// return null if there are no params
+		
+		// return false if there are no params
 		if( count($params)==0 ) {
-			$params = NULL;
+			$params = false;
 		// convert the params to a string if they are only one element
 		} else if( count($params)==1 ) {
 			$params = implode($params);

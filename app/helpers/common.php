@@ -355,6 +355,29 @@ function array_remove( $array, $values ){
 	return $array;
 }
 
+// checks if a given directory exists and optionally creates it
+function check_dir( $file=false, $create=false, $chmod=0755 ){
+	// prerequisites
+	if(!$file) return;
+	// break the file 
+	$info = pathinfo($file);
+	$exists = is_dir($info['dirname']);
+	// return now if we don't have to create the dir
+	if(!$create || $exists) return $exists;
+	
+	if( !$exists ) {
+		$dirs = explode("/", $info['dirname']); 
+		$path = "/";
+		foreach( $dirs as $folder){
+			$path .= array_shift($dirs) ."/";
+			// create each dir (if not available)
+			if( !is_dir( $path ) ) mkdir($path, $chmod, true);
+		}
+		
+	} 
+	// assuming that all the folders missing are created...
+	return true;
+}
 
 /**
  * Function to calculate date or time difference.

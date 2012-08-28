@@ -91,6 +91,7 @@ class Template extends KISS_View {
 		$url = url();
 		$group = array();
 		$remove = array();
+		$min = new Minify();
 		// make this a config option?
 		$baseUrl =  "assets/js/";
 		// FIX: create the dir if not available
@@ -102,6 +103,24 @@ class Template extends KISS_View {
 		$dom->preserveWhiteSpace = false; 
 		@$dom->loadHTML($html);
  		
+		// main containers
+		$head = $dom->getElementsByTagName("head")->item(0);
+		
+		
+		// CSS minification
+		if( !DEBUG ) {
+			$css_file = "assets/css/styles_" . str_replace(".php", ".css", ($this->vars['template']) ? $this->vars['template'] : DEFAULT_TEMPLATE);
+			$dom = $min->css($dom, $css_file);
+			// add the stylesheet
+			// add straight in the head section
+			$script = $dom->createElement('link');
+			$script->setAttribute("type", "text/css");
+			$script->setAttribute("href", $css_file);
+			$script->setAttribute("rel", "stylesheet");
+			$script->setAttribute("media", "screen");
+			$head->appendChild($script);
+		}
+		
 		// filter the scripts
 		$scripts = $dom->getElementsByTagName('script');
  		
@@ -139,7 +158,7 @@ class Template extends KISS_View {
 			//get the name from the script src
 			$name =str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src);
 			// remove the .js extension if not a full path and no alias set (require.js conditions :P)
-			if( substr($name, 0,1) ==  "/"  && !empty($data['path']) ) substr($name , 0, -3);
+			if( substr($name, 0,1) !=  "/"  && empty($data['path']) ) $name = substr($name , 0, -3);
 			
 			// there is no grouping if there's no minification :P
 			if( $data['minify'] && !empty($data['group']) ) {
@@ -183,8 +202,7 @@ class Template extends KISS_View {
 		if( DEBUG ){ 
 			// add the scripts in the require list as script tags
 			$scripts = $GLOBALS['client']['require']['paths'];
-			$head = $dom->getElementsByTagName("head")->item(0);
-		
+			
 			foreach($scripts as $script){
 				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
 				// check if there's a js extension
@@ -271,7 +289,6 @@ class Template extends KISS_View {
 		}
 		
 	}
-	
 	
 	function config( $scripts, $dom ){
 		

@@ -40,8 +40,6 @@ Object.extend = function(destination, source) {
 <? if( DEBUG){ ?>
 
 	var DEBUG = true;
-	// raw out put of the clinet side vars
-	Object.extend(KISSCMS, <?=json_encode_escaped( $GLOBALS['client'] )?>);
 	
 <? } ?>
 

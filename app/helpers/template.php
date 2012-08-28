@@ -137,7 +137,9 @@ class Template extends KISS_View {
 			}
 			
 			//get the name from the script src
-			$name = substr( str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src), 0, -3);
+			$name =str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src);
+			// remove the .js extension if not a full path and no alias set (require.js conditions :P)
+			if( substr($name, 0,1) ==  "/"  && !empty($data['path']) ) substr($name , 0, -3);
 			
 			// there is no grouping if there's no minification :P
 			if( $data['minify'] && !empty($data['group']) ) {
@@ -154,7 +156,7 @@ class Template extends KISS_View {
 		$this->minify( $group );
 		
 		// process require configuration
-		$dom = $this->config( $group, $dom );
+		if( !DEBUG ) $dom = $this->config( $group, $dom );
 		
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
@@ -174,27 +176,47 @@ class Template extends KISS_View {
 		if($client_sign == $cache_sign){ 
 			// do nothing
 		} else {
-			
 			// set the cache for later use
 			self::setCache( $client_file , $client);
 		}
-		// render a standard script tag
-		$script = $dom->createElement('script');
-		$script->setAttribute("type", "text/javascript");
-		$script->setAttribute("src", $client_src);
-		$script->setAttribute("defer", "defer");
-		// include the script 
-		$dom = $this->updateDom($script, $dom);
 		
-		// remove all modified scripts
-		foreach($remove as $script){
-			$script->parentNode->removeChild($script); 
+		if( DEBUG ){ 
+			// add the scripts in the require list as script tags
+			$scripts = $GLOBALS['client']['require']['paths'];
+			$head = $dom->getElementsByTagName("head")->item(0);
+		
+			foreach($scripts as $script){
+				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
+				// check if there's a js extension
+				if( substr($src, -3) != ".js") $src .= ".js";
+				
+				// add straight in the head section
+				$script = $dom->createElement('script');
+				$script->setAttribute("type", "text/javascript");
+				$script->setAttribute("src", $src);
+				$head->appendChild($script);
+				
+			}
+			
+		} else { 
+			// render a standard script tag
+			$script = $dom->createElement('script');
+			$script->setAttribute("type", "text/javascript");
+			$script->setAttribute("src", $client_src);
+			$script->setAttribute("defer", "defer");
+			// include the script 
+			$dom = $this->updateDom($script, $dom);
+			
+			// remove all modified scripts
+			foreach($remove as $script){
+				$script->parentNode->removeChild($script); 
+			}
 		}
 		
 		$output =  $dom->saveHTML();
 		
 		// output the final markup - clear whitespace
-		return ( DEBUG ) ? $html : $this->trimWhitespace( $output );
+		return  ( DEBUG ) ? $output : $this->trimWhitespace( $output );
 		
 	}
 	
@@ -376,17 +398,15 @@ class Template extends KISS_View {
 		);
 		
 		// currently there is no support for the require config during DEBUG
-		if( !DEBUG ){ 
-			// first process the require.config.json for cdn libs
-			// add a config option for the location of this file? 
-			$file = APP. "public/require.config.json";
-			if( is_file( $file ) ) $json = file_get_contents( $file );
-			if( !empty( $json ) ) $libs = json_decode($json, true);
-			
-			if( !empty( $libs ) ){ 
-				// merge the libs with the client globals
-				$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
-			}
+		// first process the require.config.json for cdn libs
+		// add a config option for the location of this file? 
+		$file = APP. "public/require.config.json";
+		if( is_file( $file ) ) $json = file_get_contents( $file );
+		if( !empty( $json ) ) $libs = json_decode($json, true);
+		
+		if( !empty( $libs ) ){ 
+			// merge the libs with the client globals
+			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
 		}
 	}
 	

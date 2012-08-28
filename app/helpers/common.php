@@ -128,6 +128,10 @@ function getFile($filename) {
 	
 	$output = file_get_contents( $filename );
 	header("Content-Type: $ctype"); 
+	$mtime = filemtime($filename);
+	$etag = md5_file($filename);
+	header("Last-Modified: ".gmdate("D, d M Y H:i:s", $mtime)." GMT"); 
+	header("Etag: $etag"); 
     return $output;
 } 
  

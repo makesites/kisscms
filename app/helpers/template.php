@@ -5,6 +5,7 @@
 //===============================================================
 class Template extends KISS_View {
 	public $hash;
+	private $template;
 	
 	//Example of overriding a constructor/method, add some code then pass control back to parent
 	function __construct($vars='') {
@@ -109,7 +110,7 @@ class Template extends KISS_View {
 		
 		// CSS minification
 		if( !DEBUG ) {
-			$css_file = "assets/css/" . str_replace(".php", "", ($this->vars['template']) ? $this->vars['template'] : DEFAULT_TEMPLATE) .".min.css";
+			$css_file = "assets/css/" . $this->template .".min.css";
 			$dom = $min->css($dom, $css_file);
 			// add the stylesheet
 			// add straight in the head section
@@ -370,11 +371,13 @@ class Template extends KISS_View {
 	function getTemplate(){
 		// support for mobile template
 		if(array_key_exists('IS_MOBILE', $GLOBALS) && $GLOBALS['IS_MOBILE'] == true && is_file(TEMPLATES."mobile.php") ){ 
-			$file = TEMPLATES."mobile.php";
+			$this->template = "mobile";
 		} else {
-			$file = (array_key_exists('template', $this->vars) && is_file(TEMPLATES.$this->vars['template'])) ? TEMPLATES.$this->vars['template'] : TEMPLATES.DEFAULT_TEMPLATE;
+			$template = (array_key_exists('template', $this->vars) && is_file(TEMPLATES.$this->vars['template'])) ? $this->vars['template'] : DEFAULT_TEMPLATE;
+			// strip out the php extension (if supplied)
+			$this->template = str_replace(".php", "", $template);
 		}
-		return $file;
+		return TEMPLATES.$this->template.".php";
 	}
 	
 	// find the section a view file belongs to

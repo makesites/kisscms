@@ -59,7 +59,7 @@ class Minify extends PhpClosure {
 		foreach ($remove as $tag){
 			$tag->parentNode->removeChild($tag); 
 		}
-				
+		
 		$this->_srcs[] = APP. "public/". $file;
 		
 		// remove comments

@@ -6,6 +6,7 @@
 class Template extends KISS_View {
 	public $hash;
 	private $template;
+	private $client;
 	
 	//Example of overriding a constructor/method, add some code then pass control back to parent
 	function __construct($vars='') {
@@ -179,7 +180,7 @@ class Template extends KISS_View {
 		if( !DEBUG ) $dom = $this->config( $group, $dom );
 		
 		// render the global client vars
-		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
+		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $this->client ) .');';
 		
 		$client = $this->trimWhitespace($client);
 		$client_file = "client_". $this->hash .".js";
@@ -202,7 +203,7 @@ class Template extends KISS_View {
 		
 		if( DEBUG ){ 
 			// add the scripts in the require list as script tags
-			$scripts = $GLOBALS['client']['require']['paths'];
+			$scripts = $this->client['require']['paths'];
 			
 			foreach($scripts as $script){
 				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
@@ -428,6 +429,10 @@ class Template extends KISS_View {
 			// merge the libs with the client globals
 			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
 		}
+		// set the client (locally to use later)
+		$this->client = $GLOBALS['client'];
+		// in debug mode remove the require scripts
+		if(DEBUG) unset($GLOBALS['client']['require']);
 	}
 	
 	function doList( $selected=null){

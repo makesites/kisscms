@@ -2,6 +2,9 @@
 
 class Minify extends PhpClosure {
 	
+	protected $_content = array();
+	protected $_dom;
+	
 	// a version of the "write" function that doesn't output the content
 	function create(){
 		
@@ -25,9 +28,8 @@ class Minify extends PhpClosure {
 	function css( $dom=false, $file=false ){
 		if(!$dom || !$file) return;
 		
-		$styles = array();
+		$el = array();
 		$remove = array();
-		$css = "";
 		$http = new Http();
 		$http->setMethod('GET');
 		// (re)set the source files
@@ -37,22 +39,38 @@ class Minify extends PhpClosure {
 		$tags = $dom->getElementsByTagName('link');
  		
 		foreach ($tags as $tag){
+			$id = $tag->getAttribute('id');
 			$rel = $tag->getAttribute('rel');
 			$href = $tag->getAttribute('href');
 			$type = $tag->getAttribute('data-type');
+			$group = $tag->getAttribute('data-group');
 			if($rel=="stylesheet" && $type=="minify" && !empty($href) ){ 
-				$styles[] = $href;
-				$remove[] = $tag;
-				
+				if( empty($group) ){ 
+					$el[][] = $href;
+				} else {
+					$el[$group][] = $href;
+				}
+				// remove if not the intended container
+				if( $id != $group ."-style") $remove[] = $tag;
 			}
 		}
 		
-		// get the raw css
-		foreach ($styles as $style){
-			$result = $http->execute( $style );
-			if( $result && !empty($result) ){
-				$css .= $result;
+		// process groups seperately 
+		foreach ($el as $group=>$styles){
+			// get the raw css
+			$css = "";
+			foreach ($styles as $style){
+				$result = $http->execute( $style );
+				if( $result && !empty($result) ){
+					$css .= $result;
+				}
 			}
+			// remove comments
+			$css = $this->removeCommentsCSS($css);
+			// strip whitspace
+			$css = $this->trimWhitespace($css);
+			$this->_content[$group] = $css;
+			$this->_srcs[$group] = APP ."public/assets/css/". $group .".min.css";
 		}
 		
 		// remove the 'old' link tags
@@ -60,24 +78,20 @@ class Minify extends PhpClosure {
 			$tag->parentNode->removeChild($tag); 
 		}
 		
-		$this->_srcs[] = APP. "public/". $file;
-		
-		// remove comments
-		$css = $this->removeCommentsCSS($css);
-		// strip whitspace
-		$css = $this->trimWhitespace($css);
 		// save css in file
-		$this->write( $css );
+		$this->write();
+		// update the dom
+		$dom = $this->update( $dom );
 		
 		return $dom;
 		
 	}
 	
-	function write( $result="" ) {
+	function write() {
 		
-		foreach($this->_srcs as $cache_file){
+		foreach($this->_srcs as $name=>$cache_file){
 			
-			//$this->setHeader($cache_file);
+			$result = $this->_content[$name];
 			
 			// No cache directory so just dump the output.
 			//if ($this->_cache_dir == "") {
@@ -91,7 +105,7 @@ class Minify extends PhpClosure {
 				//$result = $this->_compile();
 				file_put_contents($cache_file, $result);
 				//echo $result;
-			} else {
+			//} else {
 				// No recompile needed, but see if we can send a 304 to the browser.
 				/*$cache_mtime = filemtime($cache_file);
 				$etag = md5_file($cache_file);
@@ -107,7 +121,55 @@ class Minify extends PhpClosure {
 			}
 		}
 	}
-
+	
+	// update the DOM
+	function update( $dom ){
+		
+		//main dom containers
+		$head = $dom->getElementsByTagName("head")->item(0);
+		$require_main = $dom->getElementById("require-main");
+		
+		foreach($this->_srcs as $name=>$min_file){
+			
+			$file = str_replace(APP ."public/", "", $min_file);
+			$ext = substr( $file, strrpos($file, ".")+1 );
+			
+			switch($ext){
+				case "css":
+					
+					// lookup if the container already exists
+					$container = $dom->getElementById($name ."-style");
+					if( is_null($container) ){ 
+						$tag = $dom->createElement('link');
+						$tag->setAttribute("type", "text/css");
+						$tag->setAttribute("href", url($file));
+						$tag->setAttribute("rel", "stylesheet");
+						$tag->setAttribute("media", "screen");
+						// append at the end of the head section
+						$head->appendChild($tag);
+					} else {
+						$container->setAttribute("href", url($file));
+					}
+					
+				break;
+				case "js":
+				
+					$tag = $dom->createElement('script');
+					$tag->setAttribute("type", "text/javascript");
+					$tag->setAttribute("src", url($file));
+					$tag->setAttribute("defer", "defer");
+					
+					$container = $name ."-script";
+				
+				break;
+			}
+			
+		}
+				
+		return $dom;
+		
+	}
+	
 	// Helpers
 	function setFile( $name=false ) {
 		if($name) $this->_file = $name;

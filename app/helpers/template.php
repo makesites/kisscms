@@ -108,19 +108,9 @@ class Template extends KISS_View {
 		// main containers
 		$head = $dom->getElementsByTagName("head")->item(0);
 		
-		
 		// CSS minification
 		if( !DEBUG ) {
-			$css_file = "assets/css/" . $this->template .".min.css";
-			$dom = $min->css($dom, $css_file);
-			// add the stylesheet
-			// add straight in the head section
-			$script = $dom->createElement('link');
-			$script->setAttribute("type", "text/css");
-			$script->setAttribute("href", $css_file);
-			$script->setAttribute("rel", "stylesheet");
-			$script->setAttribute("media", "screen");
-			$head->appendChild($script);
+			$dom = $min->css($dom, $this->template);
 		}
 		
 		// filter the scripts

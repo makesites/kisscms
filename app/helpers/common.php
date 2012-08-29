@@ -88,7 +88,7 @@ function isStatic( $file ) {
 	// check in the plugins directory
 	if( defined("PLUGINS")){
 		$files = glob(PLUGINS."*/public/$file");
-		if( count($files) > 0 ) {
+		if( $files && count($files) > 0 ) {
 			// arbitrary pick the first file - should have a comparison mechanism in place
 			$target = $files[0];
 			return $target;

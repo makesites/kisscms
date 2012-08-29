@@ -290,7 +290,7 @@ class Template extends KISS_View {
 			$attr = $this->groupAttributes($group);
 			if( !$attr['data']['require'] ) {
 				if( $attr['data']['minify'] ) {
-					$file = url($GLOBALS['client']['require']['baseUrl'] . $name .".min.js");
+					$file = url($this->client['require']['baseUrl'] . $name .".min.js");
 				} else {
 					$file = $attr["src"];
 				}
@@ -311,18 +311,17 @@ class Template extends KISS_View {
 				}
 				
 				// push the name of the groups as the dependency
-				array_push( $GLOBALS['client']['require']['deps'], $name);
+				array_push( $this->client['require']['deps'], $name);
 				
 				if( !empty($attr['data']['path']) ) 
-						$GLOBALS['client']['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
+						$this->client['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
 					
 				// add the shim, if any
 				if( !empty($attr['data']['deps']) )
-					$GLOBALS['client']['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
+					$this->client['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
 				
 			}
 			
-
 		}
 		
 		// return the DOM object

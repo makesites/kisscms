@@ -202,7 +202,6 @@ class Template extends KISS_View {
 		if( DEBUG ){ 
 			// add the scripts in the require list as script tags
 			$scripts = $GLOBALS['client']['require']['paths'];
-			unset($GLOBALS['client']['require']);
 			
 			foreach($scripts as $script){
 				$src = ( is_array( $script ) ) ? array_shift($script) : $script;

@@ -109,7 +109,7 @@ class Template extends KISS_View {
 		
 		// CSS minification
 		if( !DEBUG ) {
-			$css_file = "assets/css/styles_" . str_replace(".php", ".css", ($this->vars['template']) ? $this->vars['template'] : DEFAULT_TEMPLATE);
+			$css_file = "assets/css/" . str_replace(".php", "", ($this->vars['template']) ? $this->vars['template'] : DEFAULT_TEMPLATE) .".min.css";
 			$dom = $min->css($dom, $css_file);
 			// add the stylesheet
 			// add straight in the head section

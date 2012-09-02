@@ -149,16 +149,27 @@ class Minify extends PhpClosure {
 						$head->appendChild($tag);
 					} else {
 						$container->setAttribute("href", url($file));
+						// remove data* attributes
+						$container->removeAttribute("data-group");
+						$container->removeAttribute("data-type");
 					}
 					
 				break;
 				case "js":
-				
-					$tag = $dom->createElement('script');
-					$tag->setAttribute("type", "text/javascript");
-					$tag->setAttribute("src", url($file));
-					$tag->setAttribute("defer", "defer");
 					
+					if( is_null($container) ){ 
+						$tag = $dom->createElement('script');
+						$tag->setAttribute("type", "text/javascript");
+						$tag->setAttribute("src", url($file));
+						$tag->setAttribute("defer", "defer");
+					} else {
+						$container->setAttribute("src", url($file));
+						// remove data* attributes
+						$container->removeAttribute("data-group");
+						$container->removeAttribute("data-type");
+						$container->removeAttribute("data-path");
+						$container->removeAttribute("data-deps");
+					}
 				break;
 			}
 			

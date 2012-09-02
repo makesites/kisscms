@@ -127,12 +127,12 @@ class Minify extends PhpClosure {
 			$group = $tag->getAttribute('data-group');
 			if($rel=="stylesheet" && $type=="minify" && !empty($href) ){ 
 				if( empty($group) ){ 
-					$el[][] = $href;
+					$el[$file][] = $href;
 				} else {
 					$el[$group][] = $href;
 				}
 				// remove if not the intended container
-				if( $id != $group ."-min") $remove[] = $tag;
+				if( !$group || $id != $group ."-min") $remove[] = $tag;
 			}
 		}
 		
@@ -306,7 +306,7 @@ class Minify extends PhpClosure {
 			}
 			
 			//->useClosureLibrary()
-   			$this->create();
+   			$min->create();
 				
 		}
 		

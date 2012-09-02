@@ -80,8 +80,12 @@ class Minify extends PhpClosure {
 			// there is no grouping if there's no minification :P
 			if( $data['minify'] && !empty($data['group']) ) {
 				$group[$data['group']][] = array( "src" => $src, "data" => $data );
-			} else { 
+			} else if( $data['minify'] ) { 
+			//} else if( $data['minify'] && !$data['require'] ) { 
+				// group all files to be minified in one file (under the template name)
 				$group[$file][] = array( "src" => $src, "data" => $data );
+			} else { 
+				$group[$name][] = array( "src" => $src, "data" => $data );
 			}
 			
 			

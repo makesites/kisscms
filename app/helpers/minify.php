@@ -56,7 +56,7 @@ class Minify extends PhpClosure {
 			$src = str_replace( $url,"/", $script->getAttribute('src') );
 			
 			// register types
-			$data['minify'] = strpos($type, "google-closure") > -1 || !empty($data['encode']);
+			$data['minify'] = strpos($type, "minify") > -1 || !empty($data['encode']);
 			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
 			
 			// leave standard types alone

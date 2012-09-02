@@ -51,7 +51,7 @@ class Minify extends PhpClosure {
 					$el[$group][] = $href;
 				}
 				// remove if not the intended container
-				if( $id != $group ."-style") $remove[] = $tag;
+				if( $id != $group ."-min") $remove[] = $tag;
 			}
 		}
 		
@@ -133,12 +133,12 @@ class Minify extends PhpClosure {
 			
 			$file = str_replace(APP ."public/", "", $min_file);
 			$ext = substr( $file, strrpos($file, ".")+1 );
-			
+			// lookup if the container already exists
+			$container = $dom->getElementById($name ."-min");
+					
 			switch($ext){
 				case "css":
 					
-					// lookup if the container already exists
-					$container = $dom->getElementById($name ."-style");
 					if( is_null($container) ){ 
 						$tag = $dom->createElement('link');
 						$tag->setAttribute("type", "text/css");
@@ -159,8 +159,6 @@ class Minify extends PhpClosure {
 					$tag->setAttribute("src", url($file));
 					$tag->setAttribute("defer", "defer");
 					
-					$container = $name ."-script";
-				
 				break;
 			}
 			

@@ -45,6 +45,7 @@ class Minify extends PhpClosure {
 		foreach ($scripts as $script){
 			// check out for the supported script attributes
 			$data = array();
+			$id = $script->getAttribute('id');
 			$data['path'] = $script->getAttribute('data-path');
 			$data['deps'] = $script->getAttribute('data-deps');
 			$data['group'] = $script->getAttribute('data-group');
@@ -60,10 +61,9 @@ class Minify extends PhpClosure {
 			
 			// leave standard types alone
 			if( !$data['minify'] && !$data['require']) continue;
-		
 			
-			// if script processed in any way, remove from the DOM
-			$remove[] = $script;
+			// remove if not the intended container
+			if( !$data['group'] || $id != $data['group'] ."-min") $remove[] = $script;
 			
 			// if no src add to the config file
 			if( empty($src) && $data['require'] ) {
@@ -81,8 +81,7 @@ class Minify extends PhpClosure {
 			if( $data['minify'] && !empty($data['group']) ) {
 				$group[$data['group']][] = array( "src" => $src, "data" => $data );
 			} else { 
-				// maybe pick the file name as the group name instead...
-				$group[$name][] = array( "src" => $src, "data" => $data );
+				$group[$file][] = array( "src" => $src, "data" => $data );
 			}
 			
 			

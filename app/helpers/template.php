@@ -13,6 +13,7 @@ class Template extends KISS_View {
 		$this->vars = $vars;
 		$this->hash = $this->getHash("", $vars);
 		$file = $this->getTemplate();
+		$this->client = array();
 		parent::__construct($file,$vars);
 	}
 
@@ -24,6 +25,7 @@ class Template extends KISS_View {
 		if($cache && !DEBUG) { echo $cache; return; }
 		// continue processing
 		$template->setupClient();
+		// 
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
 		$GLOBALS['foot'] = $template->get("foot");
@@ -89,140 +91,23 @@ class Template extends KISS_View {
 	function process( $html ){
 		
 		// setup 
-		$client = "";
-		$url = url();
-		$group = array();
-		$remove = array();
 		$min = new Minify();
-		// make this a config option?
-		$baseUrl =  "assets/js/";
-		// FIX: create the dir if not available
-		if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
-		if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
 		
 		// map the dom
 		$dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false; 
 		@$dom->loadHTML($html);
- 		
-		// main containers
-		$head = $dom->getElementsByTagName("head")->item(0);
 		
-		// CSS minification
+		// minification
 		if( !DEBUG ) {
 			$dom = $min->css($dom, $this->template);
-		}
-		
-		// filter the scripts
-		$scripts = $dom->getElementsByTagName('script');
- 		
-		// check the script attributes
-		foreach ($scripts as $script){
-			// check out for the supported script attributes
-			$data = array();
-			$data['path'] = $script->getAttribute('data-path');
-			$data['deps'] = $script->getAttribute('data-deps');
-			$data['group'] = $script->getAttribute('data-group');
-			$data['order'] = (int) $script->getAttribute('data-order');
-			$data['encode'] = $script->getAttribute('data-encode');
-			$type = $script->getAttribute('data-type');
-			// remove domain name from src (if entered)
-			$src = str_replace( $url,"/", $script->getAttribute('src') );
-			
-			// register types
-			$data['minify'] = strpos($type, "google-closure") > -1 || !empty($data['encode']);
-			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
-			
-			// leave standard types alone
-			if( !$data['minify'] && !$data['require']) continue;
-		
-			
-			// if script processed in any way, remove from the DOM
-			$remove[] = $script;
-			
-			// if no src add to the config file
-			if( empty($src) && $data['require'] ) {
-				$client .= $script->textContent;
-				// no further processing required
-				continue;
-			}
-			
-			//get the name from the script src
-			$name =str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src);
-			// remove the .js extension if not a full path and no alias set (require.js conditions :P)
-			if( substr($name, 0,1) !=  "/"  && empty($data['path']) ) $name = substr($name , 0, -3);
-			
-			// there is no grouping if there's no minification :P
-			if( $data['minify'] && !empty($data['group']) ) {
-				$group[$data['group']][] = array( "src" => $src, "data" => $data );
-			} else { 
-				// maybe pick the file name as the group name instead...
-				$group[$name][] = array( "src" => $src, "data" => $data );
-			}
+			$dom = $min->js($dom, $this->template);	
 			
 			
 		}
-		
-		// process minification
-		$this->minify( $group );
-		
 		// process require configuration
-		if( !DEBUG ) $dom = $this->config( $group, $dom );
-		
-		// render the global client vars
-		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $this->client ) .');';
-		
-		$client = $this->trimWhitespace($client);
-		$client_file = "client_". $this->hash .".js";
-		$cache = $this->getCache( $client_file );
-		
-		// write config file
-		$client_sign = md5($client);
-		$cache_sign = ($cache) ? md5($cache) : NULL;
-		
-		// the client file should not be cached by the cdn
-		$client_src= WEB_FOLDER. $client_file;
-		
-		// check md5 signature
-		if($client_sign == $cache_sign){ 
-			// do nothing
-		} else {
-			// set the cache for later use
-			self::setCache( $client_file , $client);
-		}
-		
-		if( DEBUG ){ 
-			// add the scripts in the require list as script tags
-			$scripts = $this->client['require']['paths'];
+		$this->createClient($dom);
 			
-			foreach($scripts as $script){
-				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
-				// check if there's a js extension
-				if( substr($src, -3) != ".js") $src .= ".js";
-				
-				// add straight in the head section
-				$script = $dom->createElement('script');
-				$script->setAttribute("type", "text/javascript");
-				$script->setAttribute("src", $src);
-				$head->appendChild($script);
-				
-			}
-			
-		} else { 
-			// render a standard script tag
-			$script = $dom->createElement('script');
-			$script->setAttribute("type", "text/javascript");
-			$script->setAttribute("src", $client_src);
-			$script->setAttribute("defer", "defer");
-			// include the script 
-			$dom = $this->updateDom($script, $dom);
-			
-			// remove all modified scripts
-			foreach($remove as $script){
-				$script->parentNode->removeChild($script); 
-			}
-		}
-		
 		$output =  $dom->saveHTML();
 		
 		// output the final markup - clear whitespace
@@ -230,104 +115,6 @@ class Template extends KISS_View {
 		
 	}
 	
-	function minify( $scripts ){
-		// make this a config option?
-		$baseUrl =  "assets/js/";
-		// sort results
-		//ksort_recursive( $minify );
-		
-		// call google-closure
-		foreach( $scripts as $name=>$group ){
-			$first = current($group);
-			// go to next group if minify flag is not true
-			if( !$first["data"]['minify'] ) continue;
-			$min = new Minify();
-			// get the encoding from the first member of the group
-			$encode = $first["data"]["encode"];
-			// loop through the group and add the files
-			foreach( $group as $script ){
-				// the move the domain from the script (if available)
-				$src = str_replace( array(url(), cdn() ),"", $script["src"] );
-				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
-				$min->add( $file );
-			}
-			
-			$min		->cacheDir( APP. "public/". $baseUrl )
-						->setFile( $name.".min" );
-			if( !DEBUG){
-			$min		->quiet()
-						->hideDebugInfo();
-			}
-			// condition the method of minification here...
-			switch( $encode ){ 
-				case "whitespace": 
-					$min->whitespaceOnly();
-				break;
-				case "simple": 
-					$min->simpleMode();
-				break;
-				case "advanced": 
-					$min->advancedMode();
-				break;
-				default: 
-					$min->simpleMode();
-				break;
-			
-			}
-			
-			//->useClosureLibrary()
-   			$min->create();
-				
-		}
-		
-	}
-	
-	function config( $scripts, $dom ){
-		
-		// loop through the scripts
-		foreach ($scripts as $name=>$group){
-			//$first = current($group);
-			$attr = $this->groupAttributes($group);
-			if( !$attr['data']['require'] ) {
-				if( $attr['data']['minify'] ) {
-					$file = url($this->client['require']['baseUrl'] . $name .".min.js");
-				} else {
-					$file = $attr["src"];
-				}
-				// render a standard script tag
-				$script = $dom->createElement('script');
-				$script->setAttribute("type", "text/javascript");
-				$script->setAttribute("src", $file);
-				$script->setAttribute("defer", "defer");
-				// add the new script in the dom
-				$dom = $this->updateDom($script, $main);
-
-			} else {
-				// check the require parameters...
-				if( !empty($attr['data']['path']) ){
-					$name = $attr['data']['path'];
-				} elseif( $attr['data']['minify'] ) {
-					$name = $name .".min";
-				}
-				
-				// push the name of the groups as the dependency
-				array_push( $this->client['require']['deps'], $name);
-				
-				if( !empty($attr['data']['path']) ) 
-						$this->client['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
-					
-				// add the shim, if any
-				if( !empty($attr['data']['deps']) )
-					$this->client['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
-				
-			}
-			
-		}
-		
-		// return the DOM object
-		return $dom;
-		
-	}
 	
 	// Helpers
 	function getHash( $prefix="", $vars=array() ){
@@ -412,17 +199,74 @@ class Template extends KISS_View {
 		// add a config option for the location of this file? 
 		$file = APP. "public/require.config.json";
 		if( is_file( $file ) ) $json = file_get_contents( $file );
-		if( !empty( $json ) ) $libs = json_decode($json, true);
+		$libs = ( !empty( $json ) ) ? json_decode($json, true) : array();
 		
-		if( !empty( $libs ) ){ 
+		if( !DEBUG ){ 
 			// merge the libs with the client globals
 			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
+		} else {
+			$this->client['require'] = $libs;
 		}
-		// set the client (locally to use later)
-		$this->client = $GLOBALS['client'];
-		// in debug mode remove the require scripts
-		if(DEBUG) unset($GLOBALS['client']['require']);
 	}
+	
+	function createClient( $dom ){
+		$client = "";
+		// see if there is any "loose" source in the client
+		if( !empty($GLOBALS['client']["_src"]) ) {
+			$client = $GLOBALS['client']["_src"];
+			unset($GLOBALS['client']["_src"]);
+		}
+		// render the global client vars
+		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
+		
+		$client = $this->trimWhitespace($client);
+		$client_file = "client_". $this->hash .".js";
+		$cache = $this->getCache( $client_file );
+		
+		// write config file
+		$client_sign = md5($client);
+		$cache_sign = ($cache) ? md5($cache) : NULL;
+		
+		// the client file should not be cached by the cdn
+		$client_src= WEB_FOLDER. $client_file;
+		
+		// check md5 signature
+		if($client_sign == $cache_sign){ 
+			// do nothing
+		} else {
+			// set the cache for later use
+			self::setCache( $client_file , $client);
+		}
+	
+		if(DEBUG) {
+			// add the scripts in the require list as script tags
+			$scripts = (!empty($this->client['require']['paths'])) ? $this->client['require']['paths'] : array();
+			$head = $dom->getElementsByTagName("head")->item(0);
+			
+			foreach($scripts as $script){
+				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
+				// check if there's a js extension
+				if( substr($src, -3) != ".js") $src .= ".js";
+				
+				// add straight in the head section
+				$script = $dom->createElement('script');
+				$script->setAttribute("type", "text/javascript");
+				$script->setAttribute("src", $src);
+				$head->appendChild($script);
+			}
+			
+		} else {
+			// render a standard script tag
+			$script = $dom->createElement('script');
+			$script->setAttribute("type", "text/javascript");
+			$script->setAttribute("src", $client_src);
+			$script->setAttribute("defer", "defer");
+			// include the script 
+			$dom = $this->updateDom($script, $dom);
+		}
+	}
+	
+	
 	
 	function doList( $selected=null){
 		
@@ -444,36 +288,6 @@ class Template extends KISS_View {
 		} else {
 			return false;
 		}			
-	}
-	
-	function groupAttributes($group){
-		
-		$attr = array();
-			
-		foreach($group as $element){
-			$attr = array_merge_recursive($attr, $element);
-		}
-		
-		// marge data values
-		foreach($attr['data'] as $key =>$element){
-			$attributes = array();
-			// don't process items that are already collapsed
-			if( !is_array( $element ) ) {
-				// explode the string (in case it has comma seperated values)
-				if( strpos($element, ",") ) $attr['data'][$key] = explode(",", $element);
-				continue;
-			}
-			foreach($element as $k =>$v){
-				$attribute = ( is_array($v) ) ? $v : explode(",", $v) ;
-				$attributes = array_merge( $attributes, array_unique($attribute) );
-				// fix nested empty arrays manually
-				if( implode($attributes) == "") $attributes = array();
-			}
-			// pickup only the unique values (and reset the keys)
-			$attr['data'][$key] = array_values( array_unique( $attributes ) );
-		}
-		
-		return $attr;
 	}
 	
 	function updateDom($tag, $dom){ 

@@ -25,6 +25,87 @@ class Minify extends PhpClosure {
 		
 	}
 	
+	function js( $dom=false, $file=false ){
+		$client = "";
+		$url = url();
+		$group = array();
+		$remove = array();
+		// make this a config option?
+		$baseUrl =  "assets/js/";
+		
+		// FIX: create the dir if not available
+		if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
+		if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
+		
+		
+		// filter the scripts
+		$scripts = $dom->getElementsByTagName('script');
+ 		
+		// check the script attributes
+		foreach ($scripts as $script){
+			// check out for the supported script attributes
+			$data = array();
+			$data['path'] = $script->getAttribute('data-path');
+			$data['deps'] = $script->getAttribute('data-deps');
+			$data['group'] = $script->getAttribute('data-group');
+			$data['order'] = (int) $script->getAttribute('data-order');
+			$data['encode'] = $script->getAttribute('data-encode');
+			$type = $script->getAttribute('data-type');
+			// remove domain name from src (if entered)
+			$src = str_replace( $url,"/", $script->getAttribute('src') );
+			
+			// register types
+			$data['minify'] = strpos($type, "google-closure") > -1 || !empty($data['encode']);
+			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
+			
+			// leave standard types alone
+			if( !$data['minify'] && !$data['require']) continue;
+		
+			
+			// if script processed in any way, remove from the DOM
+			$remove[] = $script;
+			
+			// if no src add to the config file
+			if( empty($src) && $data['require'] ) {
+				$client .= $script->textContent;
+				// no further processing required
+				continue;
+			}
+			
+			//get the name from the script src
+			$name =str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src);
+			// remove the .js extension if not a full path and no alias set (require.js conditions :P)
+			if( substr($name, 0,1) !=  "/"  && empty($data['path']) ) $name = substr($name , 0, -3);
+			
+			// there is no grouping if there's no minification :P
+			if( $data['minify'] && !empty($data['group']) ) {
+				$group[$data['group']][] = array( "src" => $src, "data" => $data );
+			} else { 
+				// maybe pick the file name as the group name instead...
+				$group[$name][] = array( "src" => $src, "data" => $data );
+			}
+			
+			
+		}
+		
+		
+		// process minification
+		$this->closureJS( $group );
+		// process requireJS
+		$dom = $this->requireJS( $group, $dom );
+		
+		// remove all modified scripts
+		foreach($remove as $script){
+			$script->parentNode->removeChild($script); 
+		}
+		
+		$GLOBALS['client']["_src"] = $client;
+		
+		
+		return $dom;
+		
+	}
+	
 	function css( $dom=false, $file=false ){
 		if(!$dom || !$file) return;
 		
@@ -179,7 +260,139 @@ class Minify extends PhpClosure {
 		
 	}
 	
+	function closureJS( $scripts ){
+		// make this a config option?
+		$baseUrl =  "assets/js/";
+		// sort results
+		//ksort_recursive( $minify );
+		
+		// call google-closure
+		foreach( $scripts as $name=>$group ){
+			$first = current($group);
+			// go to next group if minify flag is not true
+			if( !$first["data"]['minify'] ) continue;
+			$min = new Minify();
+			// get the encoding from the first member of the group
+			$encode = $first["data"]["encode"];
+			// loop through the group and add the files
+			foreach( $group as $script ){
+				// the move the domain from the script (if available)
+				$src = str_replace( array(url(), cdn() ),"", $script["src"] );
+				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
+				$min->add( $file );
+			}
+			
+			$min		->cacheDir( APP. "public/". $baseUrl )
+						->setFile( $name.".min" );
+			if( !DEBUG){
+			$min		->quiet()
+						->hideDebugInfo();
+			}
+			// condition the method of minification here...
+			switch( $encode ){ 
+				case "whitespace": 
+					$min->whitespaceOnly();
+				break;
+				case "simple": 
+					$min->simpleMode();
+				break;
+				case "advanced": 
+					$min->advancedMode();
+				break;
+				default: 
+					$min->simpleMode();
+				break;
+			
+			}
+			
+			//->useClosureLibrary()
+   			$this->create();
+				
+		}
+		
+	}
+	
+	function requireJS( $scripts, $dom ){
+		
+		// loop through the scripts
+		foreach ($scripts as $name=>$group){
+			//$first = current($group);
+			$attr = $this->groupAttributes($group);
+			if( !$attr['data']['require'] ) {
+				if( $attr['data']['minify'] ) {
+					$file = url($GLOBALS['client']['require']['baseUrl'] . $name .".min.js");
+				} else {
+					$file = $attr["src"];
+				}
+				// render a standard script tag
+				$script = $dom->createElement('script');
+				$script->setAttribute("type", "text/javascript");
+				$script->setAttribute("src", $file);
+				$script->setAttribute("defer", "defer");
+				// add the new script in the dom
+				$dom = $this->updateDom($script, $main);
+
+			} else {
+				// check the require parameters...
+				if( !empty($attr['data']['path']) ){
+					$name = $attr['data']['path'];
+				} elseif( $attr['data']['minify'] ) {
+					$name = $name .".min";
+				}
+				
+				// push the name of the groups as the dependency
+				array_push( $GLOBALS['client']['require']['deps'], $name);
+				
+				if( !empty($attr['data']['path']) ) 
+						$GLOBALS['client']['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
+					
+				// add the shim, if any
+				if( !empty($attr['data']['deps']) )
+					$GLOBALS['client']['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
+				
+			}
+			
+		}
+		
+		// return the DOM object
+		return $dom;
+		
+	}
+	
+	
 	// Helpers
+	
+	function groupAttributes($group){
+		
+		$attr = array();
+			
+		foreach($group as $element){
+			$attr = array_merge_recursive($attr, $element);
+		}
+		
+		// marge data values
+		foreach($attr['data'] as $key =>$element){
+			$attributes = array();
+			// don't process items that are already collapsed
+			if( !is_array( $element ) ) {
+				// explode the string (in case it has comma seperated values)
+				if( strpos($element, ",") ) $attr['data'][$key] = explode(",", $element);
+				continue;
+			}
+			foreach($element as $k =>$v){
+				$attribute = ( is_array($v) ) ? $v : explode(",", $v) ;
+				$attributes = array_merge( $attributes, array_unique($attribute) );
+				// fix nested empty arrays manually
+				if( implode($attributes) == "") $attributes = array();
+			}
+			// pickup only the unique values (and reset the keys)
+			$attr['data'][$key] = array_values( array_unique( $attributes ) );
+		}
+		
+		return $attr;
+	}
+	
+	
 	function setFile( $name=false ) {
 		if($name) $this->_file = $name;
     	return $this;

@@ -27,7 +27,6 @@ class Minify extends PhpClosure {
 	
 	function js( $dom=false, $file=false ){
 		$client = "";
-		$url = url();
 		$group = array();
 		$remove = array();
 		// make this a config option?
@@ -53,7 +52,7 @@ class Minify extends PhpClosure {
 			$data['encode'] = $script->getAttribute('data-encode');
 			$type = $script->getAttribute('data-type');
 			// remove domain name from src (if entered)
-			$src = str_replace( $url,"/", $script->getAttribute('src') );
+			$src = str_replace( array( url(), cdn() ),"/", $script->getAttribute('src') );
 			
 			// register types
 			$data['minify'] = strpos($type, "minify") > -1 || !empty($data['encode']);
@@ -226,13 +225,13 @@ class Minify extends PhpClosure {
 					if( is_null($container) ){ 
 						$tag = $dom->createElement('link');
 						$tag->setAttribute("type", "text/css");
-						$tag->setAttribute("href", url($file));
+						$tag->setAttribute("href", cdn($file));
 						$tag->setAttribute("rel", "stylesheet");
 						$tag->setAttribute("media", "screen");
 						// append at the end of the head section
 						$head->appendChild($tag);
 					} else {
-						$container->setAttribute("href", url($file));
+						$container->setAttribute("href", cdn($file));
 						// remove data* attributes
 						$container->removeAttribute("data-group");
 						$container->removeAttribute("data-type");
@@ -244,10 +243,10 @@ class Minify extends PhpClosure {
 					if( is_null($container) ){ 
 						$tag = $dom->createElement('script');
 						$tag->setAttribute("type", "text/javascript");
-						$tag->setAttribute("src", url($file));
+						$tag->setAttribute("src", cdn($file));
 						$tag->setAttribute("defer", "defer");
 					} else {
-						$container->setAttribute("src", url($file));
+						$container->setAttribute("src", cdn($file));
 						// remove data* attributes
 						$container->removeAttribute("data-group");
 						$container->removeAttribute("data-type");
@@ -323,7 +322,7 @@ class Minify extends PhpClosure {
 			$attr = $this->groupAttributes($group);
 			if( !$attr['data']['require'] ) {
 				if( $attr['data']['minify'] ) {
-					$file = url($GLOBALS['client']['require']['baseUrl'] . $name .".min.js");
+					$file = cdn($GLOBALS['client']['require']['baseUrl'] . $name .".min.js");
 				} else {
 					$file = $attr["src"];
 				}

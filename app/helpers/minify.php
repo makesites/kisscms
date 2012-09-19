@@ -333,7 +333,7 @@ class Minify extends PhpClosure {
 				$script->setAttribute("defer", "defer");
 				// add the new script in the dom
 				$dom = $this->updateDom($script, $main);
-
+				
 			} else {
 				// check the require parameters...
 				if( !empty($attr['data']['path']) ){
@@ -418,6 +418,24 @@ class Minify extends PhpClosure {
 		
 		return $string;
 	}
+	// deprecate...
+	function updateDom($tag, $dom){ 
+		// switch based on the type of tag (script,link)
+		// if link....
+		// else
+		// get the main require js
+		$main = $dom->getElementById("require-main");
+		$body = $dom->getElementsByTagName("body")->item(0);
+		
+		// prepend all scripts before the main require js
+		( empty($main) ) 
+					? $body->appendChild($tag)
+					: $main->parentNode->insertBefore($tag, $main);
+					
+		
+		return $dom;
+	}
+	
 }
 
 ?>

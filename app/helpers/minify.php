@@ -332,7 +332,7 @@ class Minify extends PhpClosure {
 				$script->setAttribute("src", $file);
 				$script->setAttribute("defer", "defer");
 				// add the new script in the dom
-				$dom = $this->updateDom($script, $main);
+				$dom = $this->updateDom($script, $dom);
 				
 			} else {
 				// check the require parameters...

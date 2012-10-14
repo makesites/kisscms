@@ -243,11 +243,8 @@ class Controller extends KISS_Controller {
 			}
 		}
 		
-		// remove the selected route from the request
-		$request = array_remove($request, $remove);
-		
 		// lastly convert the params in pairs
-		$params = $this->normalize_params( $request );
+		$params = $this->normalize_params( $request, $remove );
 		
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
@@ -292,10 +289,21 @@ class Controller extends KISS_Controller {
 	}
 	
 	// this function takes an array and creates pairs of key-value
-	function normalize_params( $params ){
+	function normalize_params( $params, $remove){
 		
 		// create a new key/value array
 		$normalized = array();
+		
+		// first remove the picked route
+		if( !empty($remove) ){
+			// route is either part of the path or the query
+			// remove the selected route from the request
+			if( !empty($params["uri_parts"]) ){
+				$params["uri_parts"] = array_remove($params["uri_parts"], $remove);
+			} else {
+				$params["query"] = array_remove($params["query"], $remove);
+			}
+		}
 		
 		//loop through the groups of params
 		foreach( $params as $type => $group ){

@@ -54,10 +54,9 @@ class Admin extends Controller {
 
 	
 	function config( $params=array() ) {
-
-	  if($params['action'] == "save" ){
-		// remove the action param
-		unset($params['action']); 
+	  // if saving...
+	  if( $_SERVER['REQUEST_METHOD'] == "POST" ){
+		
 		// loop through all the other data and reorganise them properly
 		foreach($params as $k=>$v){
 			// get the controller from the field name
@@ -83,6 +82,7 @@ class Admin extends Controller {
 		
 		// redirect back to the configuration page
 		header('Location: '.url('admin/config'));
+	
 	  } else {
 	  	// show the configuration
 	  	//$this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);

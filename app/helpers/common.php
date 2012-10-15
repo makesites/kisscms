@@ -359,6 +359,18 @@ function array_remove( $array, $values ){
 	return $array;
 }
 
+// convert the keys to elements of the array
+function array_flatten( $array ){
+	$result = array();
+	
+	foreach( $array as $k=>$v ){
+		$result[] = $k;
+		$result[] = $v;
+	}
+	
+	return $result;
+}
+
 // checks if a given directory exists and optionally creates it
 function check_dir( $file=false, $create=false, $chmod=0755 ){
 	// prerequisites

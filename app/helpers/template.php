@@ -9,12 +9,17 @@ class Template extends KISS_View {
 	private $client;
 	
 	//Example of overriding a constructor/method, add some code then pass control back to parent
-	function __construct($vars='') {
-		$this->vars = $vars;
+	function __construct( $vars=array() ) {
+		// defaults
+		$this->vars = array(
+			"body" => ""
+		);
+		$this->vars = array_merge($this->vars, $vars);
+		
 		$this->hash = $this->getHash("", $vars);
 		$file = $this->getTemplate();
 		$this->client = array();
-		parent::__construct($file,$vars);
+		parent::__construct($file, $this->vars);
 	}
 
 	function output($vars=''){
@@ -29,6 +34,7 @@ class Template extends KISS_View {
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
 		$GLOBALS['foot'] = $template->get("foot");
+		
 		// compile the page with the existing data
 		$output = parent::do_fetch($template->file, $template->vars);
 		// post-process (in debug with limited features)

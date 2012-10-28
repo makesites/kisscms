@@ -1,6 +1,6 @@
 <?php
 
-class Main extends Controller {
+class Main extends KISS_Auth {
 	private $category = false;
 	
 	//This function maps the controller name and function name to the file location of the .php file to include
@@ -22,28 +22,16 @@ class Main extends Controller {
 		$this->render();
 	}
 
-	// Generic logout method
-	function logout() {
-		// destroy session
-		session_destroy();
-		
-		// remove cookie(s)
-		foreach($_COOKIE as $name=>$value){
-			unset($_COOKIE[$name]);
-			setcookie($name, NULL, -1); 
-		}
-		
-		// reload the site
-		header("Location: ". url());
-		
-	}
-	
+
+	// Main render method
 	function render() {
 			
 		// display the page
 		Template::output($this->data);
 	}
 	
+	
+	// - Helpers
 	function getPage( ) {
 		
 		$data = array();

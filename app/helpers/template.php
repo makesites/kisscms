@@ -57,7 +57,7 @@ class Template extends KISS_View {
 		foreach($data as $part){ 
 			if ( $view && !isset($part['status']) )
 			  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
-			elseif ($part['view'])
+			elseif ( array_key_exists('view', $part) )
 			  View::do_dump( $part['view'], $part);
 			else
 			  View::do_dump( getPath('views/main/body.php'), $part);

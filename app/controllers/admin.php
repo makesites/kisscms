@@ -102,7 +102,7 @@ class Admin extends Controller {
 	function create($params=false) {
 		
 		$data['status']= $this->data['status']="create";
-		$data['path']= ( array_key_exists("path", $params) ) ? $params["path"] : clean($_REQUEST['path']);
+		$data['path']= ( is_array($params) && array_key_exists("path", $params) ) ? $params["path"] : clean($_REQUEST['path']);
 		$data['tags']= "";
 		$data['view']= getPath('views/admin/edit_page.php');
 		$data['template']= DEFAULT_TEMPLATE;

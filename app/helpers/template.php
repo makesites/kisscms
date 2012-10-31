@@ -200,10 +200,8 @@ class Template extends KISS_View {
 			"deps" => array()
 		);
 		
-		// currently there is no support for the require config during DEBUG
-		// first process the require.config.json for cdn libs
-		// add a config option for the location of this file? 
-		$file = APP. "public/require.config.json";
+		// first, process the require.config.json for cdn libs
+		$file = isStatic( "require.config.json" );
 		if( is_file( $file ) ) $json = file_get_contents( $file );
 		$libs = ( !empty( $json ) ) ? json_decode($json, true) : array();
 		

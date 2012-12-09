@@ -19,8 +19,18 @@ if(!defined("WEB_FOLDER")) define('WEB_FOLDER', substr( $_SERVER['PHP_SELF'], 0,
 // alternatively use this if you do not have mod_rewrite enabled
 //define('WEB_FOLDER','/index.php/'); 
 
-// full path of where the templates reside
-if(!defined("TEMPLATES")) define('TEMPLATES', $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/'); 
+// #70 : fallback path of where the templates reside (logic messy here...)
+$templates = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/';
+// lookup APP folder first
+if( !is_dir($templates) && defined("BASE") ){
+	// then look up the default template location
+	$templates = realpath(BASE . '../' ) . "/html/templates/";
+	if( !is_dir($templates) ){
+		// lastly lookup at the root 
+		$templates = realpath(BASE . '../' ) . "/templates/";
+	}
+}
+if(!defined("TEMPLATES")) define('TEMPLATES', $templates ); 
 
 
 //===============================================

@@ -330,7 +330,7 @@ class Controller extends KISS_Controller {
 		if( count($params)==0 ) {
 			$params = false;
 		// convert the params to a string if they are only one element
-		} else if( count($params)==1 ) {
+		} else if( count($params)==1 && isset($params[0]) ) {
 			$params = implode($params);
 		}
 		

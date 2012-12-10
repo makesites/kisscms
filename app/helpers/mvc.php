@@ -337,6 +337,29 @@ class Controller extends KISS_Controller {
 		return $params;
 		
 	}
+	
+	/**
+	 *  CORS-compliant method.  It will allow any GET, POST, PUT or DELETE requests from any origin.
+	 *
+	 *  This is a test feature. In a production environment, you probably want to be more restrictive
+	 *  Will add whitelist domain as part of the configuration. For now, use with caution...
+	 *
+	 *  Example: 
+	 *  $this->cors();
+	 *  $this->render();
+	 *
+	 */
+	function cors() {
+
+		// Allow from any origin
+		if (isset($_SERVER['HTTP_ORIGIN'])) {
+			header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Max-Age: 86400');    // cache for 1 day
+			header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE"); 
+		}
+	
+	}
 }
 
 //===============================================================

@@ -12,7 +12,13 @@ $admin_username = (!isset($admin_username)) ? '' : $admin_username;
 		echo '<legend><h3>'. ucwords( $controller ) .'</h3></legend>';
     	foreach( $vars as $k=>$v ){
 			// $GLOBALS['language']['config'][$k]
-			echo '<label>' . ucwords( str_replace("_", " ", $k )) . ':</label><input type="text" name="'. $controller .'|' . $k . '" value="' . $v . '" />' . "\n";
+			echo '<label>' . ucwords( str_replace("_", " ", $k )) . ':</label><input type="text" name="'. $controller .'|' . $k . '"';
+			// #25 - special presentation for password
+			if( $k == "admin_password" ){ 
+				echo ' value="" placeholder="type new password..." />' . "\n";
+			} else {
+				echo ' value="' . $v . '" />' . "\n";
+			}
 		}
 		echo '</fieldset>';
 	}

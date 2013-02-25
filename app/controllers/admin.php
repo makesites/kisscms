@@ -27,7 +27,8 @@ class Admin extends Controller {
 			$username=trim($_POST['admin_username']);
 			$password=crypt($_POST['admin_password'], $db_password);
 			// check for the entered data
-			if( $username == $db_username && $password == $db_password ){
+			// #25 - leaving legacy password check for backwards compatibility (to be deprecated)
+			if( $username == $db_username && ( $password == $db_password || $_POST['admin_password'] == $db_password ) ){
 				$login = true;
 			}
 		}

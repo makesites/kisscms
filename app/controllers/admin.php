@@ -17,17 +17,20 @@ class Admin extends Controller {
 	}
 
 	function login() {
-
-	  $login = false;
-
-	  if( isset($_POST['admin_username']) && $_POST['admin_password']){
-		$username=trim($_POST['admin_username']);
-		$password=$_POST['admin_password'];
-		// check for the entered data
-		if($username == $GLOBALS['config']['admin']['admin_username'] && $password == $GLOBALS['config']['admin']['admin_password']){
-			$login = true;
+		
+		$login = false;
+		// configuration values;
+		$db_password = $GLOBALS['config']['admin']['admin_password'];
+		$db_username = $GLOBALS['config']['admin']['admin_username'];
+		// check user input
+		if( isset($_POST['admin_username']) && $_POST['admin_password']){
+			$username=trim($_POST['admin_username']);
+			$password=crypt($_POST['admin_password'], $db_password);
+			// check for the entered data
+			if( $username == $db_username && $password == $db_password ){
+				$login = true;
+			}
 		}
-	  }
 
 	  if($login == true) {
 		$_SESSION['admin']="true";
@@ -59,12 +62,15 @@ class Admin extends Controller {
 		
 		// loop through all the other data and reorganise them properly
 		foreach($params as $k=>$v){
+			// exit if the values is empty?
+			if( empty($v) ) continue;
 			// get the controller from the field name
 			$name = explode("|", $k);
 			if(count($name) < 2) continue;
 			$table = $name[0];
 			$key = $name[1];
-			$value = $v;
+			//#25 - encrupting 'password' fields
+			$value = ( $key== "admin_password" ) ? crypt( $v ) : $v;
 			// only save the data that has changed
 			if( $GLOBALS["config"][$table][$key] != $value ){
 				$config = new Config(0, $table);

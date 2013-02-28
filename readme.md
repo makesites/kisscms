@@ -4,7 +4,7 @@ A Make Sites production (www.makesites.org)
 Lead Developer: Makis Tracend (makis@makesit.es) 
 Website: http://www.kisscms.com 
 
-Current release: [v1.4](https://github.com/makesites/kisscms/zipball/v1.4)
+Current release: [v1.5](https://github.com/makesites/kisscms/archive/1.5.0.zip)
 [![Build Status](https://secure.travis-ci.org/makesites/kisscms.png)](http://travis-ci.org/makesites/kisscms)
 
 Description

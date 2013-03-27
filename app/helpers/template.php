@@ -272,7 +272,7 @@ class Template extends KISS_View {
 	
 	
 	
-	function doList( $selected=null){
+	public static function doList( $selected=null){
 		
 		$data['template']['selected'] = $selected;
 		

@@ -2,3 +2,7 @@
 env.json
 app/plugins
 tmp
+
+# Editor backup files
+*~
+*.bak

@@ -45,14 +45,14 @@ class Template extends KISS_View {
 		self::setCache( $id, $output);
 	}
 	
-	function head( $vars=false ){
+	public static function head( $vars=false ){
 		$data = $GLOBALS['head'];
 		foreach($data as $name=>$html){
 			echo "$html\n";
 		}		
 	}
 	
-	function body($view=false){
+	public static function body($view=false){
 		$data = $GLOBALS['body'];
 		foreach($data as $part){ 
 			if ( $view && !isset($part['status']) )
@@ -64,7 +64,7 @@ class Template extends KISS_View {
 		}
 	}
 	
-	function foot($vars=false){
+	public static function foot($vars=false){
 		$data = $GLOBALS['foot'];
 		foreach($data as $name=>$html){
 			echo "$html\n";

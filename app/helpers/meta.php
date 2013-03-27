@@ -2,7 +2,7 @@
 
 class Meta {
 	
-	static function display($type){
+	public static function display($type){
 		/*
 		$meta = new Meta();
 		switch( $type ){ 
@@ -14,15 +14,15 @@ class Meta {
 		*/
 	}
 	
-	function title(){
+	public static function title(){
 		echo ( array_key_exists('meta', $GLOBALS) && $GLOBALS['meta']['title'] ) ? $GLOBALS['meta']['title'] : $GLOBALS['config']['main']['site_name'];
 	}
 	
-	function description(){
+	public static function description(){
 		echo (  array_key_exists('meta', $GLOBALS) && $GLOBALS['meta']['description'] ) ? $GLOBALS['meta']['description'] : $GLOBALS['config']['main']['site_description'];
 	}
 	
-	function url($query=false){
+	public static function url($query=false){
 		if(  array_key_exists('meta', $GLOBALS) && $GLOBALS['meta']['url'] ) {
 			echo $GLOBALS['meta']['url'];
 		} else {

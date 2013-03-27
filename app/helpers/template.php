@@ -22,7 +22,7 @@ class Template extends KISS_View {
 		parent::__construct($file, $this->vars);
 	}
 
-	function output($vars=''){
+	public static function output($vars=''){
 		$template = new Template($vars);
 		// first thing, check if there's a cached version of the template
 		$id = "template_". $template->hash;
@@ -140,12 +140,12 @@ class Template extends KISS_View {
 		// generate a hash form the string
 		return $prefix . hash("md5", $string);
 	}
-	function getCache($id ){
+	static function getCache($id ){
 		$cache = new Minify_Cache_File();
 		// check if the file is less than an hour old 
 		return ( $cache->isValid($id, time("now")-3600) ) ? $cache->fetch($id) : false;
 	}
-	function setCache($id, $data){
+	static function setCache($id, $data){
 		$cache = new Minify_Cache_File();
 		$cache->store($id, $data);
 	}

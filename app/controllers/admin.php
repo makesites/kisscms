@@ -63,8 +63,8 @@ class Admin extends Controller {
 		
 		// loop through all the other data and reorganise them properly
 		foreach($params as $k=>$v){
-			// exit if the values is empty?
-			if( empty($v) ) continue;
+			// exit if the values is empty (but not false)?
+			if( empty($v) && $v != "0" ) continue;
 			// get the controller from the field name
 			$name = explode("|", $k);
 			if(count($name) < 2) continue;

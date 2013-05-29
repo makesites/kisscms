@@ -18,13 +18,18 @@
 
 <link rel="shortcut icon" href="<?=url('/favicon.ico')?>">
 <link rel="apple-touch-icon" href="<?=url('/apple-touch-icon.png')?>">
+<link rel="apple-touch-icon-precomposed" href="<?=url('/apple-touch-icon-precomposed.png')?>">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?=url('/apple-touch-icon-72x72-precomposed.png')?>" />
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?=url('/apple-touch-icon-114x114-precomposed.png')?>" />
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?=url('/apple-touch-icon-144x144-precomposed.png')?>" />
 
 <link rel="stylesheet" href="<?=url('/css/style.css')?>">
+<!-- link rel="stylesheet" href="<?=url('/assets/css/common.css')?>" -->
 <link type="text/plain" rel="author" href="<?=url('/humans.txt')?>">
 
 <script type="text/javascript"  data-type="require">
 	var KISSCMS = {};
-	
+
 Object.extend = function(destination, source) {
   for (var property in source) {
     if (source[property] && source[property].constructor &&
@@ -41,10 +46,10 @@ Object.extend = function(destination, source) {
 <? if( DEBUG){ ?>
 
 	var DEBUG = true;
-	
+
 	// raw out put of the client side vars
 	Object.extend(KISSCMS, <?=json_encode_escaped( $GLOBALS['client'] )?>);
-	
+
 <? } ?>
 
 </script>

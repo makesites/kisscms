@@ -30,7 +30,9 @@ class Model extends KISS_Model  {
 				// Continue logic on a specific error code (14: unable to open database file)
 				$error = (string)$e->getCode();
 				if( $error == "14" ){ 
-					// see if there is a data directory
+                                  // #79 report last error on SQLite fail
+                                  print_r(error_get_last());
+                                  // see if there is a data directory
 					if( !is_dir( DATA ) ){ 
 						// create the directory with write access
 						mkdir( DATA, 0775);

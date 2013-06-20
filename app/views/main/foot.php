@@ -5,11 +5,7 @@
 <![endif]-->
 
 <script type="text/javascript" data-type="require">
-<? if( DEBUG){ ?>
-	window.onload = function(){ init(); };
-<? } else { ?>
 	Object.extend(KISSCMS, {"require":{"callback": function(){ init();} }});
-<? } ?>
 </script>
 
 <script id="require-main" type="text/javascript" data-main="<?=url("/assets/js/main.js")?>" src="<?=url("/js/libs/require.js")?>"  defer="defer"></script>

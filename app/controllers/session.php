@@ -54,7 +54,7 @@ class Session extends REST_Service {
 		// validate first?
 		if( array_key_exists('user', $params) ) 
             $_SESSION['user'] = array_merge( $_SESSION['user'], $params['user']);
-		if( array_key_exists('oauth', $params) ){
+		if( array_key_exists('oauth', $params) )
             $_SESSION['oauth'] = array_merge( $_SESSION['oauth'], $params['oauth']);
 		
         // render the final data

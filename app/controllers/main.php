@@ -102,7 +102,8 @@ class Main extends KISS_Auth {
 			$this->data['body'][] = $data;
 		} else { 
 			// show 404 error if not loggedin
-			$data['view']= getPath('views/main/404.php');
+			header("HTTP/1.0 404 Not Found");
+			$data['view']= getPath('views/errors/404.php');
 			$this->data['body'][] = $data;
 		} 
 		

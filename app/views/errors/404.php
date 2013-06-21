@@ -1,6 +1,3 @@
-<?php
-header("HTTP/1.0 404 Not Found");
-?>
 <article class="error"> 
    <h2>Not found <span frown>:(</span></h2> 
    <div> 

@@ -138,7 +138,7 @@ class REST_Service extends Controller {
         }
         
 		// display the data in json format
-		View::do_dump( getPath('views/json.php'), $this->data );
+		View::do_dump( getPath('views/main/json.php'), $this->data );
 	}
 
 	// Helpers

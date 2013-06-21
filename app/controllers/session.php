@@ -51,8 +51,11 @@ class Session extends REST_Service {
 		if( !array_key_exists("user", $_SESSION) || !is_array($_SESSION['user'] ) ) $_SESSION['user'] = array();
 		if( !array_key_exists("oauth", $_SESSION) || !is_array($_SESSION['oauth'] ) ) $_SESSION['oauth'] = array();
 		
+        // FIX - force object to become an assosiative array
+        $params = json_decode(json_encode($params), true);
+        
 		// validate first?
-		if( array_key_exists('user', $params) ) 
+        if( array_key_exists('user', $params) ) 
             $_SESSION['user'] = array_merge( $_SESSION['user'], $params['user']);
 		if( array_key_exists('oauth', $params) )
             $_SESSION['oauth'] = array_merge( $_SESSION['oauth'], $params['oauth']);

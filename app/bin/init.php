@@ -294,7 +294,7 @@ function requireOnly($folder='', $only=array() ){
 set_exception_handler('uncaught_exception_handler');
 
 function uncaught_exception_handler($e) {
-  ob_end_clean(); //dump out remaining buffered text
+  if( ob_get_length() ) ob_end_clean(); //dump out remaining buffered text
   $vars['message']=$e;
   die(View::do_fetch( getPath('views/errors/exception_uncaught.php'),$vars));
 }

@@ -7,7 +7,7 @@ class Template extends KISS_View {
 	public $hash;
 	private $template;
 	private $client;
-	
+
 	//Example of overriding a constructor/method, add some code then pass control back to parent
 	function __construct( $vars=array() ) {
 		// defaults
@@ -15,7 +15,7 @@ class Template extends KISS_View {
 			"body" => ""
 		);
 		$this->vars = array_merge($this->vars, $vars);
-		
+
 		$this->hash = $this->getHash("", $vars);
 		$file = $this->getTemplate();
 		$this->client = array();
@@ -31,11 +31,11 @@ class Template extends KISS_View {
 		if($cache && !DEBUG) { echo $cache; return; }
 		// continue processing
 		$template->setupClient();
-		// 
+		//
 		$GLOBALS['body'] = $template->vars["body"];
 		$GLOBALS['head'] = $template->get("head");
 		$GLOBALS['foot'] = $template->get("foot");
-		
+
 		// compile the page with the existing data
 		$output = parent::do_fetch($template->file, $template->vars);
 		// post-process (in debug with limited features)
@@ -45,17 +45,17 @@ class Template extends KISS_View {
 		// set the cache for later use
 		//self::setCache( $id, $output);
 	}
-	
+
 	function head( $vars=false ){
 		$data = $GLOBALS['head'];
 		foreach($data as $name=>$html){
 			echo "$html\n";
-		}		
+		}
 	}
-	
+
 	function body($view=false){
 		$data = $GLOBALS['body'];
-		foreach($data as $part){ 
+		foreach($data as $part){
 			if ( $view && !isset($part['status']) )
 			  View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
 			elseif ( array_key_exists('view', $part) )
@@ -64,7 +64,7 @@ class Template extends KISS_View {
 			  View::do_dump( getPath('views/main/body.php'), $part);
 		}
 	}
-	
+
 	function foot($vars=false){
 		$data = $GLOBALS['foot'];
 		foreach($data as $name=>$html){
@@ -86,43 +86,43 @@ class Template extends KISS_View {
 	function get($name=''){
 		$data = array();
 		$files = findFiles( $name.'.php' );
-		
+
 		foreach($files as $view){
 			 $section = $this->getSection( $view );
 			 $data[$section] = View::do_fetch( $view, $this->vars);
 		}
 		return $data;
 	}
-	
-	
+
+
 	function process( $html ){
-		
-		// setup 
+
+		// setup
 		$min = new Minify();
-		
+
 		// map the dom
 		$dom = new DOMDocument;
-		$dom->preserveWhiteSpace = false; 
+		$dom->preserveWhiteSpace = false;
 		@$dom->loadHTML($html);
-		
+
 		// minification
 		if( !DEBUG ) {
 			$dom = $min->css($dom, $this->template);
-			$dom = $min->js($dom, $this->template);	
-			
-			
+			$dom = $min->js($dom, $this->template);
+
+
 		}
 		// process require configuration
 		$this->createClient($dom);
-			
+
 		$output =  $dom->saveHTML();
-		
+
 		// output the final markup - clear whitespace
 		return  ( DEBUG ) ? $output : $this->trimWhitespace( $output );
-		
+
 	}
-	
-	
+
+
 	// Helpers
 	function getHash( $prefix="", $vars=array() ){
 		// the hash is an expression of the variables compiled to render the template
@@ -130,7 +130,7 @@ class Template extends KISS_View {
 		$string = serialize( $vars );
 		// ALTERNATE method
 		// the hash is a combination of :
-		// - the request url 
+		// - the request url
 		// - the request parameters
 		// - the session id
 		// - the user id (if available)
@@ -143,18 +143,18 @@ class Template extends KISS_View {
 	}
 	function getCache($id ){
 		$cache = new Minify_Cache_File();
-		// check if the file is less than an hour old 
+		// check if the file is less than an hour old
 		return ( $cache->isValid($id, time("now")-3600) ) ? $cache->fetch($id) : false;
 	}
 	function setCache($id, $data){
 		$cache = new Minify_Cache_File();
 		$cache->store($id, $data);
 	}
-	
-	
+
+
 	function getTemplate(){
 		// support for mobile template
-		if(array_key_exists('IS_MOBILE', $GLOBALS) && $GLOBALS['IS_MOBILE'] == true && is_file(TEMPLATES."mobile.php") ){ 
+		if(array_key_exists('IS_MOBILE', $GLOBALS) && $GLOBALS['IS_MOBILE'] == true && is_file(TEMPLATES."mobile.php") ){
 			$this->template = "mobile";
 		} else {
 			$template = (array_key_exists('template', $this->vars) && is_file(TEMPLATES.$this->vars['template'])) ? $this->vars['template'] : DEFAULT_TEMPLATE;
@@ -163,7 +163,7 @@ class Template extends KISS_View {
 		}
 		return TEMPLATES.$this->template.".php";
 	}
-	
+
 	// find the section a view file belongs to
 	function getSection( $file ){
 		// first check if it is in a plugins folder
@@ -184,10 +184,10 @@ class Template extends KISS_View {
 		if(!isset($section)){ $section = "none"; }
 		return $section;
 	}
-	
+
 	// this method compiles vars that need to be available on the client
 	function setupClient(){
-		
+
 		// make this a config option?
 		$baseUrl =  "assets/js/";
 		// precaution(s) in case this is the first time we are accessing the client globals (not needed?)
@@ -195,25 +195,25 @@ class Template extends KISS_View {
 		if( !isset($GLOBALS['client']['require']) ) $GLOBALS['client']['require'] = array();
 		// default require strucure
 		$GLOBALS['client']['require'] = array(
-			"baseUrl" => WEB_FOLDER . $baseUrl, 
+			"baseUrl" => WEB_FOLDER . $baseUrl,
 			"paths" => array(),
 			"shim" => array(),
 			"deps" => array()
 		);
-		
+
 		// first, process the require.config.json for cdn libs
 		$file = isStatic( "require.config.json" );
 		if( is_file( $file ) ) $json = file_get_contents( $file );
 		$libs = ( !empty( $json ) ) ? json_decode($json, true) : array();
-		
-		if( !DEBUG ){ 
+
+		if( !DEBUG ){
 			// merge the libs with the client globals
 			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
 		} else {
 			$this->client['require'] = $libs;
 		}
 	}
-	
+
 	function createClient( $dom ){
 		$client = "";
 		// see if there is any "loose" source in the client
@@ -223,100 +223,107 @@ class Template extends KISS_View {
 		}
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
-		
+
 		$client = $this->trimWhitespace($client);
+		// #87 not caching client vars as a file
+		/*
 		$client_file = "client_". $this->hash .".js";
 		$cache = $this->getCache( $client_file );
-		
+
 		// write config file
 		$client_sign = md5($client);
 		$cache_sign = ($cache) ? md5($cache) : NULL;
-		
+
 		// the client file should not be cached by the cdn
 		$client_src= WEB_FOLDER. $client_file;
-		
+
 		// check md5 signature
-		if($client_sign == $cache_sign){ 
+		if($client_sign == $cache_sign){
 			// do nothing
 		} else {
 			// set the cache for later use
 			self::setCache( $client_file , $client);
 		}
-	
+		*/
+		$client_file = "client";
+		$client_src= WEB_FOLDER. $client_file;
+
 		if(DEBUG) {
 			// add the scripts in the require list as script tags
 			$scripts = (!empty($this->client['require']['paths'])) ? $this->client['require']['paths'] : array();
 			$head = $dom->getElementsByTagName("head")->item(0);
-			
+
 			foreach($scripts as $script){
 				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
 				// check if there's a js extension
 				if( substr($src, -3) != ".js") $src .= ".js";
-				
+
 				// add straight in the head section
 				$script = $dom->createElement('script');
 				$script->setAttribute("type", "text/javascript");
 				$script->setAttribute("src", $src);
 				$head->appendChild($script);
 			}
-			
-		} else {
-			// render a standard script tag
-			$script = $dom->createElement('script');
-			$script->setAttribute("type", "text/javascript");
-			$script->setAttribute("src", $client_src);
-			$script->setAttribute("defer", "defer");
-			// include the script 
-			$dom = $this->updateDom($script, $dom);
 		}
+		// Always render the client.js
+		// render a standard script tag
+		$script = $dom->createElement('script');
+		$script->setAttribute("type", "text/javascript");
+		$script->setAttribute("src", $client_src);
+		//$script->setAttribute("defer", "defer");
+		// include the script
+		$dom = $this->updateDom($script, $dom);
+
+		// set the client as a session var
+		$_SESSION["_client"] = $client;
 	}
-	
-	
-	
+
+
+
 	function doList( $selected=null){
-		
+
 		$data['template']['selected'] = $selected;
-		
+
 		if ($handle = opendir(TEMPLATES)) {
 			while (false !== ($template = readdir($handle))) {
 				#52: Skip files that start with a dot
-				if ( substr($template,0,1) == '.' ) { 
-				  continue; 
-				} 
+				if ( substr($template,0,1) == '.' ) {
+				  continue;
+				}
 				if ( is_file(TEMPLATES.$template) ) {
-					$data['template']['list'][] = array( 	'value' => $template, 
+					$data['template']['list'][] = array( 	'value' => $template,
 															'title' => beautify($template)
 														);
 				}
-			}	
+			}
 			View::do_dump( getPath('views/admin/list_templates.php'), $data);
 		} else {
 			return false;
-		}			
+		}
 	}
-	
-	function updateDom($tag, $dom){ 
+
+	function updateDom($tag, $dom){
 		// switch based on the type of tag (script,link)
 		// if link....
 		// else
 		// get the main require js
 		$main = $dom->getElementById("require-main");
 		$body = $dom->getElementsByTagName("body")->item(0);
-		
+
 		// prepend all scripts before the main require js
-		( empty($main) ) 
+		( empty($main) )
 					? $body->appendChild($tag)
 					: $main->parentNode->insertBefore($tag, $main);
-					
-		
+
+
 		return $dom;
 	}
-	
+
 	function trimWhitespace( $string ){
 		// replace multiple spaces with one
 		return preg_replace( '/\s+/', ' ', $string );
 	}
-  
+
 }
 
 ?>

@@ -92,7 +92,7 @@ class Minify extends PhpClosure {
 
 
 		// process minification
-		$this->closureJS( $group );
+		$group = $this->closureJS( $group );
 		// process requireJS
 		$dom = $this->requireJS( $group, $dom );
 
@@ -320,7 +320,12 @@ class Minify extends PhpClosure {
 			//->useClosureLibrary()
 			$min->create();
 
+			// add the signature in the group
+			$scripts[$name][]["data"]["md5"] = $md5;
+
 		}
+
+		return $scripts;
 
 	}
 
@@ -330,12 +335,19 @@ class Minify extends PhpClosure {
 		foreach ($scripts as $name=>$group){
 			//$first = current($group);
 			$attr = $this->groupAttributes($group);
+			// signature of file/group
+			$md5 = ( !empty( $attr['data']['md5'] ) ) ? $attr['data']['md5'] : false;
+			// get file of the group
+			if( $attr['data']['minify'] ) {
+				$file = $GLOBALS['client']['require']['baseUrl'] . $name;
+				$file .= ( $md5 ) ? ".". $md5 .".min.js" : ".min.js";
+				$file = cdn( $file );
+			} else {
+				$file = $attr["src"];
+			}
+			//
 			if( !$attr['data']['require'] ) {
-				if( $attr['data']['minify'] ) {
-					$file = cdn($GLOBALS['client']['require']['baseUrl'] . $name .".min.js");
-				} else {
-					$file = $attr["src"];
-				}
+
 				// render a standard script tag
 				$script = $dom->createElement('script');
 				$script->setAttribute("type", "text/javascript");
@@ -349,7 +361,14 @@ class Minify extends PhpClosure {
 				if( !empty($attr['data']['path']) ){
 					$name = $attr['data']['path'];
 				} elseif( $attr['data']['minify'] ) {
-					$name = $name .".min";
+					//$name = $name .".min";
+					//$name = $name;
+				}
+
+				// if there is a signature we'll have to create a new path for the group
+				if ( $md5 ){
+					$GLOBALS['client']['require']['paths'][$name] =  substr( $file, 0, -3);
+
 				}
 
 				// push the name of the groups as the dependency

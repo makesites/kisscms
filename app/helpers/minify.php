@@ -267,6 +267,8 @@ class Minify extends PhpClosure {
 		$baseUrl =  "assets/js/";
 		// sort results
 		//ksort_recursive( $minify );
+		// record signature
+		$md5 = "";
 
 		// call google-closure
 		foreach( $scripts as $name=>$group ){
@@ -281,8 +283,11 @@ class Minify extends PhpClosure {
 				// the move the domain from the script (if available)
 				$src = str_replace( array(url(), cdn() ),"", $script["src"] );
 				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
+				$md5 .= md5_file($file);
 				$min->add( $file );
 			}
+			// compress signatures of all files
+			$md5 = md5( $md5 );
 
 			$min		->cacheDir( APP. "public/". $baseUrl )
 						->setFile( $name.".min" );

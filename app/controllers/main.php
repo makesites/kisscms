@@ -2,10 +2,10 @@
 
 class Main extends KISS_Auth {
 	private $category = false;
-	
+
 	//This function maps the controller name and function name to the file location of the .php file to include
 	function index( $params ) {
-		
+
 		// get the page details stored in the database
 		$is_page = $this->getPage();
 		$is_category = $this->getCategoryPages( $is_page );
@@ -17,7 +17,7 @@ class Main extends KISS_Auth {
 		if(!$is_page && $is_category){
 			$this->data['status']="new";
 		}
-		
+
 		// render the page
 		$this->render();
 	}
@@ -25,20 +25,19 @@ class Main extends KISS_Auth {
 
 	// Main render method
 	function render() {
-			
+
 		// display the page
 		Template::output($this->data);
 	}
-	
-	
+
 	// - Helpers
 	function getPage( ) {
-		
+
 		$data = array();
 		// if there is no path, load the index
 		if( empty( $this->data['path'] ) ){
 			$page = new Page(1);
-		} else { 
+		} else {
 			$page = new Page();
 			$page->get_page_from_path($this->data['path']);
 		}
@@ -53,7 +52,7 @@ class Main extends KISS_Auth {
 			$data['date'] = strtotime( stripslashes( $page->get('date') ) );
 			// check if the page has been classified as a category
 			$this->category = ( strpos( $data['tags'], "category" ) > -1) ? true : false;
-			
+
 			$data['path']= $this->data['path'];
 			$data['view'] = getPath('views/main/body.php');
 			$this->data['body'][] = $data;
@@ -62,24 +61,24 @@ class Main extends KISS_Auth {
 			$this->data['template'] = stripslashes( $page->get('template') );
 			return true;
 		} else {
-			return false;			
+			return false;
 		}
 
 	}
-	
+
 	function getCategoryPages($is_page=false) {
 
-		if( $is_page && !$this->category ) return false; 
-		
+		if( $is_page && !$this->category ) return false;
+
 		$page=new Page();
 		$page->tablename = "pages";
-		
+
 		// add a leading slash to the path
 		$path = ( substr($this->data['path'], -1) == "/" ) ? $this->data['path'] : $this->data['path'].'/';
-		
+
 		$pages = $page->retrieve_many("path like '". $this->data['path'] ."%'");
-		
-		if( count($pages) > 0 ){ 
+
+		if( count($pages) > 0 ){
 			foreach( $pages as $data ){
 				$data['view'] = getPath('views/main/category.php');
 				$this->data['body'][] = $data;
@@ -88,27 +87,27 @@ class Main extends KISS_Auth {
 		} else {
 			return false;
 		}
-		
+
 	}
-	
+
 
 	function getNewPage() {
-		
-		if( array_key_exists('admin', $_SESSION) && $_SESSION['admin'] ){ 
+
+		if( array_key_exists('admin', $_SESSION) && $_SESSION['admin'] ){
 			// forward to create a new page
 			$data['status']= $this->data['status']="new";
 			$data['path']= $this->data['path'];
 			$data['view']= getPath('views/admin/confirm_new.php');
 			$this->data['body'][] = $data;
-		} else { 
+		} else {
 			// show 404 error if not loggedin
 			header("HTTP/1.0 404 Not Found");
 			$data['view']= getPath('views/errors/404.php');
 			$this->data['body'][] = $data;
-		} 
-		
+		}
+
 	}
-	
+
 
 }
 

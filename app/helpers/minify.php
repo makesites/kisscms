@@ -14,8 +14,8 @@ class Minify extends PhpClosure {
 		$etag = ( is_file($cache_file) ) ? md5_file($cache_file) : false;
 
 		// flags
-		$is_old = @strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime;
-		$file_diff = @trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag;
+		$is_old =  (array_key_exists("HTTP_IF_MODIFIED_SINCE", $_SERVER)) ? @strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime : false;
+		$file_diff = (array_key_exists("HTTP_IF_NONE_MATCH", $_SERVER)) ? @trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag : false;
 		$needs_compile = $this->_isRecompileNeeded($cache_file);
 
 		if ( $is_old || $file_diff || $needs_compile) {
@@ -286,6 +286,8 @@ class Minify extends PhpClosure {
 			foreach( $group as $script ){
 				// the move the domain from the script (if available)
 				$src = str_replace( array(url(), cdn() ),"", $script["src"] );
+				// remove leading slash
+				$src = ltrim($src,'/');
 				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
 				$md5 .= md5_file($file);
 				$min->add( $file );

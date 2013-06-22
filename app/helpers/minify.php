@@ -1,45 +1,45 @@
 <?php
 
 class Minify extends PhpClosure {
-	
+
 	protected $_content = array();
 	protected $_dom;
-	
+
 	// a version of the "write" function that doesn't output the content
 	function create(){
-		
+
 		$cache_file = $this->_getCacheFileName();
-		
+
 		$cache_mtime = ( is_file($cache_file) ) ? filemtime($cache_file) : false;
 		$etag = ( is_file($cache_file) ) ? md5_file($cache_file) : false;
-		
+
 		// flags
 		$is_old = @strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime;
 		$file_diff = @trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag;
 		$needs_compile = $this->_isRecompileNeeded($cache_file);
-		
-		if ( $is_old || $file_diff || $needs_compile) { 
+
+		if ( $is_old || $file_diff || $needs_compile) {
 			$result = $this->_compile();
 			file_put_contents($cache_file, $result);
 		}
-		
+
 	}
-	
+
 	function js( $dom=false, $file=false ){
 		$client = "";
 		$group = array();
 		$remove = array();
 		// make this a config option?
 		$baseUrl =  "assets/js/";
-		
+
 		// FIX: create the dir if not available
 		if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
 		if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
-		
-		
+
+
 		// filter the scripts
 		$scripts = $dom->getElementsByTagName('script');
- 		
+
 		// check the script attributes
 		foreach ($scripts as $script){
 			// check out for the supported script attributes
@@ -53,82 +53,82 @@ class Minify extends PhpClosure {
 			$type = $script->getAttribute('data-type');
 			// remove domain name from src (if entered)
 			$src = str_replace( array( url(), cdn() ),"/", $script->getAttribute('src') );
-			
+
 			// register types
 			$data['minify'] = strpos($type, "minify") > -1 || !empty($data['encode']);
 			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
-			
+
 			// leave standard types alone
 			if( !$data['minify'] && !$data['require']) continue;
-			
+
 			// remove if not the intended container
 			if( !$data['group'] || $id != $data['group'] ."-min") $remove[] = $script;
-			
+
 			// if no src add to the config file
 			if( empty($src) && $data['require'] ) {
 				$client .= $script->textContent;
 				// no further processing required
 				continue;
 			}
-			
+
 			//get the name from the script src
 			$name =str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src);
 			// remove the .js extension if not a full path and no alias set (require.js conditions :P)
 			if( substr($name, 0,1) !=  "/"  && empty($data['path']) ) $name = substr($name , 0, -3);
-			
+
 			// there is no grouping if there's no minification :P
 			if( $data['minify'] && !empty($data['group']) ) {
 				$group[$data['group']][] = array( "src" => $src, "data" => $data );
-			} else if( $data['minify'] ) { 
-			//} else if( $data['minify'] && !$data['require'] ) { 
+			} else if( $data['minify'] ) {
+			//} else if( $data['minify'] && !$data['require'] ) {
 				// group all files to be minified in one file (under the template name)
 				$group[$file][] = array( "src" => $src, "data" => $data );
-			} else { 
+			} else {
 				$group[$name][] = array( "src" => $src, "data" => $data );
 			}
-			
-			
+
+
 		}
-		
-		
+
+
 		// process minification
 		$this->closureJS( $group );
 		// process requireJS
 		$dom = $this->requireJS( $group, $dom );
-		
+
 		// remove all modified scripts
 		foreach($remove as $script){
-			$script->parentNode->removeChild($script); 
+			$script->parentNode->removeChild($script);
 		}
-		
+
 		$GLOBALS['client']["_src"] = $client;
-		
-		
+
+
 		return $dom;
-		
+
 	}
-	
+
 	function css( $dom=false, $file=false ){
 		if(!$dom || !$file) return;
-		
+
 		$el = array();
 		$remove = array();
 		$http = new Http();
 		$http->setMethod('GET');
 		// (re)set the source files
 		$this->_srcs = array();
-		
+
 		// filter the scripts
 		$tags = $dom->getElementsByTagName('link');
- 		
+
 		foreach ($tags as $tag){
 			$id = $tag->getAttribute('id');
 			$rel = $tag->getAttribute('rel');
 			$href = $tag->getAttribute('href');
 			$type = $tag->getAttribute('data-type');
 			$group = $tag->getAttribute('data-group');
-			if($rel=="stylesheet" && $type=="minify" && !empty($href) ){ 
-				if( empty($group) ){ 
+			if($rel=="stylesheet" && $type=="minify" && !empty($href) ){
+				if( empty($group) ){
 					$el[$file][] = $href;
 				} else {
 					$el[$group][] = $href;
@@ -137,8 +137,8 @@ class Minify extends PhpClosure {
 				if( !$group || $id != $group ."-min") $remove[] = $tag;
 			}
 		}
-		
-		// process groups seperately 
+
+		// process groups seperately
 		foreach ($el as $group=>$styles){
 			// get the raw css
 			$css = "";
@@ -155,27 +155,27 @@ class Minify extends PhpClosure {
 			$this->_content[$group] = $css;
 			$this->_srcs[$group] = APP ."public/assets/css/". $group .".min.css";
 		}
-		
+
 		// remove the 'old' link tags
 		foreach ($remove as $tag){
-			$tag->parentNode->removeChild($tag); 
+			$tag->parentNode->removeChild($tag);
 		}
-		
+
 		// save css in file
 		$this->write();
 		// update the dom
 		$dom = $this->update( $dom );
-		
+
 		return $dom;
-		
+
 	}
-	
+
 	function write() {
-		
+
 		foreach($this->_srcs as $name=>$cache_file){
-			
+
 			$result = $this->_content[$name];
-			
+
 			// No cache directory so just dump the output.
 			//if ($this->_cache_dir == "") {
 			//	echo $this->_compile();
@@ -192,11 +192,11 @@ class Minify extends PhpClosure {
 				// No recompile needed, but see if we can send a 304 to the browser.
 				/*$cache_mtime = filemtime($cache_file);
 				$etag = md5_file($cache_file);
-				header("Last-Modified: ".gmdate("D, d M Y H:i:s", $cache_mtime)." GMT"); 
-				header("Etag: $etag"); 
-				if (@strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime || 
-					@trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
-					header("HTTP/1.1 304 Not Modified"); 
+				header("Last-Modified: ".gmdate("D, d M Y H:i:s", $cache_mtime)." GMT");
+				header("Etag: $etag");
+				if (@strtotime(@$_SERVER['HTTP_IF_MODIFIED_SINCE']) == $cache_mtime ||
+					@trim(@$_SERVER['HTTP_IF_NONE_MATCH']) == $etag) {
+					header("HTTP/1.1 304 Not Modified");
 				} else {
 					// Read the cache file and send it to the client.
 					echo file_get_contents($cache_file);
@@ -204,25 +204,25 @@ class Minify extends PhpClosure {
 			}
 		}
 	}
-	
+
 	// update the DOM
 	function update( $dom ){
-		
+
 		//main dom containers
 		$head = $dom->getElementsByTagName("head")->item(0);
 		$require_main = $dom->getElementById("require-main");
-		
+
 		foreach($this->_srcs as $name=>$min_file){
-			
+
 			$file = str_replace(APP ."public/", "", $min_file);
 			$ext = substr( $file, strrpos($file, ".")+1 );
 			// lookup if the container already exists
 			$container = $dom->getElementById($name ."-min");
-					
+
 			switch($ext){
 				case "css":
-					
-					if( is_null($container) ){ 
+
+					if( is_null($container) ){
 						$tag = $dom->createElement('link');
 						$tag->setAttribute("type", "text/css");
 						$tag->setAttribute("href", cdn($file));
@@ -236,11 +236,11 @@ class Minify extends PhpClosure {
 						$container->removeAttribute("data-group");
 						$container->removeAttribute("data-type");
 					}
-					
+
 				break;
 				case "js":
-					
-					if( is_null($container) ){ 
+
+					if( is_null($container) ){
 						$tag = $dom->createElement('script');
 						$tag->setAttribute("type", "text/javascript");
 						$tag->setAttribute("src", cdn($file));
@@ -255,19 +255,19 @@ class Minify extends PhpClosure {
 					}
 				break;
 			}
-			
+
 		}
-				
+
 		return $dom;
-		
+
 	}
-	
+
 	function closureJS( $scripts ){
 		// make this a config option?
 		$baseUrl =  "assets/js/";
 		// sort results
 		//ksort_recursive( $minify );
-		
+
 		// call google-closure
 		foreach( $scripts as $name=>$group ){
 			$first = current($group);
@@ -283,7 +283,7 @@ class Minify extends PhpClosure {
 				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
 				$min->add( $file );
 			}
-			
+
 			$min		->cacheDir( APP. "public/". $baseUrl )
 						->setFile( $name.".min" );
 			if( !DEBUG){
@@ -291,31 +291,31 @@ class Minify extends PhpClosure {
 						->hideDebugInfo();
 			}
 			// condition the method of minification here...
-			switch( $encode ){ 
-				case "whitespace": 
+			switch( $encode ){
+				case "whitespace":
 					$min->whitespaceOnly();
 				break;
-				case "simple": 
+				case "simple":
 					$min->simpleMode();
 				break;
-				case "advanced": 
+				case "advanced":
 					$min->advancedMode();
 				break;
-				default: 
+				default:
 					$min->simpleMode();
 				break;
-			
+
 			}
-			
+
 			//->useClosureLibrary()
-   			$min->create();
-				
+			$min->create();
+
 		}
-		
+
 	}
-	
+
 	function requireJS( $scripts, $dom ){
-		
+
 		// loop through the scripts
 		foreach ($scripts as $name=>$group){
 			//$first = current($group);
@@ -333,7 +333,7 @@ class Minify extends PhpClosure {
 				$script->setAttribute("defer", "defer");
 				// add the new script in the dom
 				$dom = $this->updateDom($script, $dom);
-				
+
 			} else {
 				// check the require parameters...
 				if( !empty($attr['data']['path']) ){
@@ -341,37 +341,37 @@ class Minify extends PhpClosure {
 				} elseif( $attr['data']['minify'] ) {
 					$name = $name .".min";
 				}
-				
+
 				// push the name of the groups as the dependency
 				array_push( $GLOBALS['client']['require']['deps'], $name);
-				
-				if( !empty($attr['data']['path']) ) 
+
+				if( !empty($attr['data']['path']) )
 						$GLOBALS['client']['require']['paths'][$attr['data']['path']] =  substr( $attr['src'], 0, -3);
-					
+
 				// add the shim, if any
 				if( !empty($attr['data']['deps']) )
 					$GLOBALS['client']['require']['shim'][$name] = (is_array($attr['data']['deps'])) ? $attr['data']['deps'] : array($attr['data']['deps']);
-				
+
 			}
-			
+
 		}
-		
+
 		// return the DOM object
 		return $dom;
-		
+
 	}
-	
-	
+
+
 	// Helpers
-	
+
 	function groupAttributes($group){
-		
+
 		$attr = array();
-			
+
 		foreach($group as $element){
 			$attr = array_merge_recursive($attr, $element);
 		}
-		
+
 		// marge data values
 		foreach($attr['data'] as $key =>$element){
 			$attributes = array();
@@ -390,52 +390,52 @@ class Minify extends PhpClosure {
 			// pickup only the unique values (and reset the keys)
 			$attr['data'][$key] = array_values( array_unique( $attributes ) );
 		}
-		
+
 		return $attr;
 	}
-	
-	
+
+
 	function setFile( $name=false ) {
 		if($name) $this->_file = $name;
-    	return $this;
+		return $this;
 	}
-	
+
 	function _getCacheFileName() {
 		return ( empty($this->_file) ) ? $this->_cache_dir . $this->_getHash() . ".js" : $this->_cache_dir . $this->_file. ".js";
 	}
-  
+
 	function trimWhitespace( $string, $replace=" " ){
 		// replace multiple spaces with one
 		return preg_replace( '/\s+/', $replace, $string );
 	}
-	
+
 	function removeCommentsCSS( $string ){
 		$regex = array(
 			"!/\*.*?\*/!s"=>'',
 			"/\n\s*\n/"=>"\n"
 			);
 		$string = preg_replace(array_keys($regex),$regex,$string);
-		
+
 		return $string;
 	}
 	// deprecate...
-	function updateDom($tag, $dom){ 
+	function updateDom($tag, $dom){
 		// switch based on the type of tag (script,link)
 		// if link....
 		// else
 		// get the main require js
 		$main = $dom->getElementById("require-main");
 		$body = $dom->getElementsByTagName("body")->item(0);
-		
+
 		// prepend all scripts before the main require js
-		( empty($main) ) 
+		( empty($main) )
 					? $body->appendChild($tag)
 					: $main->parentNode->insertBefore($tag, $main);
-					
-		
+
+
 		return $dom;
 	}
-	
+
 }
 
 ?>

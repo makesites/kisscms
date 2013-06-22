@@ -6,7 +6,7 @@
 class Model extends KISS_Model  {
 
 	public $db;
-	
+
 	function __construct($db='pages.sqlite', $pkname='',$tablename='',$dbhfnname='getdbh',$quote_style='MYSQL',$compress_array=true) {
 		$this->db=$db; //Name of the database
 		$this->pkname=$pkname; //Name of auto-incremented Primary Key
@@ -15,7 +15,7 @@ class Model extends KISS_Model  {
 		$this->QUOTE_STYLE=$quote_style;
 		$this->COMPRESS_ARRAY=$compress_array;
 	}
-	
+
 //===============================================
 // Database Connection
 //===============================================
@@ -29,15 +29,15 @@ class Model extends KISS_Model  {
 			} catch (PDOException $e) {
 				// Continue logic on a specific error code (14: unable to open database file)
 				$error = (string)$e->getCode();
-				if( $error == "14" ){ 
+				if( $error == "14" ){
                                   // #79 report last error on SQLite fail
                                   print_r(error_get_last());
                                   // see if there is a data directory
-					if( !is_dir( DATA ) ){ 
+					if( !is_dir( DATA ) ){
 						// create the directory with write access
 						mkdir( DATA, 0775);
 						// refresh page to continue past the error
-						header("Location: /"); 
+						header("Location: /");
 						exit;
 					}
 				} else {
@@ -54,19 +54,19 @@ class Model extends KISS_Model  {
 		return htmlspecialchars($this->get($key));
 	}
 
-	
+
 	function create_table($name, $fields, $db=false){
 		$dbh = $this->getdbh();
 		$sql = "CREATE TABLE $name($fields)";
 		$results = $dbh->prepare($sql);
 		//$results->bindValue(1,$username);
-		if( $results != false ) 
-			$results->execute();	
+		if( $results != false )
+			$results->execute();
 	}
-	
+
 	function get_tables(){
 		//$tables = $this->retrieve_many('type="table"');
-		//foreach( $tables as $table ){ 
+		//foreach( $tables as $table ){
 		//$this->tablename = $table['name'];
 		//}
 		$dbh= $this->getdbh();
@@ -94,7 +94,7 @@ class Model extends KISS_Model  {
 			$this->set($key, $val);
 		return $this;
 	}
-	
+
 	function retrieve_many($wherewhat='',$bindings='') {
 		$dbh=$this->getdbh();
 		if (is_scalar($bindings))
@@ -115,14 +115,14 @@ class Model extends KISS_Model  {
 		}
 		return $arr;
 	}
-	
+
 	function get($key) {
 		if (isset($this->rs[$key]))
 			return $this->rs[$key];
 		else
 			return false;
 	}
-	
+
 	function getAll(){
 		// override in models to add exceptions...
 		$array = array();
@@ -135,7 +135,7 @@ class Model extends KISS_Model  {
 	}
 
 	function drop_table( $table ) {
-		if( $table ){ 
+		if( $table ){
 			$dbh = $this->getdbh();
 			$sql = "DROP TABLE $table";
 			$stmt = $dbh->prepare($sql);
@@ -145,38 +145,45 @@ class Model extends KISS_Model  {
 			return false;
 		}
 	}
-	
+
 }
 
 //===============================================================
 // Controller
 //===============================================================
 class Controller extends KISS_Controller {
-	
+
 	public $data;
-	
+
 	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
 		// generic redirection for secure connections (assuming that ssl is on port 443)
 		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '.url( request_uri() ) );
-		
+
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
-		
+
 		// set the template the controller is using
 		$template = strtolower( get_class($this) ) .".php";
 		$this->data['template']= ( is_file( TEMPLATES.$template ) ) ? $template : false;
-		
+
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}
-	
+
+	function client() {
+		// set the right header
+		header('Content-Type: application/javascript');
+		// display the client vars
+		echo ( !empty( $_SESSION["_client"] ) ) ? $_SESSION["_client"] : "";
+	}
+
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.
-	function parse_http_request() {		
+	function parse_http_request() {
 		$request = array();
 		// form the url
 		$url = "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 		// remove the trailing slash, if any
 		if( substr($url, -1) == "/" ) $url = substr($url, 0, -1);
-		
+
 		// parse the URL
 		$url_parts = parse_url($url);
 		$requri = ( array_key_exists("path", $url_parts) ) ? $url_parts['path'] : "";
@@ -186,26 +193,26 @@ class Controller extends KISS_Controller {
 		$request["uri_parts"] = $requri ? explode('/',$requri) : array();
 		// remove the "index.php" from the request
 		if( array_key_exists(0, $request["uri_parts"]) && $request["uri_parts"][0] == "index.php" ){ array_shift( $request["uri_parts"] ); }
-		
+
 		// add GET params
-		if( !empty($url_parts['query']) ){ 
+		if( !empty($url_parts['query']) ){
 			$queries = explode("&", $url_parts['query']);
 			$request["query"] = array();
-			foreach( $queries as $query){ 
+			foreach( $queries as $query){
 				$request["query"] = array_merge( $request["query"], explode("=", $query) );
 			}
 		}
-		
+
 		// add POST params
-		if( !empty($_POST) ){ 
+		if( !empty($_POST) ){
 			$request["post"] = array();
 			foreach( $_POST as $k => $v ){
 				$request["post"][] = $k;
 				$request["post"][] = $v;
 			}
 		}
-		
-		// handle requests encoded as application/json 
+
+		// handle requests encoded as application/json
 		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
      		$json = json_decode(file_get_contents("php://input"));
 			$request["json"] = array();
@@ -214,10 +221,10 @@ class Controller extends KISS_Controller {
 				$request["json"][] = $v;
 			}
 		}
-		
-		
+
+
 		$this->request_uri_parts =  $request;
-		
+
 		return $this;
 	}
 
@@ -228,9 +235,9 @@ class Controller extends KISS_Controller {
 		$class = strtolower( get_class($this) );
 		$request = $this->request_uri_parts;
 		$remove = array();
-		
+
 		$p = ( !$route ) ? array_collapse($request) : $route;
-		
+
 		if (isset($p[0]) && $p[0] == $class) {
 			$controller=$p[0];
 			$remove[] = $p[0];
@@ -244,22 +251,22 @@ class Controller extends KISS_Controller {
 				$remove[] = $p[0];
 			}
 		}
-		
+
 		// lastly convert the params in pairs
 		$params = $this->normalize_params( $request, $remove );
-		
+
 		// if the method doesn't exist rever to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
 			$this->request_not_found();
-		
-		
+
+
 		// calculate the path - possibly this can be merged with parse_http_request()
 		$path = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
-		// check if we have a trailing slash (and remove it) 
+		// check if we have a trailing slash (and remove it)
 		$path = ( substr($path, -1) == "/" ) ? substr($path, 0, -1) : $path;
 		// save the path for later use by controllers and helpers
-		$GLOBALS['path'] = $this->data['path'] = $path; 
-		
+		$GLOBALS['path'] = $this->data['path'] = $path;
+
 		// call the method
 		$this->$function($params);
 		return $this;
@@ -269,19 +276,19 @@ class Controller extends KISS_Controller {
 	function request_not_found() {
 		die(View::do_fetch(  getPath('views/errors/404.php') ));
 	}
-	
+
 	function require_login() {
 	  if (!isset($_SESSION['admin']) && $_SERVER['REQUEST_URI'] != WEB_FOLDER.'admin/login')
 		$this->redirect('admin/login');
 	}
 
 	function redirect($path, $window=false) {
-		if($window != "top"){ 
+		if($window != "top"){
 			header('Location: '.url($path));
 		} else {
 			echo "<script type='text/javascript'>top.location.href = '". $path ."';</script>";
 		}
-		
+
 		exit;
 	}
 
@@ -289,13 +296,13 @@ class Controller extends KISS_Controller {
 		// display the page
 		Template::output($this->data);
 	}
-	
+
 	// this function takes an array and creates pairs of key-value
 	function normalize_params( $params, $remove){
-		
+
 		// create a new key/value array
 		$normalized = array();
-		
+
 		// first remove the picked route
 		if( !empty($remove) ){
 			// route is either part of the path or the query
@@ -306,10 +313,10 @@ class Controller extends KISS_Controller {
 				$params["query"] = array_remove($params["query"], $remove);
 			}
 		}
-		
+
 		//loop through the groups of params
 		foreach( $params as $type => $group ){
-			
+
 			while ( $param = current($group) ){
 				$next = next($group);
 				if( $next === false ){
@@ -321,13 +328,13 @@ class Controller extends KISS_Controller {
 					$normalized[ $key ] = $value;
 					next($group);
 				}
-				
+
 			}
 		}
-		
+
 		// replace the given params
 		$params = $normalized;
-		
+
 		// return false if there are no params
 		if( count($params)==0 ) {
 			$params = false;
@@ -335,18 +342,18 @@ class Controller extends KISS_Controller {
 		} else if( count($params)==1 && isset($params[0]) ) {
 			$params = implode($params);
 		}
-		
+
 		return $params;
-		
+
 	}
-	
+
 	/**
 	 *  CORS-compliant method.  It will allow any GET, POST, PUT or DELETE requests from any origin.
 	 *
 	 *  This is a test feature. In a production environment, you probably want to be more restrictive
 	 *  Will add whitelist domain as part of the configuration. For now, use with caution...
 	 *
-	 *  Example: 
+	 *  Example:
 	 *  $this->cors();
 	 *  $this->render();
 	 *
@@ -362,8 +369,8 @@ class Controller extends KISS_Controller {
 		}
 			header("Access-Control-Allow-Headers: X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-PINGOTHER");
 			header("Access-Control-Max-Age: 86400");    // cache for 1 day
-			header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); 
-		
+			header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
 	}
 }
 

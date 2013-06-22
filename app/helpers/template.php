@@ -26,7 +26,8 @@ class Template extends KISS_View {
 		$template = new Template($vars);
 		// first thing, check if there's a cached version of the template
 		$id = "template_". $template->hash;
-		$cache = self::getCache( $id );
+		//$cache = self::getCache( $id );
+		$cache = false;
 		if($cache && !DEBUG) { echo $cache; return; }
 		// continue processing
 		$template->setupClient();
@@ -42,7 +43,7 @@ class Template extends KISS_View {
 		// output the final markup - clear whitespace (if not in debug mode)
 		echo $output;
 		// set the cache for later use
-		self::setCache( $id, $output);
+		//self::setCache( $id, $output);
 	}
 	
 	function head( $vars=false ){
@@ -74,11 +75,11 @@ class Template extends KISS_View {
 	function display($data='', $names=''){
 		if (is_array($data))
 		  foreach($data as $name=>$html)
-		  	if ( ($names == '' ) || (!is_array($names) && $names == $name ) || (is_array($names) && array_key_exists($name, $names)) )
+			if ( ($names == '' ) || (!is_array($names) && $names == $name ) || (is_array($names) && array_key_exists($name, $names)) )
 			  echo "$html\n";
 		elseif ( is_array($names) )
 		  foreach($names as $name)
-		  	if ( array_key_exists($name, $block) )
+			if ( array_key_exists($name, $block) )
 			  echo "$html\n";
 	}
 	*/

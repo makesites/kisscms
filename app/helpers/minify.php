@@ -5,6 +5,11 @@ class Minify extends PhpClosure {
 	protected $_content = array();
 	protected $_dom;
 
+	function __construct()  {
+		// class objects
+		$this->cache = new Minify_Cache_File();
+	}
+
 	// a version of the "write" function that doesn't output the content
 	function create(){
 
@@ -117,7 +122,7 @@ class Minify extends PhpClosure {
 		$http->setMethod('GET');
 		// (re)set the source files
 		$this->_srcs = array();
-
+		$cache_path = $this->cache->getPath() ."/assets/css/";
 		// filter the scripts
 		$tags = $dom->getElementsByTagName('link');
 
@@ -142,18 +147,21 @@ class Minify extends PhpClosure {
 		foreach ($el as $group=>$styles){
 			// get the raw css
 			$css = "";
+			$md5 = "";
 			foreach ($styles as $style){
 				$result = $http->execute( $style );
 				if( $result && !empty($result) ){
 					$css .= $result;
 				}
 			}
+			// get the signature
+			$md5 .= md5($css);
 			// remove comments
 			$css = $this->removeCommentsCSS($css);
 			// strip whitspace
 			$css = $this->trimWhitespace($css);
 			$this->_content[$group] = $css;
-			$this->_srcs[$group] = APP ."public/assets/css/". $group .".min.css";
+			$this->_srcs[$group] = $cache_path ."$group.$md5.min.css";
 		}
 
 		// remove the 'old' link tags
@@ -214,7 +222,9 @@ class Minify extends PhpClosure {
 
 		foreach($this->_srcs as $name=>$min_file){
 
-			$file = str_replace(APP ."public/", "", $min_file);
+			$file = str_replace( $this->cache->getPath() ."/", "", $min_file);
+			// backwards compatibility - remove old path
+			$file = str_replace(APP ."public/", "", $file);
 			$ext = substr( $file, strrpos($file, ".")+1 );
 			// lookup if the container already exists
 			$container = $dom->getElementById($name ."-min");
@@ -269,8 +279,7 @@ class Minify extends PhpClosure {
 		//ksort_recursive( $minify );
 		// record signature
 		$md5 = "";
-		$cache = new Minify_Cache_File();
-		$cache_path = $cache->getPath() ."/$baseUrl";
+		$cache_path = $this->cache->getPath() ."/$baseUrl";
 		// FIX: create the dir if not available
 		if( !is_dir( $cache_path ) ) mkdir($cache_path, 0775, true);
 

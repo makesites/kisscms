@@ -221,6 +221,26 @@ class Template extends KISS_View {
 			$client = $GLOBALS['client']["_src"];
 			unset($GLOBALS['client']["_src"]);
 		}
+		// if in debug, remove any scripts in the require.js paths
+		$scripts = ( !empty($this->client['require']['paths']) );
+		if(DEBUG && $scripts) {
+			// add the scripts in the require list as script tags
+			$head = $dom->getElementsByTagName("head")->item(0);
+
+			foreach( $this->client['require']['paths'] as $name => $script){
+				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
+				// check if there's a js extension
+				if( substr($src, -3) != ".js") $src .= ".js";
+
+				// add straight in the head section
+				$script = $dom->createElement('script');
+				$script->setAttribute("type", "text/javascript");
+				$script->setAttribute("src", $src);
+				$head->appendChild($script);
+				unset($this->client['require']['paths'][$name]);
+			}
+
+		}
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
 
@@ -248,23 +268,6 @@ class Template extends KISS_View {
 		$client_file = "client";
 		$client_src= WEB_FOLDER. $client_file;
 
-		if(DEBUG) {
-			// add the scripts in the require list as script tags
-			$scripts = (!empty($this->client['require']['paths'])) ? $this->client['require']['paths'] : array();
-			$head = $dom->getElementsByTagName("head")->item(0);
-
-			foreach($scripts as $script){
-				$src = ( is_array( $script ) ) ? array_shift($script) : $script;
-				// check if there's a js extension
-				if( substr($src, -3) != ".js") $src .= ".js";
-
-				// add straight in the head section
-				$script = $dom->createElement('script');
-				$script->setAttribute("type", "text/javascript");
-				$script->setAttribute("src", $src);
-				$head->appendChild($script);
-			}
-		}
 		// Always render the client.js
 		// render a standard script tag
 		$script = $dom->createElement('script');

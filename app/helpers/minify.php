@@ -441,6 +441,17 @@ class Minify extends PhpClosure {
 		return $dom;
 	}
 
+	function getCache($path ){
+		$cache = new Minify_Cache_File();
+		// check if the file is less than an hour old
+		//return ( $cache->isValid($path, time("now")-3600) ) ? $cache->fetch($path) : false;
+		return $cache->fetch($path);
+	}
+	function setCache($path, $content){
+		$cache = new Minify_Cache_File();
+		$cache->store($path, $content);
+	}
+
 }
 
 ?>

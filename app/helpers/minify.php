@@ -33,8 +33,8 @@ class Minify extends PhpClosure {
 		$baseUrl =  "assets/js/";
 
 		// FIX: create the dir if not available
-		if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
-		if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
+		//if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
+		//if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
 
 
 		// filter the scripts
@@ -269,6 +269,10 @@ class Minify extends PhpClosure {
 		//ksort_recursive( $minify );
 		// record signature
 		$md5 = "";
+		$cache = new Minify_Cache_File();
+		$cache_path = $cache->getPath() ."/$baseUrl";
+		// FIX: create the dir if not available
+		if( !is_dir( $cache_path ) ) mkdir($cache_path, 0775, true);
 
 		// call google-closure
 		foreach( $scripts as $name=>$group ){
@@ -289,8 +293,9 @@ class Minify extends PhpClosure {
 			// compress signatures of all files
 			$md5 = md5( $md5 );
 
-			$min		->cacheDir( APP. "public/". $baseUrl )
-						->setFile( $name.".min" );
+			//$min		->cacheDir( APP. "public/". $baseUrl )
+			$min		->cacheDir( $cache_path )
+						->setFile( "$name.$md5.min" );
 			if( !DEBUG){
 			$min		->quiet()
 						->hideDebugInfo();

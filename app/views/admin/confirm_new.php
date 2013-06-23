@@ -1,6 +1,6 @@
 <h2>Page not found</h2>
 
-<p>The page you requested does not exist.</>
+<p>The page you requested does not exist.</p>
 
 <p>Would you like to create it now?</p>
 

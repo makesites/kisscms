@@ -22,7 +22,7 @@ class Template extends KISS_View {
 		parent::__construct($file, $this->vars);
 	}
 
-	function output($vars=''){
+	public static function output($vars=''){
 		$template = new Template($vars);
 		// first thing, check if there's a cached version of the template
 		$id = "template_". $template->hash;
@@ -45,15 +45,25 @@ class Template extends KISS_View {
 		// set the cache for later use
 		//self::setCache( $id, $output);
 	}
+<<<<<<< HEAD
 
 	function head( $vars=false ){
+=======
+	
+	public static function head( $vars=false ){
+>>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data = $GLOBALS['head'];
 		foreach($data as $name=>$html){
 			echo "$html\n";
 		}
 	}
+<<<<<<< HEAD
 
 	function body($view=false){
+=======
+	
+	public static function body($view=false){
+>>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data = $GLOBALS['body'];
 		foreach($data as $part){
 			if ( $view && !isset($part['status']) )
@@ -64,8 +74,13 @@ class Template extends KISS_View {
 			  View::do_dump( getPath('views/main/body.php'), $part);
 		}
 	}
+<<<<<<< HEAD
 
 	function foot($vars=false){
+=======
+	
+	public static function foot($vars=false){
+>>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data = $GLOBALS['foot'];
 		foreach($data as $name=>$html){
 			echo "$html\n";
@@ -140,12 +155,12 @@ class Template extends KISS_View {
 		// generate a hash form the string
 		return $prefix . hash("md5", $string);
 	}
-	function getCache($id ){
+	static function getCache($id ){
 		$cache = new Minify_Cache_File();
 		// check if the file is less than an hour old
 		return ( $cache->isValid($id, time("now")-3600) ) ? $cache->fetch($id) : false;
 	}
-	function setCache($id, $data){
+	static function setCache($id, $data){
 		$cache = new Minify_Cache_File();
 		$cache->store($id, $data);
 	}
@@ -280,11 +295,19 @@ class Template extends KISS_View {
 		// set the client as a session var
 		$_SESSION["_client"] = $client;
 	}
+<<<<<<< HEAD
 
 
 
 	function doList( $selected=null){
 
+=======
+	
+	
+	
+	public static function doList( $selected=null){
+		
+>>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data['template']['selected'] = $selected;
 
 		if ($handle = opendir(TEMPLATES)) {

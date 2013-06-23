@@ -107,10 +107,9 @@ class Template extends KISS_View {
 
 		// minification
 		if( !DEBUG ) {
+			$dom = $min->less($dom, $this->template);
 			$dom = $min->css($dom, $this->template);
 			$dom = $min->js($dom, $this->template);
-
-
 		}
 		// process require configuration
 		$this->createClient($dom);

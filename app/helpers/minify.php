@@ -178,6 +178,84 @@ class Minify extends PhpClosure {
 
 	}
 
+	function less( $dom=false, $file=false ){
+		// pre-requisites
+		if(!$dom || !$file) return false;
+		// if in debug no need to change anything
+		if( DEBUG ) return $dom;
+
+		$el = array();
+		$target = array();
+		$less = new lessc;
+		$http = new Http();
+		$http->setMethod('GET');
+		// make this a config option?
+		$baseUrl =  "/assets/css/";
+		// (re)set the source files
+		$this->_srcs = array();
+		$cache_path = $this->cache->getPath() . $baseUrl;
+		// filter the scripts
+		$tags = $dom->getElementsByTagName('link');
+
+		// save the less tags
+		foreach ($tags as $tag){
+			$rel = $tag->getAttribute('rel');
+			if($rel=="stylesheet/less"){
+				// save the link for processing
+				array_push($target, $tag);
+			}
+		}
+
+		// process less files
+		foreach ($target as $tag){
+			// get the raw css
+			$css = "";
+			$md5 = "";
+			$href = $tag->getAttribute('href');
+			// check if it's a local url
+			$local = (substr($href, 0, 4) !== "http");
+			if( $local ) $href = url( $href );
+			$result = $http->execute( $href );
+			// set the path of the file as the import dir ( code clean up?)
+			$importDir = parse_url($href);
+			$importDir = substr($importDir['path'], 1, strrpos($importDir['path'], "/") );
+			$less->setImportDir( array($importDir) );
+
+			$css = $less->compile( $result );
+			// get the signature
+			$md5 = md5($css);
+			// remove comments
+			$css = $this->removeCommentsCSS($css);
+			// strip whitspace
+			$css = $this->trimWhitespace($css);
+			$this->_content[] = $css;
+			$filename =  basename($href, ".less").".$md5.min.css";
+			$this->_srcs[] = $cache_path . $filename;
+
+			// always leave the less link tags as markup - will be parced by the css()
+			// change the attributes to css
+			$tag->setAttribute("rel", "stylesheet");
+			// change the link to its compiled version
+			$tag->setAttribute("href", $baseUrl . $filename);
+
+		}
+
+		// save compiled files
+		$this->write();
+
+		// remove any instances of the less lib
+		$scripts = $dom->getElementsByTagName('script');
+		foreach ($scripts as $script){
+			$src = $script->getAttribute('src');
+			if (preg_match("/less\.js|less\.min\.js/i", $src)){
+				$script->parentNode->removeChild($script);
+			}
+		}
+
+		return $dom;
+
+	}
+
 	function write() {
 
 		foreach($this->_srcs as $name=>$cache_file){

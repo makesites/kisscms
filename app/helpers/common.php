@@ -5,7 +5,7 @@
 //===============================================
 
 
-// Custom parser for KISSCMS 
+// Custom parser for KISSCMS
 // the "main" controller is used for all URLs except the once's that match existing controllers
 function findController($url) {
 	// first remove the website path from the URL
@@ -20,7 +20,7 @@ function findController($url) {
 	$controllerfile = getPath('controllers/'.$controller.'.php');
 	// check if what we found is sane
 	if (!$controller || !file_exists($controllerfile)){
-		// find the default controller 
+		// find the default controller
 		if( defined("DEFAULT_ROUTE") ){
 			$controller = DEFAULT_ROUTE;
 			$controllerfile = getPath('controllers/'.$controller.'.php');
@@ -29,7 +29,7 @@ function findController($url) {
 	if( !empty( $controllerfile) ) {
 		// set the controller file as a constant for later use (only do it the first time...)
 		if( !defined("CONTROLLER") ) define("CONTROLLER", $controller);
-		// include the controller file 
+		// include the controller file
 		require( $controllerfile );
 		// return the controller name with the first letter uppercase
 		return ucfirst( $controller );
@@ -43,12 +43,12 @@ function isStatic( $file ) {
 	// FIX: clean webfolder from path before comparing
 	$file = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $file);
 	$root = rtrim($_SERVER['DOCUMENT_ROOT'],"/")."/";
-	
+
 	// check in the document root
 	if ( file_exists( $root.$file ) ) {
 		$target = $root.$file;
 		return $target;
-	} 
+	}
 	// check in the app public folders
 	if( defined("APP") ){
 		if ( file_exists( APP."public/".$file ) ) {
@@ -57,9 +57,9 @@ function isStatic( $file ) {
 		}
 		if (is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
-				if ($plugin == '.' || $plugin == '..') { 
-				  continue; 
-				} 
+				if ($plugin == '.' || $plugin == '..') {
+				  continue;
+				}
 				if ( is_dir(APP."plugins/".$plugin) && file_exists( APP."plugins/".$plugin."/public/".$file ) ) {
 					$target = APP."plugins/".$plugin."/public/".$file;
 					return $target;
@@ -75,12 +75,12 @@ function isStatic( $file ) {
 		}
 		if (is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
-				if ($plugin == '.' || $plugin == '..') { 
-				  continue; 
-				} 
+				if ($plugin == '.' || $plugin == '..') {
+				  continue;
+				}
 				if ( is_dir(BASE."plugins/".$plugin) && file_exists( BASE."plugins/".$plugin."/public/".$file ) ) {
 					$target = BASE."plugins/".$plugin."/public/".$file;
-					return $target;	
+					return $target;
 				}
 			}
 		}
@@ -96,47 +96,48 @@ function isStatic( $file ) {
 	}
 	//lastly check the cache (less than an hour old)
 	$cache = new Minify_Cache_File();
-	if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
-	
+	//if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
+	if( $cache->isValid($file, 0) ) return $cache->tmp() ."/". $file;
+
 	// return false if there are no results
 	return false;
 }
 
-function getFile($filename) { 
-	$exts = explode(".", strtolower($filename) ) ; 
-	$ext = array_pop( $exts ); 
-	switch ($ext) { 
-		case "txt": $ctype="text/plain"; break; 
-		case "css": $ctype="text/css"; break; 
-		case "js": $ctype="application/javascript"; break; 
-		case "pdf": $ctype="application/pdf"; break; 
-		case "exe": $ctype="application/octet-stream"; break; 
-		case "zip": $ctype="application/zip"; break; 
-		case "doc": $ctype="application/msword"; break; 
-		case "rtf": $ctype="application/rtf"; break; 
-		case "xls": $ctype="application/vnd.ms-excel"; break; 
-		case "ppt": $ctype="application/vnd.ms-powerpoint"; break; 
-		case "gif": $ctype="image/gif"; break; 
-		case "png": $ctype="image/png"; break; 
-		case "jpeg": 
-		case "jpg": $ctype="image/jpg"; break; 
-		default: $ctype="text/html"; 
-    } 
+function getFile($filename) {
+	$exts = explode(".", strtolower($filename) ) ;
+	$ext = array_pop( $exts );
+	switch ($ext) {
+		case "txt": $ctype="text/plain"; break;
+		case "css": $ctype="text/css"; break;
+		case "js": $ctype="application/javascript"; break;
+		case "pdf": $ctype="application/pdf"; break;
+		case "exe": $ctype="application/octet-stream"; break;
+		case "zip": $ctype="application/zip"; break;
+		case "doc": $ctype="application/msword"; break;
+		case "rtf": $ctype="application/rtf"; break;
+		case "xls": $ctype="application/vnd.ms-excel"; break;
+		case "ppt": $ctype="application/vnd.ms-powerpoint"; break;
+		case "gif": $ctype="image/gif"; break;
+		case "png": $ctype="image/png"; break;
+		case "jpeg":
+		case "jpg": $ctype="image/jpg"; break;
+		default: $ctype="text/html";
+    }
 
 	// FIX: exit if this is a directory
 	if( is_dir($filename) ) return false;
-	
+
 	$output = file_get_contents( $filename );
-	header("Content-Type: $ctype"); 
+	header("Content-Type: $ctype");
 	$mtime = filemtime($filename);
 	$etag = md5_file($filename);
-	header("Last-Modified: ".gmdate("D, d M Y H:i:s", $mtime)." GMT"); 
-	header("Etag: $etag"); 
+	header("Last-Modified: ".gmdate("D, d M Y H:i:s", $mtime)." GMT");
+	header("Etag: $etag");
     return $output;
-} 
- 
+}
+
 function getPath( $file ) {
-	if (defined("APP")){ 
+	if (defined("APP")){
 		// find the clone file first
 		if (file_exists(APP.$file)) return APP.$file;
 		if (file_exists(APP."plugins/$file")) return APP."plugins/$file";
@@ -152,7 +153,7 @@ function getPath( $file ) {
 		// check the plugins folder
 		$search = glob(BASE."plugins/*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);
-	} 
+	}
 	// check the plugins folder if we still haven't found anything
 	if( defined("PLUGINS") ){
 		// find the core file second
@@ -160,8 +161,8 @@ function getPath( $file ) {
 		// check the plugins folder
 		$search = glob(PLUGINS."*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);
-	} 
-	
+	}
+
 	// nothing checks out...
 	return false;
 }
@@ -171,37 +172,37 @@ function url($file=''){
 	// get the full uri for the file
 	$uri = uri($file);
 	// check if it is a static
-	if( isStatic( $uri ) && defined("CDN")){ 
+	if( isStatic( $uri ) && defined("CDN")){
 		// load the cdn address instead
-		// remove trailing slash, if any 
+		// remove trailing slash, if any
 		$domain = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
-		
-	} else { 
+
+	} else {
 		// check if this is a secure connection
 		$domain = ( $_SERVER['SERVER_PORT'] == "443" || (defined('SSL') && SSL) ) ? 'https://' : 'http://';
 		// load the regular server address
 		$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
-		/*if( $_SERVER['SERVER_PORT'] != "80" && $_SERVER['SERVER_PORT'] != "443" ){ 
+		/*if( $_SERVER['SERVER_PORT'] != "80" && $_SERVER['SERVER_PORT'] != "443" ){
 			$domain .= ":".$_SERVER['SERVER_PORT'];
 		}*/
 	}
-	
+
 	// add the uri
 	$url = $domain . $uri;
-	
+
   	return $url;
 }
 
 function uri($file=''){
-	// remove leading slash, if any 
+	// remove leading slash, if any
 	$file = ( substr($file, 0, 1) == "/" ) ? substr($file, 1) : $file;
 	// add the web folder
 	$uri = WEB_FOLDER;
 	// add file if available
-	if( $file != '' ){ 
+	if( $file != '' ){
 		$uri .= $file;
-	}	
+	}
 	return $uri;
 }
 
@@ -210,7 +211,7 @@ function cdn($file=''){
 	$uri = uri($file);
 	// first check if we have already defined a CDN
 	if (defined("CDN")){
-		// remove trailing slash, if any 
+		// remove trailing slash, if any
 		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
 		return $url . $uri;
 	} else {
@@ -224,14 +225,14 @@ function cdn($file=''){
 function findFiles($filename) {
 	$return = array();
 	// first find the files in the app directory
-	if (defined("APP")){ 
+	if (defined("APP")){
 		$files = glob(APP."{views/*/$filename,plugins/*/views/$filename}",GLOB_BRACE);
-		if( is_array( $files) ){ 
-			$return = array_merge($return, $files); 
+		if( is_array( $files) ){
+			$return = array_merge($return, $files);
 		}
 	}
 	// then find the files in the base directory, if available
-	if (defined("BASE")){ 
+	if (defined("BASE")){
 		$files = glob(BASE."{views/*/$filename,plugins/*/views/$filename}",GLOB_BRACE);
 		foreach( $files as $file ){
 			$app_file = str_replace(BASE, APP, $file);
@@ -242,43 +243,43 @@ function findFiles($filename) {
 	}
 	if (defined("PLUGINS")){
 		$files = glob(PLUGINS."*/views/$filename");
-		if( is_array( $files) ){ 
-			$return = array_merge($return, $files); 
+		if( is_array( $files) ){
+			$return = array_merge($return, $files);
 		}
 	}
 	return $return;
 }
 
 
-function writeFile($file = false, $output=false, $method='w'){ 
-	
-	if ($file){ 
+function writeFile($file = false, $output=false, $method='w'){
+
+	if ($file){
 		// try to find the directory, create it if not avaiable
 		$dir = dirname($file);
-		if( is_dir( $dir ) ){ 
-		
+		if( is_dir( $dir ) ){
+
 		} else {
 			mkdir($dir, 0777);
 		}
 		// switch between methods to write the file
 		switch( $method ) {
-			case 'w': 
+			case 'w':
 				$f = fopen($file,"w");
 				fwrite($f,$output);
 				fclose($f);
 			break;
-			
-			case 'w9': 
-				$gz_output = gzcompress($output, 9); 
+
+			case 'w9':
+				$gz_output = gzcompress($output, 9);
 				$gz_file = gzopen($file, "w9");
 				gzwrite($gz_file, $gz_output);
 				gzclose($gz_file);
 			break;
-			
+
 		}
 	}
 }
-		
+
 
 
 // clean submitted input
@@ -308,21 +309,21 @@ function truncate($string, $limit, $break=".", $pad="...")
       $string = substr($string, 0, $breakpoint) . $pad;
     }
   }
-    
+
   return $string;
 }
 
 
 function beautify($string, $block='.', $ucwords=true)
 {
-  
+
   // stop in the occurance of the designated character
-  if( $block ){ 
+  if( $block ){
   	$string = substr( $string, 0 , strpos($string, $block) );
   }
   // replace all underscores with spaces
   $string = str_replace( "_", " ", $string );
-  
+
   if($ucwords){
 	  $string = ucwords ( $string );
   }
@@ -338,13 +339,13 @@ function request_uri(){
 function array_collapse( $params ){
 	$collapsed = array();
 	foreach( $params as $key => $val ){
-		if( is_array($val) ){ 
+		if( is_array($val) ){
 			$collapsed = array_merge($collapsed, $val);
 		} else {
 			$collapsed[$key] = $val;
 		}
 	}
-	return $collapsed; 
+	return $collapsed;
 }
 
 // remove a set of elements from a multi-dimentional array
@@ -362,12 +363,12 @@ function array_remove( $array, $values ){
 // convert the keys to elements of the array
 function array_flatten( $array ){
 	$result = array();
-	
+
 	foreach( $array as $k=>$v ){
 		$result[] = $k;
 		$result[] = $v;
 	}
-	
+
 	return $result;
 }
 
@@ -375,29 +376,29 @@ function array_flatten( $array ){
 function check_dir( $file=false, $create=false, $chmod=0755 ){
 	// prerequisites
 	if(!$file) return;
-	// break the file 
+	// break the file
 	$info = pathinfo($file);
 	$exists = is_dir($info['dirname']);
 	// return now if we don't have to create the dir
 	if(!$create || $exists) return $exists;
-	
+
 	if( !$exists ) {
-		$dirs = explode("/", $info['dirname']); 
+		$dirs = explode("/", $info['dirname']);
 		$path = "/";
 		foreach( $dirs as $folder){
 			$path .= array_shift($dirs) ."/";
 			// create each dir (if not available)
 			if( !is_dir( $path ) ) mkdir($path, $chmod, true);
 		}
-		
-	} 
+
+	}
 	// assuming that all the folders missing are created...
 	return true;
 }
 
 /**
  * Function to calculate date or time difference.
- * 
+ *
  * Function to calculate date or time difference. Returns an array or
  * false on error.
  *
@@ -423,7 +424,7 @@ function get_time_difference( $start, $end )
                 $diff = $diff % 3600;
             if( $minutes=intval((floor($diff/60))) )
                 $diff = $diff % 60;
-            $diff    =    intval( $diff );            
+            $diff    =    intval( $diff );
             return( array('days'=>$days, 'hours'=>$hours, 'minutes'=>$minutes, 'seconds'=>$diff) );
         }
         else
@@ -439,61 +440,61 @@ function get_time_difference( $start, $end )
 }
 
 
-/******************************** 
- * Retro-support of get_called_class() 
- * Tested and works in PHP 5.2.4 
- * http://www.sol1.com.au/ 
- ********************************/ 
-if(!function_exists('get_called_class')) { 
-function get_called_class($bt = false,$l = 1) { 
-    if (!$bt) $bt = debug_backtrace(); 
-    if (!isset($bt[$l])) throw new Exception("Cannot find called class -> stack level too deep."); 
-    if (!isset($bt[$l]['type'])) { 
-        throw new Exception ('type not set'); 
-    } 
-    else switch ($bt[$l]['type']) { 
-        case '::': 
-            $lines = file($bt[$l]['file']); 
-            $i = 0; 
-            $callerLine = ''; 
-            do { 
-                $i++; 
-                $callerLine = $lines[$bt[$l]['line']-$i] . $callerLine; 
-            } while (stripos($callerLine,$bt[$l]['function']) === false); 
-            preg_match('/([a-zA-Z0-9\_]+)::'.$bt[$l]['function'].'/', 
-                        $callerLine, 
-                        $matches); 
-            if (!isset($matches[1])) { 
-                // must be an edge case. 
-                throw new Exception ("Could not find caller class: originating method call is obscured."); 
-            } 
-            switch ($matches[1]) { 
-                case 'self': 
-                case 'parent': 
-                    return get_called_class($bt,$l+1); 
-                default: 
-                    return $matches[1]; 
-            } 
-            // won't get here. 
-        case '->': switch ($bt[$l]['function']) { 
-                case '__get': 
-                    // edge case -> get class of calling object 
-                    if (!is_object($bt[$l]['object'])) throw new Exception ("Edge case fail. __get called on non object."); 
-                    return get_class($bt[$l]['object']); 
-                default: return $bt[$l]['class']; 
-            } 
+/********************************
+ * Retro-support of get_called_class()
+ * Tested and works in PHP 5.2.4
+ * http://www.sol1.com.au/
+ ********************************/
+if(!function_exists('get_called_class')) {
+function get_called_class($bt = false,$l = 1) {
+    if (!$bt) $bt = debug_backtrace();
+    if (!isset($bt[$l])) throw new Exception("Cannot find called class -> stack level too deep.");
+    if (!isset($bt[$l]['type'])) {
+        throw new Exception ('type not set');
+    }
+    else switch ($bt[$l]['type']) {
+        case '::':
+            $lines = file($bt[$l]['file']);
+            $i = 0;
+            $callerLine = '';
+            do {
+                $i++;
+                $callerLine = $lines[$bt[$l]['line']-$i] . $callerLine;
+            } while (stripos($callerLine,$bt[$l]['function']) === false);
+            preg_match('/([a-zA-Z0-9\_]+)::'.$bt[$l]['function'].'/',
+                        $callerLine,
+                        $matches);
+            if (!isset($matches[1])) {
+                // must be an edge case.
+                throw new Exception ("Could not find caller class: originating method call is obscured.");
+            }
+            switch ($matches[1]) {
+                case 'self':
+                case 'parent':
+                    return get_called_class($bt,$l+1);
+                default:
+                    return $matches[1];
+            }
+            // won't get here.
+        case '->': switch ($bt[$l]['function']) {
+                case '__get':
+                    // edge case -> get class of calling object
+                    if (!is_object($bt[$l]['object'])) throw new Exception ("Edge case fail. __get called on non object.");
+                    return get_class($bt[$l]['object']);
+                default: return $bt[$l]['class'];
+            }
 
-        default: throw new Exception ("Unknown backtrace method type"); 
-    } 
-} 
-} 
+        default: throw new Exception ("Unknown backtrace method type");
+    }
+}
+}
 
 
 // Backwards compatibility
 
 // In PHP 5.4, you can use JSON_UNESCAPED_SLASHES:
 //echo json_encode($this->stream, JSON_UNESCAPED_SLASHES);
-// Otherwise, you have to do some trivial post-processing	
+// Otherwise, you have to do some trivial post-processing
 function json_encode_escaped($string){
 	$find = array('\\/', "\n");
 	$use = array('/', "");
@@ -509,26 +510,26 @@ function json_encode_escaped($string){
 function myUrl($path='',$fullurl=true){
 	$url = '';
 	// first check if we want the full url
-	if( $fullurl ){ 
+	if( $fullurl ){
 		$url = 'http://'.$_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
-		if( $_SERVER['SERVER_PORT'] != "80" ){ 
+		if( $_SERVER['SERVER_PORT'] != "80" ){
 			$url .= ":".$_SERVER['SERVER_PORT'];
 		}
-		//if( $_SERVER['REMOTE_PORT'] != 80 ){ 
+		//if( $_SERVER['REMOTE_PORT'] != 80 ){
 		//	$url .= ":".$_SERVER['REMOTE_PORT'];
 		//}
 	}
 	// add the web folder
 	$url .= WEB_FOLDER;
 	// add path if available
-	if( $path != '' ){ 
+	if( $path != '' ){
 		$url .= $path;
 	}
-	
+
 	// FIX: Remove the ending slash
 	$url = ( substr($url, -1) == "/" ) ? substr($url, 0, -1) : $url;
-	 
+
   	return $url;
 }
 
@@ -536,7 +537,7 @@ function myUrl($path='',$fullurl=true){
 function myCDN(){
 	// first check if we have already defined a CDN
 	if (defined("CDN")){
-		// remove trailing slash, if any 
+		// remove trailing slash, if any
 		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
 		return $url;
 	} else {
@@ -549,12 +550,12 @@ function myCDN(){
 function query_to_array( $string, $flat=false ){
 	$queries = array();
 	$pairs = explode("&", $string);
-	foreach( $pairs as $pair){ 
+	foreach( $pairs as $pair){
 		$kv = explode("=", $pair);
 		// if flat flag set then create a one-dimensional array
-		if( $flat ) { 
+		if( $flat ) {
 			$queries = array_merge( $queries, $kv );
-		} else {  
+		} else {
 			$queries[ $kv[0] ] = $kv[1];
 		}
 	}

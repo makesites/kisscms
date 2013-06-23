@@ -242,6 +242,7 @@ class Template extends KISS_View {
 		}
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
+		//$client .= 'var require = KISSCMS["require"];';
 
 		$client = $this->trimWhitespace($client);
 		// #87 not caching client vars as a file

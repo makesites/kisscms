@@ -34,6 +34,14 @@ if(!defined("TEMPLATES")) define('TEMPLATES', $templates );
 
 
 //===============================================
+// ENVIRONMENT VARIABLES
+//===============================================
+
+if( defined("SHARED") ) putenv('TMPDIR=' . ini_get('upload_tmp_dir'));
+	
+
+
+//===============================================
 // OTHER CONSTANTS
 //===============================================
 

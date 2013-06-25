@@ -132,7 +132,7 @@ class Minify_Cache_File {
     {
         static $tmp = null;
         if (! $tmp) {
-            $tmp = function_exists('sys_get_temp_dir')
+            $tmp = ( !defined("SHARED") && function_exists('sys_get_temp_dir') )
                 ? sys_get_temp_dir()
                 : self::_tmp();
             $tmp = rtrim($tmp, DIRECTORY_SEPARATOR);

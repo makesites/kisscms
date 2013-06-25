@@ -45,25 +45,15 @@ class Template extends KISS_View {
 		// set the cache for later use
 		//self::setCache( $id, $output);
 	}
-<<<<<<< HEAD
 
-	function head( $vars=false ){
-=======
-	
 	public static function head( $vars=false ){
->>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data = $GLOBALS['head'];
 		foreach($data as $name=>$html){
 			echo "$html\n";
 		}
 	}
-<<<<<<< HEAD
 
-	function body($view=false){
-=======
-	
 	public static function body($view=false){
->>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data = $GLOBALS['body'];
 		foreach($data as $part){
 			if ( $view && !isset($part['status']) )
@@ -74,13 +64,8 @@ class Template extends KISS_View {
 			  View::do_dump( getPath('views/main/body.php'), $part);
 		}
 	}
-<<<<<<< HEAD
 
-	function foot($vars=false){
-=======
-	
 	public static function foot($vars=false){
->>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
 		$data = $GLOBALS['foot'];
 		foreach($data as $name=>$html){
 			echo "$html\n";
@@ -295,19 +280,9 @@ class Template extends KISS_View {
 		// set the client as a session var
 		$_SESSION["_client"] = $client;
 	}
-<<<<<<< HEAD
 
-
-
-	function doList( $selected=null){
-
-=======
-	
-	
-	
 	public static function doList( $selected=null){
-		
->>>>>>> 204198714e792fdb7ed2e127037c44919ec2e54c
+
 		$data['template']['selected'] = $selected;
 
 		if ($handle = opendir(TEMPLATES)) {

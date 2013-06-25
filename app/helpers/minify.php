@@ -15,7 +15,7 @@ class Minify extends PhpClosure {
 
 		$cache_file = $this->_getCacheFileName();
 
-		$cache_mtime = ( is_file($cache_file) ) ? filemtime($cache_file) : false;
+		$cache_mtime = ( is_file($cache_file) ) ? @filemtime($cache_file) : false;
 		$etag = ( is_file($cache_file) ) ? md5_file($cache_file) : false;
 
 		// flags

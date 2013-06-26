@@ -23,8 +23,6 @@
 <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?=url('/apple-touch-icon-114x114-precomposed.png')?>" />
 <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?=url('/apple-touch-icon-144x144-precomposed.png')?>" />
 
-<link rel="stylesheet" href="<?=url('/css/style.css')?>">
-<!-- link rel="stylesheet" href="<?=url('/assets/css/common.css')?>" -->
 <link type="text/plain" rel="author" href="<?=url('/humans.txt')?>">
 
 <script type="text/javascript"  data-type="require">

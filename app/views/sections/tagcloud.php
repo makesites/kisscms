@@ -11,7 +11,7 @@
 </div>
 </canvas>
 <script type="text/javascript" src="<?=url('/js/plugins/jquery.tagcanvas.min.js')?>" data-type="require" data-deps="jquery"></script>
-<script type="text/javascript">
+<script type="text/javascript" data-type="require">
 	$(function(){
 		$("#<?=$vars['id']?>").tagcanvas({
 				 depth : 0.75

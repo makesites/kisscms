@@ -1,4 +1,4 @@
-<canvas id="<?=$vars['id']?>" class="<?=$vars['class']?>">
+<canvas <?=attr("id", $vars['id'])?> <?=attr("class", $vars['class'])?>>
 <div id="tag-holder" class="hide">
 <? if(!empty($items)){
 	foreach($items as $item){
@@ -6,7 +6,7 @@
 	if( $item['title'] != "" && strpos( $item['title'], "menu-" ) == false && $item['title'] != "category" ){ ?>
 	<a href="<?=$item['url']?>" class="tag"<? if($vars['weight']) echo ' style="font-size: '. (100+($item['weight']*10)). '%"' ?>><?=$item['title']?></a>
 <?  } ?>
-<? } 
+<? }
 } ?>
 </div>
 </canvas>

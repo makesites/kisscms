@@ -62,15 +62,16 @@ class Minify extends PhpClosure {
 			// register types
 			$data['minify'] = strpos($type, "minify") > -1 || !empty($data['encode']);
 			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
+			$data['client'] = strpos($type, "client") > -1;
 
 			// leave standard types alone
-			if( !$data['minify'] && !$data['require']) continue;
+			if( !$data['minify'] && !$data['require'] && !$data['client']) continue;
 
 			// remove if not the intended container
 			if( !$data['group'] || $id != $data['group'] ."-min") $remove[] = $script;
 
 			// if no src add to the config file
-			if( empty($src) && $data['require'] ) {
+			if( empty($src) && ( (!DEBUG && $data['require']) || $data['client']) ) {
 				// #94 check dependencies
 				if( !empty( $data['deps'] ) ){
 					$deps = explode(",", $data['deps']);

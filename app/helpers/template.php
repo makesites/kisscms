@@ -242,7 +242,7 @@ class Template extends KISS_View {
 		}
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
-		//$client .= 'var require = KISSCMS["require"];';
+		$client .= 'require.config( KISSCMS.require );';
 
 		$client = $this->trimWhitespace($client);
 		// #87 not caching client vars as a file
@@ -265,6 +265,7 @@ class Template extends KISS_View {
 			self::setCache( $client_file , $client);
 		}
 		*/
+		/*
 		$client_file = "client";
 		$client_src= WEB_FOLDER. $client_file;
 
@@ -276,7 +277,7 @@ class Template extends KISS_View {
 		//$script->setAttribute("defer", "defer");
 		// include the script
 		$dom = $this->updateDom($script, $dom);
-
+		*/
 		// set the client as a session var
 		$_SESSION["_client"] = $client;
 	}

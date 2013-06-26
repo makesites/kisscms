@@ -71,7 +71,13 @@ class Minify extends PhpClosure {
 
 			// if no src add to the config file
 			if( empty($src) && $data['require'] ) {
-				$client .= $script->textContent;
+				// #94 check dependencies
+				if( !empty( $data['deps'] ) ){
+					$deps = explode(",", $data['deps']);
+					$client .= "require(". json_encode( $deps ) .", function(){ ". $script->textContent ." });";
+				} else {
+					$client .= $script->textContent;
+				}
 				// no further processing required
 				continue;
 			}

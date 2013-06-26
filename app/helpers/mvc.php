@@ -169,7 +169,7 @@ class Controller extends KISS_Controller {
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}
 
-	function client() {
+	function client_js() {
 		// set the right header
 		header('Content-Type: application/javascript');
 		// display the client vars
@@ -190,7 +190,9 @@ class Controller extends KISS_Controller {
 		// remove the first slash from the URI so the controller is always the first item in the array (later)
 		if (strpos($requri,$this->web_folder)===0)
 			$requri=substr($requri,strlen($this->web_folder));
-		$request["uri_parts"] = $requri ? explode('/',$requri) : array();
+		// FIX: allow for controller names with extensions
+		$requri = str_replace(".", "_", $requri);
+		$request["uri_parts"] = $requri ? explode('/', $requri) : array();
 		// remove the "index.php" from the request
 		if( array_key_exists(0, $request["uri_parts"]) && $request["uri_parts"][0] == "index.php" ){ array_shift( $request["uri_parts"] ); }
 
@@ -255,7 +257,7 @@ class Controller extends KISS_Controller {
 		// lastly convert the params in pairs
 		$params = $this->normalize_params( $request, $remove );
 
-		// if the method doesn't exist rever to a generic 404 page
+		// if the method doesn't exist revert to a generic 404 page
 		if (!preg_match('#^[A-Za-z_][A-Za-z0-9_-]*$#',$function) || !method_exists($this, $function))
 			$this->request_not_found();
 

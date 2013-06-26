@@ -6,7 +6,7 @@
 
 
 // Custom parser for KISSCMS
-// the "main" controller is used for all URLs except the once's that match existing controllers
+// checking for a controller that matches the first path - the "main" controller is used as a fallback
 function findController($url) {
 	// first remove the website path from the URL
 	$requri=preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $url);
@@ -14,8 +14,9 @@ function findController($url) {
 	preg_match('#^([^/]+)/?(.*)$#', $requri, $matches);
 	// fix - remove last match if empty
 	if(isset($matches[count($matches)-1]) && $matches[count($matches)-1]==''){ array_pop( $matches ); }
+	//
 	// first match is always the contoller - add it if it exists, is made out of alphanumeric chars and is not empty...
-	$controller = (isset($matches[1]) && preg_match('#^[A-Za-z0-9_-]+$#', $matches[1]) && !empty($matches[1])) ? $matches[1]: false;
+	$controller = (isset($matches[1]) && preg_match('#^[A-Za-z0-9_\-\.]+$#', $matches[1]) && !empty($matches[1])) ? $matches[1]: false;
 	// check if the controller exists
 	$controllerfile = getPath('controllers/'.$controller.'.php');
 	// check if what we found is sane

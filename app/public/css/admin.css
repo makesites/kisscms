@@ -12,8 +12,8 @@ body{
 	border-bottom: solid 1px #999;
 	font-family: Helvetica,Verdana,Arial,Tahoma;
 	z-index: 1000;
-	-moz-box-shadow: 0 3px 15px #999; 
-	-webkit-box-shadow: 0 3px 15px #999; 
+	-moz-box-shadow: 0 3px 15px #999;
+	-webkit-box-shadow: 0 3px 15px #999;
 	box-shadow: 0 3px 15px #999;
 }
 
@@ -45,7 +45,7 @@ body{
 
 #admin-topbar h3 a:hover{
 	background-position: 0 -16px;
-	
+
 }
 
 #admin-topbar ul{
@@ -65,7 +65,7 @@ body{
 }
 
 .cms-form {
-	
+
 }
 
 .cms-form label{
@@ -107,19 +107,19 @@ body{
 /* CLEARFIX Method */
 /* for compliant browsers */
 .clearfix:after {
-    clear: both; 
-    content:".";
-    display: block;
-    height: 0;
-    visibility: hidden
-    }
+	clear: both;
+	content:".";
+	display: block;
+	height: 0;
+	visibility: hidden
+	}
 /* affects only IE7 */
 .clearfix {
-    min-width: 0;
-    }
+	min-width: 0;
+	}
 /* targets only IE5-6 and hidden from lowly IEmac \*/
-    * html .clearfix { height: 1%; } 
+	* html .clearfix { height: 1%; }
 /* end hide IEmac */
 /* What? You want to get crazy and do IEmac too? Okay. \*//*/
-    .clearfix { display: inline-table; } 
+	.clearfix { display: inline-table; }
 /* end IEmac only */

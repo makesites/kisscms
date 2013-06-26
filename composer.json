@@ -1,29 +1,29 @@
 {
-    "name": "makesites/kisscms",
-    "version": "1.7.0",
-    "type": "library",
-    "description": "Content Management made Simple",
-    "keywords": ["kisscms","cms","os","free"],
-    "homepage": "http://kisscms.com",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Makis Tracend",
-            "email": "makis@makesit.es",
-            "homepage": "http://github.com/tracend",
-            "role": "Lead Developer"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.0"
-    },
-    "require-dev": {
-        "mockery/mockery": ">=0.7.2"
-    },
+	"name": "makesites/kisscms",
+	"version": "1.7.0",
+	"type": "library",
+	"description": "Content Management made Simple",
+	"keywords": ["kisscms","cms","os","free"],
+	"homepage": "http://kisscms.com",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Makis Tracend",
+			"email": "makis@makesit.es",
+			"homepage": "http://github.com/tracend",
+			"role": "Lead Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0"
+	},
+	"require-dev": {
+		"mockery/mockery": ">=0.7.2"
+	},
 	"repositories": [
-        {
-            "type": "vcs",
-            "url": "http://github.com/makesites/kisscms"
-        }
-    ]
+		{
+			"type": "vcs",
+			"url": "http://github.com/makesites/kisscms"
+		}
+	]
 }

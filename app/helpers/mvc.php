@@ -30,9 +30,9 @@ class Model extends KISS_Model  {
 				// Continue logic on a specific error code (14: unable to open database file)
 				$error = (string)$e->getCode();
 				if( $error == "14" ){
-                                  // #79 report last error on SQLite fail
-                                  print_r(error_get_last());
-                                  // see if there is a data directory
+								  // #79 report last error on SQLite fail
+								  print_r(error_get_last());
+								  // see if there is a data directory
 					if( !is_dir( DATA ) ){
 						// create the directory with write access
 						mkdir( DATA, 0775);
@@ -41,7 +41,7 @@ class Model extends KISS_Model  {
 						exit;
 					}
 				} else {
-			  		die('Connection failed: '.$e->getMessage());
+					die('Connection failed: '.$e->getMessage());
 				}
 			}
 		}
@@ -214,7 +214,7 @@ class Controller extends KISS_Controller {
 
 		// handle requests encoded as application/json
 		if (array_key_exists("CONTENT_TYPE",$_SERVER) && stripos($_SERVER["CONTENT_TYPE"], "application/json")===0) {
-     		$json = json_decode(file_get_contents("php://input"));
+			$json = json_decode(file_get_contents("php://input"));
 			$request["json"] = array();
 			foreach( $json as $k => $v ){
 				$request["json"][] = $k;

@@ -2,7 +2,7 @@
 env.json
 app/plugins
 tmp
-
+public/cookie.txt
 # Editor backup files
 *~
 *.bak

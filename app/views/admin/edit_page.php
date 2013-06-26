@@ -34,12 +34,12 @@ $action = ( $status == "create" ) ? url("admin/update", true) : url("admin/updat
 <script type="text/javascript" src="<?=url('/js/libs/jquery-ui-1.8.core-and-interactions.min.js')?>" data-type="minify/require" data-group="admin" data-deps="jquery"></script>
 <script type="text/javascript" src="<?=url('/js/libs/jquery-ui-1.8.autocomplete.min.js')?>" data-type="minify/require" data-group="admin" data-deps="jquery"></script>
 <script type="text/javascript" src="<?=url('/js/plugins/tag-it.js')?>" data-type="minify/require" data-group="admin" data-deps="jquery"></script>
-<script type="text/javascript" data-type="require">
+<script type="text/javascript" data-type="require" data-deps="admin">
 
-$(function(){
-	$(".cms-form #tags").tagit({
-		availableTags: []
+	$(function(){
+		$(".cms-form #tags").tagit({
+			availableTags: []
+		});
 	});
-});
 
 </script>

@@ -10,8 +10,7 @@
 } ?>
 </div>
 </canvas>
-<script type="text/javascript" src="<?=url('/js/libs/jquery-1.7.2.min.js')?>"></script>
-<script type="text/javascript" src="<?=url('/js/plugins/jquery.tagcanvas.min.js')?>"></script>
+<script type="text/javascript" src="<?=url('/js/plugins/jquery.tagcanvas.min.js')?>" data-type="require" data-deps="jquery"></script>
 <script type="text/javascript">
 	$(function(){
 		$("#<?=$vars['id']?>").tagcanvas({

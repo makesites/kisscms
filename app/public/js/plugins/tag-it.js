@@ -11,10 +11,10 @@
 		var fl = $(this);
 		var el = $(this).prev("ul");
 		
-		const BACKSPACE		= 8;
-		const ENTER			= 13;
-		const SPACE			= 32;
-		const COMMA			= 44;
+		var BACKSPACE		= 8;
+		var ENTER			= 13;
+		var SPACE			= 32;
+		var COMMA			= 44;
 
 		// add the tagit CSS class.
 		el.addClass("tagit");

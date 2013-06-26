@@ -220,6 +220,11 @@ function cdn($file=''){
 	}
 }
 
+// return an html attribute for a value
+function attr($name=false, $value=false){
+	if(!$name || !$value || empty($value)) return;
+	return $name .'="'. $value .'"';
+}
 
 // find all files with a certain name
 function findFiles($filename) {

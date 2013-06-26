@@ -353,6 +353,8 @@ class Minify extends PhpClosure {
 	function closureJS( $scripts ){
 		// make this a config option?
 		$baseUrl =  "assets/js/";
+		$http = new Http();
+		$http->setMethod('GET');
 		// sort results
 		//ksort_recursive( $minify );
 		// record signature
@@ -361,33 +363,40 @@ class Minify extends PhpClosure {
 		// FIX: create the dir if not available
 		if( !is_dir( $cache_path ) ) mkdir($cache_path, 0775, true);
 
-		// call google-closure
+		// process each group
 		foreach( $scripts as $name=>$group ){
 			$first = current($group);
+			$result = "";
 			// go to next group if minify flag is not true
 			if( !$first["data"]['minify'] ) continue;
 			$min = new Minify();
+			$min->cacheDir( $cache_path );
 			// get the encoding from the first member of the group
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files
 			foreach( $group as $script ){
 				// the move the domain from the script (if available)
-				$src = str_replace( array(url(), cdn() ),"", $script["src"] );
+				// check if it's a local url
+				$href = $script["src"];
+				$local = (substr($href, 0, 4) !== "http" || substr($href, 0, 2) !== "//" );
+				if( $local ) $href = url( $href );
+				$result .= $http->execute( $href );
+				//$src = str_replace( array(url(), cdn() ),"", $script["src"] );
 				// remove leading slash
-				$src = ltrim($src,'/');
-				$file = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . $src;
-				$md5 .= md5_file($file);
-				$min->add( $file );
+				//$src = ltrim($src,'/');
+				//$md5 .= md5_file($file);
 			}
 			// compress signatures of all files
-			$md5 = md5( $md5 );
-
-			//$min		->cacheDir( APP. "public/". $baseUrl )
-			$min		->cacheDir( $cache_path )
-						->setFile( "$name.$md5.min" );
+			$md5 = md5( $result );
+			//contents of each group are saved in a tmp file
+			$tmp_file = $cache_path . "tmp.$md5.js";
+			file_put_contents($tmp_file, $result);
+			// add tmp file
+			$min->add( $tmp_file );
+			$min->setFile( "$name.$md5.min" );
 			if( !DEBUG){
-			$min		->quiet()
-						->hideDebugInfo();
+				$min->quiet()
+					->hideDebugInfo();
 			}
 			// condition the method of minification here...
 			switch( $encode ){
@@ -406,6 +415,7 @@ class Minify extends PhpClosure {
 
 			}
 
+			// call google-closure
 			//->useClosureLibrary()
 			$min->create();
 

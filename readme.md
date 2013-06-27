@@ -23,12 +23,12 @@ Website: http://www.kisscms.com
 
 ## Setup
 
-KISSCMS may be installed using Composer (getcomposer.org) or by cloning it from its Github repository. 
+KISSCMS can be installed by using Composer (getcomposer.org) or just by downloading the files straight from the Github repository. 
 
 1. Extract the archive and place the contents of the folder where you want your website to be located. 
-2. Place the files in the "html" folder should in your web root. All other folders one directory level above it.
+2. Place the files in the ```./public``` folder should in your web root. All other folders one directory level above it.
 3. Open a browser and enter the address of your website. Sample content should already work with no further effort.
-4. Type "/admin" in your web address to enter the administration area. Default (username/password) are: ** admin / admin **
+4. Go to ```./admin``` in your browser to enter the administration area. The default (username/password) are: ** admin / admin **
 
 
 ## Customization

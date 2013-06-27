@@ -168,12 +168,11 @@ function getPath( $file ) {
 	return false;
 }
 
-
-function url($file=''){
+function url($file='', $cdn=false){
 	// get the full uri for the file
 	$uri = uri($file);
 	// check if it is a static
-	if( isStatic( $uri ) && defined("CDN")){
+	if( $cdn && defined("CDN") && isStatic( $uri )){
 		// load the cdn address instead
 		// remove trailing slash, if any
 		$domain = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;

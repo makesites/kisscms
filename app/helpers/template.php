@@ -19,13 +19,14 @@ class Template extends KISS_View {
 		$this->hash = $this->getHash("", $vars);
 		$file = $this->getTemplate();
 		$this->client = array();
+
 		parent::__construct($file, $this->vars);
 	}
 
 	public static function output($vars=''){
 		$template = new Template($vars);
 		// first thing, check if there's a cached version of the template
-		$id = "template_". $template->hash;
+		$id = "html/". $_SERVER['HTTP_HOST'] ."_". $template->hash;
 		//$cache = self::getCache( $id );
 		$cache = false;
 		if($cache && !DEBUG) { echo $cache; return; }
@@ -140,14 +141,20 @@ class Template extends KISS_View {
 		// generate a hash form the string
 		return $prefix . hash("md5", $string);
 	}
-	static function getCache($id ){
+	static function getCache($file ){
 		$cache = new Minify_Cache_File();
+		$dir = dirname( $file );
+		$cache_path = $cache->getPath() ."/$dir";
+
+		// FIX: create the dir if not available
+		if( !is_dir( $cache_path ) ) mkdir($cache_path, 0775, true);
+
 		// check if the file is less than an hour old
-		return ( $cache->isValid($id, time("now")-3600) ) ? $cache->fetch($id) : false;
+		return ( $cache->isValid($file, time("now")-3600) ) ? $cache->fetch($file) : false;
 	}
-	static function setCache($id, $data){
+	static function setCache($file, $data){
 		$cache = new Minify_Cache_File();
-		$cache->store($id, $data);
+		$cache->store($file, $data);
 	}
 
 

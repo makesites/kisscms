@@ -1,6 +1,6 @@
 <?php
 
-class Minify extends PhpClosure {
+class Minify extends UglifyJS {
 
 	protected $_content = array();
 	protected $_dom;

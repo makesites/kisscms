@@ -104,7 +104,7 @@ class Minify extends PhpClosure {
 
 
 		// process minification
-		$group = $this->closureJS( $group );
+		$group = $this->uglifyJS( $group );
 		// process requireJS
 		$dom = $this->requireJS( $group, $dom );
 
@@ -357,7 +357,7 @@ class Minify extends PhpClosure {
 
 	}
 
-	function closureJS( $scripts ){
+	function uglifyJS( $scripts ){
 		// make this a config option?
 		$baseUrl =  "assets/js/";
 		$http = new Http();
@@ -422,8 +422,6 @@ class Minify extends PhpClosure {
 
 			}
 
-			// call google-closure
-			//->useClosureLibrary()
 			$min->create();
 
 			// add the signature in the group

@@ -378,6 +378,7 @@ class Minify extends UglifyJS {
 			if( !$first["data"]['minify'] ) continue;
 			$min = new UglifyJS();
 			$min->cacheDir( $cache_path );
+			//var_dump( $GLOBALS['config']['compress']['uglify_service'] );
 			// get the encoding from the first member of the group
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files
@@ -527,7 +528,7 @@ class Minify extends UglifyJS {
 		return $attr;
 	}
 
-
+/*
 	function setFile( $name=false ) {
 		if($name) $this->_file = $name;
 		return $this;
@@ -536,7 +537,7 @@ class Minify extends UglifyJS {
 	function _getCacheFileName() {
 		return ( empty($this->_file) ) ? $this->_cache_dir . $this->_getHash() . ".js" : $this->_cache_dir . $this->_file. ".js";
 	}
-
+*/
 	function trimWhitespace( $string, $replace=" " ){
 		// replace multiple spaces with one
 		return preg_replace( '/\s+/', $replace, $string );

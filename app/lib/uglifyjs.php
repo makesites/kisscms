@@ -43,6 +43,10 @@ class UglifyJS {
 		return $this;
 	}
 
+	function setFile( $name=false ) {
+		if($name) $this->_file = $name;
+		return $this;
+	}
 	/**
 	 * Sets the URL prefix to use with the UglifyJS service's code_url
 	 * parameter.
@@ -200,7 +204,7 @@ class UglifyJS {
 	}
 
 	function _getCacheFileName() {
-		return $this->_cache_dir . $this->_getHash() . ".js";
+		return ( empty($this->_file) ) ? $this->_cache_dir . $this->_getHash() . ".js" : $this->_cache_dir . $this->_file. ".js";
 	}
 
 	function _getHash() {

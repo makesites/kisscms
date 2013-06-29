@@ -376,7 +376,7 @@ class Minify extends PhpClosure {
 			$result = "";
 			// go to next group if minify flag is not true
 			if( !$first["data"]['minify'] ) continue;
-			$min = new Minify();
+			$min = new UglifyJS();
 			$min->cacheDir( $cache_path );
 			// get the encoding from the first member of the group
 			$encode = $first["data"]["encode"];
@@ -422,7 +422,7 @@ class Minify extends PhpClosure {
 
 			}
 
-			$min->create();
+			$min->write();
 
 			// add the signature in the group
 			$scripts[$name][]["data"]["md5"] = $md5;

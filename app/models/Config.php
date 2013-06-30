@@ -21,7 +21,8 @@ class Config extends Model {
 	if( empty($GLOBALS['config'][$table]) ){
 		$config = new Config(0, $table);
 		// FIX: The id needs to be setup as autoincrement
-		$config->create_table($table, "id INTEGER PRIMARY KEY ASC," . implode(",", array_keys( $config->rs )) );
+		//$config->create_table($table, "id INTEGER PRIMARY KEY ASC," . implode(",", array_keys( $config->rs )) );
+		$config->create_table($table, "id INTEGER PRIMARY KEY ASC, key, value");
 		$GLOBALS['config'][$table] = array();
 	}
 

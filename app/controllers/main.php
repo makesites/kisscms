@@ -67,7 +67,7 @@ class Main extends KISS_Auth {
 	}
 
 	function getCategoryPages($is_page=false) {
-
+		// a page needs the tag "category" to jump into this behaviour
 		if( $is_page && !$this->category ) return false;
 
 		$page=new Page();
@@ -76,13 +76,19 @@ class Main extends KISS_Auth {
 		// add a leading slash to the path
 		$path = ( substr($this->data['path'], -1) == "/" ) ? $this->data['path'] : $this->data['path'].'/';
 
-		$pages = $page->retrieve_many("path like '". $this->data['path'] ."%'");
+		$pages = $page->retrieve_many("path like '". $path ."%'");
+
+		// FIX: reset the data (in case it has page info)
+		if( $is_page ) $this->data['body'] = array();
 
 		if( count($pages) > 0 ){
 			foreach( $pages as $data ){
 				$data['view'] = getPath('views/main/category.php');
 				$this->data['body'][] = $data;
 			}
+			// everything checked out - ready to set the template
+			$this->data['template'] = "category.php";
+
 			return true;
 		} else {
 			return false;

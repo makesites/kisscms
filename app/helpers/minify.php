@@ -378,7 +378,7 @@ class Minify extends UglifyJS {
 			if( !$first["data"]['minify'] ) continue;
 			$min = new UglifyJS();
 			$min->cacheDir( $cache_path );
-			//var_dump( $GLOBALS['config']['compress']['uglify_service'] );
+			$min->compiler( $GLOBALS['config']['compress']['uglify_service'] );
 			// get the encoding from the first member of the group
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files

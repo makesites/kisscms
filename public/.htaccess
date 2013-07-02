@@ -4,6 +4,11 @@ AddHandler php5-script .php
 # Allow <?...?> 'short tags' next to the usual <?php...?>
 php_value short_open_tag 1
 
+# Webfonts
+AddType application/vnd.ms-fontobject .eot
+AddType application/octet-stream .otf .ttf
+AddType application/font-woff .woff
+
 # Application Cache manifest files (defined with the right mime-type)
 AddType text/cache-manifest .appcache
 

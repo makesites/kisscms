@@ -119,6 +119,7 @@ class Menu extends Section {
 		$items = array();
 		// fallback to menu tag if no tag is set
 		$tag = ( $this->data['vars']['tag'] ) ? $this->data['vars']['tag'] : "menu";
+		$uri = substr( $_SERVER['PATH_INFO'], 1);
 
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];
@@ -132,13 +133,19 @@ class Menu extends Section {
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
 				// pick only first level pages
 				$path = explode("/", $v['path'] );
+
 				if(count($path) > 1){
 					$items[$path[0]] = array( 'url' =>  url( $path[0] ), 'title' => ucwords($path[0]) );
+					// add seleted class if uri matches path
+					$items[$path[0]]['selected'] = ($uri == $v['path']) ? "selected" : null;
 				} else {
 					$items[$v['path']] = array( 'url' =>  url( $v['path'] ), 'title' => $v['title'] );
+					// add seleted class if uri matches path
+					$items[$v['path']]['selected'] = ($uri == $v['path']) ? "selected" : null;
 				}
 			}
 		}
+
 		return $items;
 	}
 

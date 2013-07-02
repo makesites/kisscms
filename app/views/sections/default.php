@@ -5,8 +5,9 @@
 <ul <?=attr("id", $vars['ul-id'])?> <?=attr("class", $vars['ul-class'])?>>
 <? if(!empty($items)){ ?>
 <? foreach($items as $item){ ?>
-	<li><a href="<?=$item['url']?>"><?=$item['title']?></a></li>
-<? } 
+	<? $selected = ( array_key_exists('selected', $item) ) ? $item['selected'] : NULL; ?>
+	<li <?=attr("class", $selected)?>><a href="<?=$item['url']?>"><?=$item['title']?></a></li>
+<? }
 } ?>
 </ul>
 </section>

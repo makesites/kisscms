@@ -119,7 +119,7 @@ class Menu extends Section {
 		$items = array();
 		// fallback to menu tag if no tag is set
 		$tag = ( $this->data['vars']['tag'] ) ? $this->data['vars']['tag'] : "menu";
-		$uri = substr( $_SERVER['PATH_INFO'], 1);
+		$uri = ( array_key_exists('PATH_INFO', $_SERVER) ) ? substr( $_SERVER['PATH_INFO'], 1) : "";
 
 		if( array_key_exists('db_pages', $GLOBALS) ){
 			$dbh = $GLOBALS['db_pages'];

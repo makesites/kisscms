@@ -133,19 +133,43 @@ class Menu extends Section {
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
 				// pick only first level pages
 				$path = explode("/", $v['path'] );
+				// get the position of the item, if any
+				preg_match("/".$tag."[a-z\-]*-(\d+)/", $v['tags'], $order );
+				$order = array_pop( $order );
+				$k = ( is_null( $order ) ) ? false : (int) $order -1;
+				$selected = ($uri == $v['path']) ? "selected" : null;
 
-				if(count($path) > 1){
-					$items[$path[0]] = array( 'url' =>  url( $path[0] ), 'title' => ucwords($path[0]) );
-					// add seleted class if uri matches path
-					$items[$path[0]]['selected'] = ($uri == $v['path']) ? "selected" : null;
+				$p = (count($path) > 1) ? $path[0] : $v['path'];
+				$title = (count($path) > 1) ? ucwords($path[0]) : $v['title'];
+
+				$item = array( 'url' =>  url( $p ), 'title' => $title );
+				// add seleted class if uri matches path
+				$item['selected'] = $selected;
+				$item['order'] = $k;
+				// position in their right order
+				if( $k ){
+					if( array_key_exists($k, $items) ){
+						$i = $items[$k];
+						$items[$k] = $item;
+						$items[] = $i;
+					} else {
+						$items[$k] = $item;
+					}
 				} else {
-					$items[$v['path']] = array( 'url' =>  url( $v['path'] ), 'title' => $v['title'] );
-					// add seleted class if uri matches path
-					$items[$v['path']]['selected'] = ($uri == $v['path']) ? "selected" : null;
+					$placed = false;
+					for( $j = 0; $j < count( $items ); $j++){
+						if( !array_key_exists($j, $items) ){
+							$items[$j] = $item;
+							$placed = true;
+						}
+					}
+					// place at the end if not placed
+					if( !$placed ) $items[] = $item;
 				}
 			}
 		}
-
+		// sort elements by key
+		ksort($items);
 		return $items;
 	}
 

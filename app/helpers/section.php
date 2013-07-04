@@ -215,8 +215,9 @@ class Tags extends Section {
 			// filter out specific tags
 			// - empty tags
 			// - tags that start with "menu-"
+			// - tags that start with "author-"
 			// - specific tags: "category"...
-			if ( preg_match("/^$|^menu-|^category$/", $tag) ) continue;
+			if ( preg_match("/^$|^menu-|^author-|^category$/", $tag) ) continue;
 
 			// calculate the weight
 			if(array_key_exists($tag, $items)){

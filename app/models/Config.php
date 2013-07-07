@@ -13,8 +13,10 @@ class Config extends Model {
 	}
 
 	static function register($table, $key, $value="") {
+		// create the global config object if not available
+		if(!array_key_exists('config', $GLOBALS)) $GLOBALS['config'] = array();
 		// exit now if variable already available
-		$key_exists = !( empty($GLOBALS['config'][$table][$key]) && is_null($GLOBALS['config'][$table][$key]) );
+		$key_exists = !( !array_key_exists($table, $GLOBALS['config']) || (empty($GLOBALS['config'][$table][$key]) && is_null($GLOBALS['config'][$table][$key])));
 		if ( $key_exists ) return;
 
 	// then check if the table exists
@@ -45,6 +47,8 @@ class Config extends Model {
 		if( !is_array( $table_rows ) ){ return false; }
 		// clean up data in a better format
 		foreach( $table_rows as $table => $rows ){
+			// create the config table if it doesn't exist
+			if( !array_key_exists($table, $config) ) $config[$table] = array();
 			foreach( $rows as $row ){
 				// delete a duplicate key
 				if( array_key_exists( $row['key'], $config[$table] ) ){

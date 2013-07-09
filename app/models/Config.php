@@ -16,17 +16,17 @@ class Config extends Model {
 		// create the global config object if not available
 		if(!array_key_exists('config', $GLOBALS)) $GLOBALS['config'] = array();
 		// exit now if variable already available
-		$key_exists = !( !array_key_exists($table, $GLOBALS['config']) || !array_key_exists($key, $GLOBALS['config'][$table]) || (empty($GLOBALS['config'][$table][$key]) && is_null($GLOBALS['config'][$table][$key])));
+		$key_exists = ( array_key_exists($table, $GLOBALS['config']) && array_key_exists($key, $GLOBALS['config'][$table]) && !(empty($GLOBALS['config'][$table][$key]) && is_null($GLOBALS['config'][$table][$key])) );
 		if ( $key_exists ) return;
 
-	// then check if the table exists
-	if( empty($GLOBALS['config'][$table]) ){
-		$config = new Config(0, $table);
-		// FIX: The id needs to be setup as autoincrement
-		//$config->create_table($table, "id INTEGER PRIMARY KEY ASC," . implode(",", array_keys( $config->rs )) );
-		$config->create_table($table, "id INTEGER PRIMARY KEY ASC, key, value");
-		$GLOBALS['config'][$table] = array();
-	}
+		// then check if the table exists
+		if( empty($GLOBALS['config'][$table]) ){
+			$config = new Config(0, $table);
+			// FIX: The id needs to be setup as autoincrement
+			//$config->create_table($table, "id INTEGER PRIMARY KEY ASC," . implode(",", array_keys( $config->rs )) );
+			$config->create_table($table, "id INTEGER PRIMARY KEY ASC, key, value");
+			$GLOBALS['config'][$table] = array();
+		}
 
 		// we already know the key doesn't exist - just create it
 		$config = new Config(0, $table);
@@ -46,6 +46,7 @@ class Config extends Model {
 		// exit if no config is returned
 		if( !is_array( $table_rows ) ){ return false; }
 		// clean up data in a better format
+
 		foreach( $table_rows as $table => $rows ){
 			// create the config table if it doesn't exist
 			if( !array_key_exists($table, $config) ) $config[$table] = array();

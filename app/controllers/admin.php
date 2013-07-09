@@ -33,33 +33,33 @@ class Admin extends Controller {
 			}
 		}
 
-	  if($login == true) {
-		$_SESSION['admin']="true";
-		header('Location: '.url());
-		exit();
-	  } else {
-		// display login form
-		//$this->data['body']['admin']= View::do_fetch( getPath('views/admin/login.php'), $this->data);
-		$data['view']= getPath('views/admin/login.php');
-		$this->data['body'][] = $data;
-		$this->data['template']= ADMIN_TEMPLATE;
+		if($login == true) {
+			$_SESSION['admin']="true";
+			header('Location: '.url());
+			exit();
+		} else {
+			// display login form
+			//$this->data['body']['admin']= View::do_fetch( getPath('views/admin/login.php'), $this->data);
+			$data['view']= getPath('views/admin/login.php');
+			$this->data['body'][] = $data;
+			$this->data['template']= ADMIN_TEMPLATE;
 
-		// display the page
-		Template::output($this->data);
-	  }
+			// display the page
+			Template::output($this->data);
+		}
 
 	}
 
 	function logout() {
-	  unset($_SESSION['admin']);
-	  header('Location: '.url());
-	  exit();
+		unset($_SESSION['admin']);
+		header('Location: '.url());
+		exit();
 	}
 
 
 	function config( $params=array() ) {
-	  // if saving...
-	  if( $_SERVER['REQUEST_METHOD'] == "POST" ){
+		// if saving...
+		if( $_SERVER['REQUEST_METHOD'] == "POST" ){
 
 		// loop through all the other data and reorganise them properly
 		foreach($params as $k=>$v){
@@ -75,6 +75,8 @@ class Admin extends Controller {
 			// only save the data that has changed
 			if( $GLOBALS["config"][$table][$key] != $value ){
 				$config = new Config(0, $table);
+				// find the entry with the right key
+				$config->retrieve_one("key=?", $key);
 				//$config->pkname = 'key';
 				$config->set('key', $key);
 				$config->set('value', $value);
@@ -90,17 +92,17 @@ class Admin extends Controller {
 		// redirect back to the configuration page
 		header('Location: '.url('admin/config'));
 
-	  } else {
-		// show the configuration
-		//$this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);
-		$data['view']= getPath('views/admin/config.php');
-		$this->data['status']= "config";
-		$this->data['body'][] = $data;
-		$this->data['template']= ADMIN_TEMPLATE;
+		} else {
+			// show the configuration
+			//$this->data['body']['admin']=View::do_fetch( getPath('views/admin/config.php'),$this->data);
+			$data['view']= getPath('views/admin/config.php');
+			$this->data['status']= "config";
+			$this->data['body'][] = $data;
+			$this->data['template']= ADMIN_TEMPLATE;
 
-		// display the page
-		Template::output($this->data);
-	  }
+			// display the page
+			Template::output($this->data);
+		}
 	}
 
 	/*
@@ -214,8 +216,7 @@ class Admin extends Controller {
 		// load tempalate
 		$output = View::do_fetch( getPath("views/admin/humans.php"), $data);
 		// write file
-		writeFile(APP.'public/humans.txt', $output, 'w');
-
+		@file_put_contents(APP.'public/humans.txt', $output);
 	}
 }
 ?>

@@ -6,8 +6,6 @@
 //===============================================
 
 if( class_exists('Config') && method_exists(new Config(),'register')){
-	$config = new Config();
-	$GLOBALS['config'] = $config->getConfig();
 
 	// Register variables
 	Config::register("main", "site_name", "KISSCMS");

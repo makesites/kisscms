@@ -16,7 +16,7 @@ class Config extends Model {
 		// create the global config object if not available
 		if(!array_key_exists('config', $GLOBALS)) $GLOBALS['config'] = array();
 		// exit now if variable already available
-		$key_exists = !( !array_key_exists($table, $GLOBALS['config']) || (empty($GLOBALS['config'][$table][$key]) && is_null($GLOBALS['config'][$table][$key])));
+		$key_exists = !( !array_key_exists($table, $GLOBALS['config']) || !array_key_exists($key, $GLOBALS['config'][$table]) || (empty($GLOBALS['config'][$table][$key]) && is_null($GLOBALS['config'][$table][$key])));
 		if ( $key_exists ) return;
 
 	// then check if the table exists

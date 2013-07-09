@@ -147,7 +147,7 @@ class Menu extends Section {
 				$item['selected'] = $selected;
 				$item['order'] = $k;
 				// position in their right order
-				if( $k ){
+				if( $k !== false ){
 					if( array_key_exists($k, $items) ){
 						$i = $items[$k];
 						$items[$k] = $item;

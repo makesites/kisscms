@@ -27,8 +27,8 @@ class Template extends KISS_View {
 		$template = new Template($vars);
 		// first thing, check if there's a cached version of the template
 		$id = "html/". $_SERVER['HTTP_HOST'] ."_". $template->hash;
-		//$cache = self::getCache( $id );
-		$cache = false;
+		$cache = self::getCache( $id );
+		//$cache = false;
 		if($cache && !DEBUG) { echo $cache; return; }
 		// continue processing
 		$template->setupClient();
@@ -44,7 +44,7 @@ class Template extends KISS_View {
 		// output the final markup - clear whitespace (if not in debug mode)
 		echo $output;
 		// set the cache for later use
-		//self::setCache( $id, $output);
+		self::setCache( $id, $output);
 	}
 
 	public static function head( $vars=false ){

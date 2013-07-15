@@ -173,7 +173,12 @@ class Controller extends KISS_Controller {
 		// set the right header
 		header('Content-Type: application/javascript');
 		// display the client vars
-		echo ( !empty( $_SESSION["_client"] ) ) ? $_SESSION["_client"] : "";
+		$path = null;
+		if( !empty( $_SERVER["HTTP_REFERER"] ) ){
+			$url = parse_url ( $_SERVER["HTTP_REFERER"] );
+			$path = $url['path'];
+		}
+		echo ( !empty( $_SESSION["_client"][$path] ) ) ? $_SESSION["_client"][$path] : "";
 	}
 
 	//This function parses the HTTP request to set the controller name, function name and parameter parts.

@@ -286,7 +286,8 @@ class Template extends KISS_View {
 		$dom = $this->updateDom($script, $dom);
 		*/
 		// set the client as a session var
-		$_SESSION["_client"] = $client;
+		if( !array_key_exists("_client", $_SESSION) ) $_SESSION["_client"] = array();
+		$_SESSION["_client"][$_SERVER["REQUEST_URI"]] = $client;
 	}
 
 	public static function doList( $selected=null){

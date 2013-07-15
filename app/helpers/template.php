@@ -115,7 +115,7 @@ class Template extends KISS_View {
 		// process require configuration
 		$this->createClient($dom);
 
-		$output =  $dom->saveHTML();
+		$output = $dom->saveHTML();
 
 		// output the final markup - clear whitespace
 		return  ( DEBUG ) ? $output : $this->trimWhitespace( $output );

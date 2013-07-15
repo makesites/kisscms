@@ -5,7 +5,7 @@ class Minify extends UglifyJS {
 	protected $_content = array();
 	protected $_dom;
 
-	function __construct()  {
+	function __construct() {
 		// class objects
 		$this->cache = new Minify_Cache_File();
 	}
@@ -378,7 +378,7 @@ class Minify extends UglifyJS {
 			if( !$first["data"]['minify'] ) continue;
 			$min = new UglifyJS();
 			$min->cacheDir( $cache_path );
-			$min->compiler( $GLOBALS['config']['compress']['uglify_service'] );
+			$min->compiler( $GLOBALS['config']['admin']['uglify_service'] );
 			// get the encoding from the first member of the group
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files

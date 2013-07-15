@@ -161,6 +161,8 @@ class Controller extends KISS_Controller {
 
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
+		// add admin flag
+		$this->data['admin'] = $_SESSION['admin'];
 
 		// set the template the controller is using
 		$template = strtolower( get_class($this) ) .".php";

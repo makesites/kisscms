@@ -31,10 +31,10 @@ $action = ( $status == "create" ) ? url("admin/update", true) : url("admin/updat
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>
 
-<script type="text/javascript" src="<?=url('/js/libs/jquery-ui-1.8.core-and-interactions.min.js')?>" data-type="minify/require" data-group="admin" data-deps="jquery"></script>
-<script type="text/javascript" src="<?=url('/js/libs/jquery-ui-1.8.autocomplete.min.js')?>" data-type="minify/require" data-group="admin" data-deps="jquery"></script>
-<script type="text/javascript" src="<?=url('/js/plugins/tag-it.js')?>" data-type="minify/require" data-group="admin" data-deps="jquery"></script>
-<script type="text/javascript" data-type="require" data-deps="admin">
+<script type="text/javascript" src="<?=url('/js/libs/jquery-ui-1.8.core-and-interactions.min.js')?>" data-type="require" data-path="jquery-ui-core" data-deps="jquery"></script>
+<script type="text/javascript" src="<?=url('/js/libs/jquery-ui-1.8.autocomplete.min.js')?>" data-type="require" data-path="jquery-ui-autocomplete" data-deps="jquery-ui-core"></script>
+<script type="text/javascript" src="<?=url('/js/plugins/tag-it.js')?>" data-type="require" data-path="tag-it" data-deps="jquery-ui-autocomplete"></script>
+<script type="text/javascript" data-type="require" data-deps="tag-it">
 
 	$(function(){
 		$(".cms-form #tags").tagit({

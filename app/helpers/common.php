@@ -213,6 +213,8 @@ function cdn($file=''){
 	if (defined("CDN")){
 		// remove trailing slash, if any
 		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		// #108 remove www from cdn address (if set by SERVER_NAME)
+		$url = str_replace("www.",'',$url);
 		return $url . $uri;
 	} else {
 		// fallback to the domain name

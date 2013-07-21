@@ -301,7 +301,23 @@ class Controller extends KISS_Controller {
 		exit;
 	}
 
-	function render() {
+	function render( $view=false) {
+		// include a default view for body sections
+		$class = strtolower( get_class($this) );
+		//$this->data["body"][$class]["view"] = ($view) ? getPath('views/'.$class.'/'. $view .'.php') : getPath('views/'.$class.'/body.php');
+		// get the actual path of the view
+		$view = getPath('views/'.$class.'/'. $view .'.php');
+		if( array_key_exists("body" , $this->data ) ){
+			foreach( $this->data["body"] as $k => $v ){
+				if( !array_key_exists("view", $v) ){
+					$this->data["body"][$k]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
+				}
+			}
+		} else {
+			// there are no body data - may still be a "static" view
+			$this->data["body"] = array();
+			$this->data["body"][$class]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
+		}
 		// display the page
 		Template::output($this->data);
 	}

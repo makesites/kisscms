@@ -24,7 +24,7 @@ $templates = $_SERVER['DOCUMENT_ROOT'] . WEB_FOLDER . 'templates/';
 // lookup APP folder first
 if( !is_dir($templates) && defined("BASE") ){
 	// then look up the default template location
-	$templates = realpath(BASE . '../' ) . "/html/templates/";
+	$templates = realpath(BASE . '../' ) . "/public/templates/";
 	if( !is_dir($templates) ){
 		// lastly lookup at the root
 		$templates = realpath(BASE . '../' ) . "/templates/";

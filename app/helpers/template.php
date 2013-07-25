@@ -178,7 +178,7 @@ class Template extends KISS_View {
 		if( preg_match('/[a-z0-9_.\/\\\]plugins[a-z0-9_.\/\\\]*$/i', $file, $match) ) {
 			// $match =  /plugins/{section}/views/file.php
 			$path = explode("/", $match[0]);
-			// the lovation of the section is rather hardcoded here but there must be a better way...
+			// the location of the section is rather hardcoded here but there must be a better way...
 			$section = $path[2];
 		//otherwise it is in the main BASE or APP view folder
 		} else {

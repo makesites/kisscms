@@ -158,6 +158,11 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 				if($search) $exception = array_merge( $exception, (array)$search );
 
 			}
+			# 110 looking into web root for plugins
+			if( is_dir( SITE_ROOT . "/plugins" ) ){
+				$search = glob(SITE_ROOT . "/plugins/*/$folder/$file",GLOB_BRACE);
+				if($search) $exception = array_merge( $exception, (array)$search );
+			}
 		}
 	}
 	// all the files in the priority list
@@ -184,6 +189,11 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 				$search = glob(PLUGINS."*/$folder/$file",GLOB_BRACE);
 				if($search) $priorities =  array_merge( $priorities, (array)$search );
 
+			}
+			# 110 looking into web root for plugins
+			if( is_dir( SITE_ROOT . "/plugins" ) ){
+				$search = glob(SITE_ROOT . "/plugins/*/$folder/$file",GLOB_BRACE);
+				if($search) $priorities =  array_merge( $priorities, (array)$search );
 			}
 		}
 	}
@@ -222,7 +232,11 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 		$plugins = glob(PLUGINS."*/$folder/*",GLOB_BRACE);
 		if(!$plugins) $plugins = array();
 	}
-
+	# 110 looking into web root for plugins
+	if( is_dir( SITE_ROOT . "/plugins" ) ){
+		$plugins = glob(SITE_ROOT . "/plugins/*/$folder/*",GLOB_BRACE);
+		if(!$plugins) $plugins = array();
+	}
 
 	// merge all the arrays together
 	$files = array_merge( $files, $base, $app, $plugins );
@@ -289,6 +303,10 @@ function requireOnly($folder='', $only=array() ){
 		}
 		if( defined("PLUGINS") ){
 			$search = glob(PLUGINS."*/$folder/$file",GLOB_BRACE);
+			if($search) $plugins = array_merge( $plugins, (array)$search );
+		}
+		if( is_dir( SITE_ROOT . "/plugins" ) ){
+			$search = glob(SITE_ROOT . "/plugins/*/$folder/$file",GLOB_BRACE);
 			if($search) $plugins = array_merge( $plugins, (array)$search );
 		}
 		// merge all the arrays together

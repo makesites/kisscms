@@ -95,6 +95,15 @@ function isStatic( $file ) {
 			return $target;
 		}
 	}
+	# 110 looking into web root for plugins
+	if( is_dir( SITE_ROOT . "/plugins" ) ){
+		$files = glob(SITE_ROOT . "/plugins/*/public/$file");
+		if( $files && count($files) > 0 ) {
+			// arbitrary pick the first file - should have a comparison mechanism in place
+			$target = $files[0];
+			return $target;
+		}
+	}
 	//lastly check the cache (less than an hour old)
 	$cache = new Minify_Cache_File();
 	//if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
@@ -157,13 +166,20 @@ function getPath( $file ) {
 	}
 	// check the plugins folder if we still haven't found anything
 	if( defined("PLUGINS") ){
-		// find the core file second
+		// find the plugins file
 		if (file_exists(PLUGINS.$file)) return PLUGINS.$file;
 		// check the plugins folder
 		$search = glob(PLUGINS."*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);
 	}
-
+	# 110 looking into web root for plugins
+	if( is_dir( SITE_ROOT . "/plugins" ) ){
+		// find the plugins file
+		if (file_exists(SITE_ROOT ."/plugins/". $file)) return SITE_ROOT ."/plugins/". $file;
+		// check the plugins folder
+		$search = glob(SITE_ROOT ."/plugins/*/$file", GLOB_BRACE);
+		if($search) return array_pop($search);
+	}
 	// nothing checks out...
 	return false;
 }
@@ -253,6 +269,14 @@ function findFiles($filename) {
 		if( is_array( $files) ){
 			$return = array_merge($return, $files);
 		}
+	}
+	# 110 looking into web root for plugins
+	if( is_dir( SITE_ROOT . "/plugins" ) ){
+		$files = glob(SITE_ROOT . "/plugins/*/views/$filename");
+		if( is_array( $files) ){
+			$return = array_merge($return, $files);
+		}
+
 	}
 	return $return;
 }

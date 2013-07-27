@@ -17,10 +17,13 @@ function KISSCMS() {
 	$server_settings_found = false;
 	$ENV = json_decode( file_get_contents( ( file_exists("../env.json") ) ? "../env.json": "env.json" ) );
 
+	// #112 create a global for the SERVER_NAME
+	$GLOBALS['SERVER_NAME'] = ( strpos($_SERVER['SERVER_NAME'], "localhost") !== false || strpos($_SERVER['SERVER_NAME'], $_SERVER['SERVER_ADDR']) !== false ) ? "localhost" : $_SERVER['SERVER_NAME'];
+
 	// Process enviromental variables (from env.json)
 	foreach( $ENV as $domain => $properties ){ 
 		// check the domain against each set
-		if( strpos($_SERVER['SERVER_NAME'], $domain) !== false ){ 
+		if( strpos($GLOBALS['SERVER_NAME'], $domain) !== false ){ 
 			// available options: base, plugins, cdn, debug (sdk)
 			foreach( $properties as $key=>$value ){ 
 				if( !empty($value) ) eval("define('".strtoupper($key)."', '$value');");

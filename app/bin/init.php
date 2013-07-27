@@ -45,8 +45,9 @@ if( defined("SHARED") ) putenv('TMPDIR=' . ini_get('upload_tmp_dir'));
 // OTHER CONSTANTS
 //===============================================
 
-// find if this is running from localhost
-define("IS_LOCALHOST", (strpos($_SERVER['SERVER_NAME'], "localhost") !== false) );
+// find if this is running from localhost - $GLOBALS['SERVER_NAME'] is (originally) set in index.php
+if( !array_key_exists("SERVER_NAME", $GLOBALS) ) $GLOBALS['SERVER_NAME'] = $_SERVER['SERVER_NAME'];
+define("IS_LOCALHOST", (strpos($GLOBALS['SERVER_NAME'], "localhost") !== false) );
 // set to true to enable debug mode (where supported)
 if(!defined("DEBUG")) define('DEBUG', false);
 

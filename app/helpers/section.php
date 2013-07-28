@@ -37,6 +37,7 @@ class Section {
 		if(!$class){
 			$class = get_called_class();
 		}
+
 		// 1st fallback - a view named as the section class name
 		if(!$file = getPath('views/sections/'. $view .'.php')) $view  = strtolower( $class );
 		// 2nd fallback - use the default view
@@ -48,6 +49,8 @@ class Section {
 
 		if( class_exists ( $class ) ){
 			$section = new $class($view, $vars, $data);
+			// #113 auto-render if using the base section class
+			if($class == "Section") $section->render();
 		}
 	}
 

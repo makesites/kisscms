@@ -17,6 +17,8 @@ class REST_Service extends Controller {
 	protected function crud( $params ) {
 		// reset data
 		$this->data = array();
+		// normalize parameters
+		$params = $this->_normalize( $params );
 
 		// redirect to the proper method
 		switch($_SERVER['REQUEST_METHOD']){
@@ -144,11 +146,16 @@ class REST_Service extends Controller {
 	// Helpers
 	// find the id from the params array (not setting if not available)
 	protected function findID($params){
+		// alias of normalize...
+		return $this->_normalize($params);
+	}
 
+	protected function _normalize($params){
+		//
 		if( !$params || empty($params) ){
 			// reset params
 			$params = array();
-		} else if( is_string($params) ){
+		} else if( is_scalar($params) ){
 			// we assume the only param is the id
 			$id = $params;
 			// reset params

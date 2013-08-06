@@ -173,28 +173,28 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 			if(!$priorities) $priorities = array();
 			if( defined("APP") ){
 				$search = glob(APP."$folder/$file",GLOB_BRACE);
-				if($search) $priorities =  array_merge( $priorities, (array)$search );
+				if($search) $priorities = array_merge( $priorities, (array)$search );
 				// check the plugins subfolder
 				$search = glob(APP."plugins/*/$folder/$file",GLOB_BRACE);
-				if($search) $priorities =  array_merge( $priorities, (array)$search );
+				if($search) $priorities = array_merge( $priorities, (array)$search );
 			}
 			if( defined("BASE") ){
 				$search = glob(BASE."$folder/$file",GLOB_BRACE);
 				if($search) $priorities = array_merge( $priorities, (array)$search );
 				// check the plugins subfolder
 				$search = glob(BASE."plugins/*/$folder/$file",GLOB_BRACE);
-				if($search) $priorities =  array_merge( $priorities, (array)$search );
+				if($search) $priorities = array_merge( $priorities, (array)$search );
 			}
 			// check in the plugins directory
 			if( defined("PLUGINS")){
 				$search = glob(PLUGINS."*/$folder/$file",GLOB_BRACE);
-				if($search) $priorities =  array_merge( $priorities, (array)$search );
+				if($search) $priorities = array_merge( $priorities, (array)$search );
 
 			}
 			# 110 looking into web root for plugins
 			if( is_dir( SITE_ROOT . "/plugins" ) ){
 				$search = glob(SITE_ROOT . "/plugins/*/$folder/$file",GLOB_BRACE);
-				if($search) $priorities =  array_merge( $priorities, (array)$search );
+				if($search) $priorities = array_merge( $priorities, (array)$search );
 			}
 		}
 	}
@@ -229,14 +229,15 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 		}
 	}
 	// look into the plugins folder
+	$plugins = array();
 	if( defined("PLUGINS") ){
-		$plugins = glob(PLUGINS."*/$folder/*",GLOB_BRACE);
-		if(!$plugins) $plugins = array();
+		$search = glob(PLUGINS."*/$folder/*",GLOB_BRACE);
+		if($search) $plugins = array_merge( $plugins, (array)$search );
 	}
 	# 110 looking into web root for plugins
 	if( is_dir( SITE_ROOT . "/plugins" ) ){
-		$plugins = glob(SITE_ROOT . "/plugins/*/$folder/*",GLOB_BRACE);
-		if(!$plugins) $plugins = array();
+		$search = glob(SITE_ROOT . "/plugins/*/$folder/*",GLOB_BRACE);
+		if($search) $plugins = array_merge( $plugins, (array)$search );
 	}
 
 	// merge all the arrays together

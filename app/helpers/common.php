@@ -427,6 +427,14 @@ function check_dir( $file=false, $create=false, $chmod=0755 ){
 	return true;
 }
 
+// Get a normalized numeric epoch timestamp in microseconds
+function timestamp(){
+	$timestamp = (string) $_SERVER['REQUEST_TIME'];
+	// aws:#5 include microseconds when calculating REQUEST_TIME in PHP < 5.4
+	if( strlen($timestamp) == 10 ) $timestamp .= "000";
+	return $timestamp;
+}
+
 /**
  * Function to calculate date or time difference.
  *
@@ -469,7 +477,6 @@ function get_time_difference( $start, $end )
 	}
 	return( false );
 }
-
 
 /********************************
  * Retro-support of get_called_class()

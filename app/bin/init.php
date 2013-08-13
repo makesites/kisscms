@@ -327,19 +327,49 @@ function requireOnly($folder='', $only=array() ){
 //===============================================
 // Uncaught Exception Handling
 //===============================================s
-set_exception_handler('uncaught_exception_handler');
 
 function uncaught_exception_handler($e) {
-  if( ob_get_length() ) ob_end_clean(); //dump out remaining buffered text
-  $vars['message']=$e;
-  die(View::do_fetch( getPath('views/errors/500.php'),$vars));
+	if( ob_get_length() ) ob_end_clean(); //dump out remaining buffered text
+	$vars['message']=$e;
+	die(View::do_fetch( getPath('views/errors/500.php'),$vars));
 }
 
-function custom_error($msg='') {
-  $vars['msg']=$msg;
-  die(View::do_fetch( getPath('views/errors/400.php'),$vars));
+function custom_error($errno, $message, $file, $line){
+	if (!(error_reporting() & $errno)) {
+		// This error code is not included in error_reporting
+		return;
+	}
+
+	switch ($errno) {
+	case E_USER_ERROR:
+		$type= "ERROR";
+		break;
+	case E_USER_WARNING:
+		$type= "WARNING";
+		break;
+	case E_USER_NOTICE:
+		$type= "NOTICE";
+		break;
+	default:
+		$type= "Unknown error type";
+		break;
+	}
+
+	$vars = array(
+		'type' => $type,
+		'message' => $message,
+		'file' => $file,
+		'line' => $line
+	);
+	die(View::do_fetch( getPath('views/errors/400.php'),$vars));
+
+	/* Don't execute PHP internal error handler */
+	return true;
+
 }
 
+set_error_handler("custom_error");
+set_exception_handler("uncaught_exception_handler");
 
 //===============================================
 // Srart the controller

@@ -190,6 +190,10 @@ class Controller extends KISS_Controller {
 		$template = strtolower( get_class($this) ) .".php";
 		$this->data['template']= ( is_file( TEMPLATES.$template ) ) ? $template : false;
 
+		// #116 add site info in the client object
+		$GLOBALS['client']['site']['name'] = $GLOBALS['config']['main']['site_name'];
+		$GLOBALS['client']['site']['url'] = url();
+
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}
 

@@ -41,7 +41,7 @@ class Session extends REST_Service {
 		// set the auth flag
 		$this->data['auth'] = $auth;
 		// set updated attribute (for the client)
-		$this->data['updated'] = time();
+		$this->data['updated'] = timestamp();
 
 	}
 

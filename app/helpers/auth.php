@@ -37,9 +37,9 @@ class KISS_Auth extends Controller {
 			// if there is a session we are ok
 			$id = $_SESSION['user']['id'];
 			// check last accessed
-			$accessed = ( !empty($_SESSION['user']['updated']) ) ? strtotime("now") - strtotime( $_SESSION['user']['updated'] ) : false;
+			$accessed = ( !empty($_SESSION['user']['updated']) ) ? ( strtotime("now") - (int)$_SESSION['user']['updated'] ) : false;
 			// it's been less than 2 min so just return the session model (to avoid latency from constant db/api requests)
-			//if( $accessed && $accessed < 120 ) return $_SESSION['user'];
+			if( $accessed && $accessed < 120 && !DEBUG ) return $_SESSION['user'];
 
 		} else if( $api && $api->login() ) {
 			// the service has found a valid login
@@ -79,7 +79,7 @@ class KISS_Auth extends Controller {
 			$api->init();
 		}
 		// - record the time
-		$db->set("updated", date('Y-m-d H:i:s') );
+		$db->set("updated", timestamp() );
 
 		// STEP 4: SAVE back to the db
 		// - update the user model

@@ -1,5 +1,7 @@
 <?php
 
+if( !class_exists("KISS_Auth") ){
+
 class KISS_Auth extends Controller {
 
 	// Generic logout method
@@ -96,6 +98,7 @@ class KISS_Auth extends Controller {
 	}
 
 
+}
 }
 
 ?>

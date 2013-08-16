@@ -4,6 +4,8 @@ if( !class_exists("KISS_Auth") ){
 
 class KISS_Auth extends Controller {
 
+	protected $api = array();
+
 	// Generic logout method
 	function logout() {
 

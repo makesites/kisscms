@@ -204,7 +204,7 @@ class Controller extends KISS_Controller {
 		$path = null;
 		if( !empty( $_SERVER["HTTP_REFERER"] ) ){
 			$url = parse_url ( $_SERVER["HTTP_REFERER"] );
-			$path = $url['path'];
+			$path = ( array_key_exists('path', $url) ) ? $url['path'] : "/";
 		}
 		echo ( !empty( $_SESSION["_client"][$path] ) ) ? $_SESSION["_client"][$path] : "";
 	}

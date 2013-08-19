@@ -417,7 +417,9 @@ function check_dir( $file=false, $create=false, $chmod=0755 ){
 		$dirs = explode("/", $info['dirname']);
 		$path = "/";
 		foreach( $dirs as $folder){
-			$path .= array_shift($dirs) ."/";
+			//$path .= array_shift($dirs) ."/";
+			if(empty($folder)) continue;
+			$path .= $folder ."/";
 			// create each dir (if not available)
 			if( !is_dir( $path ) ) @mkdir($path, $chmod, true);
 		}

@@ -197,15 +197,19 @@ class Controller extends KISS_Controller {
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}
 
+	// display the client vars
 	function client_js() {
-		// set the right header
-		header('Content-Type: application/javascript');
-		// display the client vars
+		// container
+		if( !array_key_exists("_client", $_SESSION) || !is_array($_SESSION["_client"]) )
+				$_SESSION["_client"] = array();
+		//
 		$path = null;
 		if( !empty( $_SERVER["HTTP_REFERER"] ) ){
 			$url = parse_url ( $_SERVER["HTTP_REFERER"] );
 			$path = ( array_key_exists('path', $url) ) ? $url['path'] : "/";
 		}
+		// set the right header
+		header('Content-Type: application/javascript');
 		echo ( !empty( $_SESSION["_client"][$path] ) ) ? $_SESSION["_client"][$path] : "";
 	}
 

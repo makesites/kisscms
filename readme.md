@@ -4,7 +4,7 @@
 
 A CMS with minimal footprint written in PHP, following best practices in MVC architecture and with main objective to jump start web development by providing a clean and extensible environment.
 
-Current stable: [v1.9](https://github.com/makesites/kisscms/archive/1.9.0.zip)
+Current stable: [v2.0](https://github.com/makesites/kisscms/archive/2.0.0.zip)
 [![Build Status](https://secure.travis-ci.org/makesites/kisscms.png)](http://travis-ci.org/makesites/kisscms)
 
 Website: http://www.kisscms.com

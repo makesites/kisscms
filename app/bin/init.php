@@ -253,6 +253,37 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 
 	}
 
+	// #118 - remove duplicate classes
+	// this filter is intended for files in models/helpers/lib
+	if( $folder != "bin" ){
+		$names = array();
+		foreach($files as $file){
+			$name = basename($file);
+			if( array_key_exists( $name, $names) ){
+				// remove the duplicate
+				// app comes first, then plugins, then base
+				if( strpos( $file, APP ) === 0 ){
+					// always delete the previous file
+					//unset( array_search( $names[$name], $files ) );
+				} elseif( strpos( $file, PLUGINS ) === 0 ){
+					// delete the previous file only if its a base folder
+					if( strpos( $names[$name], BASE ) === 0 ){
+						$key = array_search( $names[$name], $files );
+						unset( $files[$key] );
+					} else {
+						// delete the new discovery instead
+						$key = array_search( $file, $files );
+						unset( $files[$key] );
+					}
+				} else {
+					// do nothing?
+				}
+			} else {
+				$names[$name] = $file;
+			}
+		}
+	}
+
 	// require the $priority files first
 	foreach($priorities as $key=>$file){
 		if(in_array($file, $files)){

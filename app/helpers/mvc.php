@@ -129,7 +129,7 @@ class Model extends KISS_Model  {
 		foreach($this->rs as $k=>$v){
 			$result = $this->get($k);
 			// don't add data that 's returned as 'false'
-			if( $result ) $array[$k] = $result;
+			if( $result ) $array[$k] = stripslashes( $result );
 		}
 		return $array;
 	}

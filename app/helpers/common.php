@@ -155,15 +155,6 @@ function getPath( $file ) {
 		$search = glob(APP."plugins/*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);
 	}
-	// try the base folder if we didn't find anything
-	if( defined("BASE") ) {
-		// find the core file second
-		if (file_exists(BASE.$file)) return BASE.$file;
-		if (file_exists(BASE."plugins/$file")) return BASE."plugins/$file";
-		// check the plugins folder
-		$search = glob(BASE."plugins/*/$file", GLOB_BRACE);
-		if($search) return array_pop($search);
-	}
 	// check the plugins folder if we still haven't found anything
 	if( defined("PLUGINS") ){
 		// find the plugins file
@@ -178,6 +169,15 @@ function getPath( $file ) {
 		if (file_exists(SITE_ROOT ."/plugins/". $file)) return SITE_ROOT ."/plugins/". $file;
 		// check the plugins folder
 		$search = glob(SITE_ROOT ."/plugins/*/$file", GLOB_BRACE);
+		if($search) return array_pop($search);
+	}
+	// try the base folder if we didn't find anything
+	if( defined("BASE") ) {
+		// find the core file second
+		if (file_exists(BASE.$file)) return BASE.$file;
+		if (file_exists(BASE."plugins/$file")) return BASE."plugins/$file";
+		// check the plugins folder
+		$search = glob(BASE."plugins/*/$file", GLOB_BRACE);
 		if($search) return array_pop($search);
 	}
 	// nothing checks out...

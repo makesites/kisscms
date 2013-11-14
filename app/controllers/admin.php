@@ -131,14 +131,15 @@ class Admin extends Controller {
 
 		// see if we have found a page
 		if( $page->get('id') ){
-			// store the information of the page
+			$data = $page->getAll();
+			// clean up this old logic...
 			$data['id'] = $this->data['id'] = $page->get('id');
-			$data['title'] = stripslashes( $page->get('title') );
-			$data['content'] = stripslashes( $page->get('content') );
+			//$data['title'] = stripslashes( $page->get('title') );
+			//$data['content'] = stripslashes( $page->get('content') );
 			$data['path'] = $this->data['path'] = $page->get('path');
 			$data['tags'] = $page->get('tags');
 			$data['view'] = getPath('views/admin/edit_page.php');
-			$data['status']= $this->data['status']="edit";
+			$data['status'] = $this->data['status'] = "edit";
 			// presentation variables
 			$data['template'] = $page->get('template');
 		} else {

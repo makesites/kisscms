@@ -50,9 +50,9 @@ class Page extends Model {
 
 	static function register($id, $key=false, $value="") {
 
-
 	// stop if variable already available
-	//if(array_key_exists($table, $GLOBALS['pages']) && array_key_exists($key, $GLOBALS['pages'][$table])) return false;
+	if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
+	if(array_key_exists("pages", $GLOBALS['db_schema']) && in_array($key, $GLOBALS['db_schema']['pages'])) return;
 
 	$page = new Page();
 	$dbh= $page->getdbh();
@@ -65,11 +65,30 @@ class Page extends Model {
 
 	// then check if the table exists
 	if(!is_array($table)){
-		//$page->create_table("pages", implode(",", array_keys( $page->rs )) );
+		$keys = implode(", ", array_keys( $page->rs ));
 		// FIX: The id needs to be setup as autoincrement
-		$page->create_table("pages", "id INTEGER PRIMARY KEY ASC, title, content, path, date, tags, template");
+		$keys = str_replace("id,", "id INTEGER PRIMARY KEY ASC,", $keys);
+		$page->create_table("pages", $keys );
+		//$page->create_table("pages", "id INTEGER PRIMARY KEY ASC, title, content, path, date, tags, template");
+	} else {
+		// get the existing schema
+		//$sql = "PRAGMA TABLE_INFO('pages')";
+		$sql = "SELECT * FROM pages LIMIT 1";
+		$results = $dbh->prepare($sql);
+		$results->execute();
+		$pages = $results->fetch(PDO::FETCH_ASSOC);
+		$GLOBALS['db_schema']['pages'] = array_keys( $pages );
 	}
 
+	// add the column if necessary
+	if( !in_array($key, $GLOBALS['db_schema']['pages']) ){
+		$sql = "ALTER TABLE pages ADD COLUMN ". $key;
+		$results = $dbh->prepare($sql);
+		$results->execute();
+		array_push( $GLOBALS['db_schema']['pages'], $key );
+	}
+
+	// this last query is debatable...
 	$sql = "SELECT * FROM 'pages' WHERE id='$id'";
 		$results = $dbh->prepare($sql);
 		$results->execute();

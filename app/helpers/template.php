@@ -332,8 +332,8 @@ class Template extends KISS_View {
 	}
 
 	function trimWhitespace( $string ){
-		// replace multiple spaces with one
-		return preg_replace( '/\s+/', ' ', $string );
+		// replace multiple spaces with one (except textarea)
+		return preg_replace( '/(?:\s+(?![^<]*<\/textarea>))/', ' ', $string );
 	}
 
 }

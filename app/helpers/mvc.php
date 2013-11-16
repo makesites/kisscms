@@ -339,6 +339,7 @@ class Controller extends KISS_Controller {
 		$view = getPath('views/'.$class.'/'. $view .'.php');
 		if( array_key_exists("body" , $this->data ) ){
 			foreach( $this->data["body"] as $k => $v ){
+				if( !is_array($v) ) $v = array();
 				if( !array_key_exists("view", $v) ){
 					$this->data["body"][$k]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
 				}

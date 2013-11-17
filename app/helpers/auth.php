@@ -15,7 +15,7 @@ class KISS_Auth extends Controller {
 			setcookie($name, NULL, -1);
 		}
 
-		// constrol API state(s)
+		// exit from each API (if available)
 		foreach( $this->api as $api){
 			if(method_exists($api,'logout')) $api->logout();
 		}

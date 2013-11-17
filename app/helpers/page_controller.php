@@ -22,7 +22,6 @@ class Page_Controller extends KISS_Auth {
 		$this->render();
 	}
 
-
 	// Main render method
 	function render() {
 

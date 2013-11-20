@@ -1,7 +1,7 @@
 <div id="admin-topbar">
 	<h3><a href="http://kisscms.com/" title="Made with love...">KISSCMS</a></h3>
 	<ul>
-<?php if( (isset( $id ) && !isset( $status )) || (isset( $status ) && $status !== "edit") ){ ?>
+<?php if( (isset( $id ) && !isset( $status )) || (isset( $id ) && isset( $status ) && $status !== "edit") ){ ?>
 		<li><a href="<?=url("admin/edit/$id")?>">Edit page</a></li>
 <?php } elseif( isset( $path ) && isset( $status ) && $status == "new" ) { ?>
 		<li><a href="<?=url("admin/create/".$path)?>">Create page</a></li>

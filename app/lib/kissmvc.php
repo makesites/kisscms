@@ -274,6 +274,8 @@ class KISS_Model  {
 		$s = substr($s,1);
 		$sql = 'UPDATE '.$this->enquote($this->tablename).' SET '.$s.' WHERE '.$this->enquote($this->pkname).'=?';
 		$stmt = $dbh->prepare($sql);
+		// #120 - if preparation failed exist now
+		if( !$stmt ) return;
 		$i=0;
 		foreach ($this->rs as $k => $v)
 			$stmt->bindValue(++$i,is_scalar($v) ? $v : ($this->COMPRESS_ARRAY ? gzdeflate(serialize($v)) : serialize($v)) );

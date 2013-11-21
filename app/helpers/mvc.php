@@ -332,9 +332,14 @@ class Controller extends KISS_Controller {
 	}
 
 	function render( $view=false) {
+		$class = strtolower( get_class($this) );
+		// #122 adding page info
+		if( !array_key_exists("_page", $this->data) ) $this->data["_page"] = array();
+		$this->data["_page"]['controller'] = $class;
+		$this->data["_page"]['view'] = $view or "";
+		// process custom body view (if available)
 		if( $view ){
 			// include a default view for body sections
-			$class = strtolower( get_class($this) );
 			//$this->data["body"][$class]["view"] = ($view) ? getPath('views/'.$class.'/'. $view .'.php') : getPath('views/'.$class.'/body.php');
 			// get the actual path of the view
 			$view = getPath('views/'.$class.'/'. $view .'.php');

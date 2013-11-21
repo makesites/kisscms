@@ -12,7 +12,7 @@
 
 </head>
 
-<body>
+<body class="<?=$_page['view']?>">
 
 <div class="page">
 	<header>

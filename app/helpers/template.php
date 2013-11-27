@@ -214,7 +214,7 @@ class Template extends KISS_View {
 		if( is_file( $file ) ) $json = file_get_contents( $file );
 		$libs = ( !empty( $json ) ) ? json_decode($json, true) : array();
 
-		if( !DEBUG ){
+		if( $this->useRequire() ){
 			// merge the libs with the client globals
 			$GLOBALS['client']['require'] = array_merge($GLOBALS['client']['require'], $libs);
 		} else {
@@ -334,6 +334,10 @@ class Template extends KISS_View {
 	function trimWhitespace( $string ){
 		// replace multiple spaces with one (except textarea)
 		return preg_replace( '/(?:\s+(?![^<]*<\/textarea>))/', ' ', $string );
+	}
+
+	function useRequire(){
+		return defined("REQUIRE") || !DEBUG;
 	}
 
 }

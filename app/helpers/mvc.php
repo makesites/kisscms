@@ -305,6 +305,8 @@ class Controller extends KISS_Controller {
 		$path = ( substr($path, -1) == "/" ) ? substr($path, 0, -1) : $path;
 		// save the path for later use by controllers and helpers
 		$GLOBALS['path'] = $this->data['path'] = $path;
+		// save a reference to the endpoint
+		$this->_endpoint = $function;
 
 		// call the method
 		$this->$function($params);
@@ -338,23 +340,22 @@ class Controller extends KISS_Controller {
 		$this->data["_page"]['controller'] = $class;
 		$this->data["_page"]['view'] = $view or "";
 		// process custom body view (if available)
-		if( $view ){
-			// include a default view for body sections
-			//$this->data["body"][$class]["view"] = ($view) ? getPath('views/'.$class.'/'. $view .'.php') : getPath('views/'.$class.'/body.php');
-			// get the actual path of the view
-			$view = getPath('views/'.$class.'/'. $view .'.php');
-			if( array_key_exists("body" , $this->data ) ){
-				foreach( $this->data["body"] as $k => $v ){
-					if( !is_array($v) ) $v = array();
-					if( !array_key_exists("view", $v) ){
-						$this->data["body"][$k]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
-					}
+		if( !$view ) $view = "body-". $this->_endpoint;
+		// include a default view for body sections
+		//$this->data["body"][$class]["view"] = ($view) ? getPath('views/'.$class.'/'. $view .'.php') : getPath('views/'.$class.'/body.php');
+		// get the actual path of the view
+		$view = getPath('views/'.$class.'/'. $view .'.php');
+		if( array_key_exists("body" , $this->data ) ){
+			foreach( $this->data["body"] as $k => $v ){
+				if( !is_array($v) ) $v = array();
+				if( !array_key_exists("view", $v) ){
+					$this->data["body"][$k]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
 				}
-			} else {
-				// there are no body data - may still be a "static" view
-				$this->data["body"] = array();
-				$this->data["body"][$class]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
 			}
+		} else {
+			// there are no body data - may still be a "static" view
+			$this->data["body"] = array();
+			$this->data["body"][$class]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
 		}
 		// display the page
 		Template::output($this->data);

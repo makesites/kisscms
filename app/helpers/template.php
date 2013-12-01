@@ -169,7 +169,10 @@ class Template extends KISS_View {
 			// strip out the php extension (if supplied)
 			$this->template = str_replace(".php", "", $template);
 		}
-		return TEMPLATES.$this->template.".php";
+		// #124 - fallback to the default template of the base folder
+		$default = realpath(BASE. "../public/templates/default.php");
+
+		return ( is_file(TEMPLATES.$this->template.".php") ) ? TEMPLATES.$this->template.".php" : $default;
 	}
 
 	// find the section a view file belongs to

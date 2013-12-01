@@ -46,7 +46,7 @@ class Page_Controller extends KISS_Auth {
 			$this->category = ( strpos( $data['tags'], "category" ) > -1) ? true : false;
 
 			$data['path']= $this->data['path'];
-			$data['view'] = getPath('views/main/body.php');
+			//$data['view'] = getPath('views/main/body.php');
 			$this->data['body'][] = $data;
 			// FIX #38: copy data of "static" pages in a separate array for easy access
 			$this->data['_page'] = $data;

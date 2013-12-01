@@ -59,7 +59,7 @@ function isStatic( $file ) {
 		if (is_dir(APP."plugins/") && $handle = opendir(APP."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') {
-				  continue;
+					continue;
 				}
 				if ( is_dir(APP."plugins/".$plugin) && file_exists( APP."plugins/".$plugin."/public/".$file ) ) {
 					$target = APP."plugins/".$plugin."/public/".$file;
@@ -74,10 +74,14 @@ function isStatic( $file ) {
 			$target = BASE."public/".$file;
 			return $target;
 		}
+		$target = realpath(BASE."../public/".$file);
+		if ( file_exists( $target ) ){
+			return $target;
+		}
 		if (is_dir(BASE."plugins/") && $handle = opendir(BASE."plugins/")) {
 			while (false !== ($plugin = readdir($handle))) {
 				if ($plugin == '.' || $plugin == '..') {
-				  continue;
+					continue;
 				}
 				if ( is_dir(BASE."plugins/".$plugin) && file_exists( BASE."plugins/".$plugin."/public/".$file ) ) {
 					$target = BASE."plugins/".$plugin."/public/".$file;

@@ -51,10 +51,10 @@ For further information how to manage your website, customize it's features and 
 
 A few of the sites using this open source: 
 
-![K&D Interactive](http://appicon.makesit.es/kdi.co)
-![Makesites Insider](http://appicon.makesit.es/makesites.co)
-![GoCollab](http://appicon.makesit.es/gocollab.com)
-![Evermood](http://appicon.makesit.es/evermood.kdi.co)
+[![K&D Interactive](http://appicon.makesit.es/kdi.co)](http://kdi.co)
+[![Makesites Insider](http://appicon.makesit.es/makesites.co)](http://makesites.co)
+[![GoCollab](http://appicon.makesit.es/gocollab.com)](http://gocollab.com)
+[![Evermood](http://appicon.makesit.es/evermood.kdi.co)](http://evermood.kdi.co)
 
 
 ## Credits

@@ -47,6 +47,15 @@ If you haven't modified anything in the APP folder, upgrading should be as simpl
 For further information how to manage your website, customize it's features and access the methods available to you please refer to the official documentation: 
 <http://kisscms.com/reference>
 
+## Showcase
+
+A few of the sites using this open source: 
+
+![K&D Interactive](http://appicon.makesit.es/kdi.co)
+![Makesites Insider](http://appicon.makesit.es/makesites.co)
+![GoCollab](http://appicon.makesit.es/gocollab.com)
+![Evermood](http://appicon.makesit.es/evermood.kdi.co)
+
 
 ## Credits
 

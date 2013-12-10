@@ -1,4 +1,4 @@
-﻿# KISSCMS
+# KISSCMS
 
 ### _Content Management made Simple_
 
@@ -12,10 +12,10 @@ Website: http://www.kisscms.com
 
 ## Features:
 
-* Minimal setup                                                                                                                                       
+* Minimal setup
 * Uncluttered administration area
 * Wiki-style page creation
-* Slim template engine with simplified methods 
+* Slim template engine with simplified methods
 * Copy paste for plugin installation
 * Automated minification of css/js
 * LESS support
@@ -23,9 +23,9 @@ Website: http://www.kisscms.com
 
 ## Setup
 
-KISSCMS can be installed by using Composer (getcomposer.org) or just by downloading the files straight from the Github repository. 
+KISSCMS can be installed by using Composer (getcomposer.org) or just by downloading the files straight from the Github repository.
 
-1. Extract the archive and place the contents of the folder where you want your website to be located. 
+1. Extract the archive and place the contents of the folder where you want your website to be located.
 2. Place the files in the ```./public``` folder should in your web root. All other folders one directory level above it.
 3. Open a browser and enter the address of your website. Sample content should already work with no further effort.
 4. Go to ```./admin``` in your browser to enter the administration area. The default (username/password) are: ** admin / admin **
@@ -38,18 +38,19 @@ The default setup is optimized for a new website with its own domain. If you wan
 
 ## Upgrading
 
-If you haven't modified anything in the APP folder, upgrading should be as simple as replacing the APP folder with the latest version. For added security you can rename the old app folder and refer to is as a BASE folder so it will operate as a fallback. If you need further assisctance please send a support ticket through the issue tracker on github: 
+If you haven't modified anything in the APP folder, upgrading should be as simple as replacing the APP folder with the latest version. For added security you can rename the old app folder and refer to is as a BASE folder so it will operate as a fallback. If you need further assisctance please send a support ticket through the issue tracker on github:
 <http://github.com/makesites/kisscms/issues>
 
 
 ## Reference
 
-For further information how to manage your website, customize it's features and access the methods available to you please refer to the official documentation: 
+For further information how to manage your website, customize it's features and access the methods available to you please refer to the official documentation:
 <http://kisscms.com/reference>
+
 
 ## Showcase
 
-A few of the sites using this open source: 
+A few of the sites using this open source:
 
 [![K&D Interactive](http://appicon.makesit.es/kdi.co)](http://kdi.co)
 [![Makesites Insider](http://appicon.makesit.es/makesites.co)](http://makesites.co)

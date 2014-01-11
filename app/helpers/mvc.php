@@ -23,9 +23,10 @@ class Model extends KISS_Model  {
 		// generate the name prefix
 		$db_name = "db_" . substr( $this->db, 0, stripos($this->db, ".") );
 		if (!isset($GLOBALS[ $db_name ])) {
+
 			try {
-			  $GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $this->db);
-			  //$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
+				$GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $this->db);
+				//$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
 			} catch (PDOException $e) {
 				// Continue logic on a specific error code (14: unable to open database file)
 				$error = (string)$e->getCode();

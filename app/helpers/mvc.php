@@ -50,11 +50,32 @@ class Model extends KISS_Model  {
 		//return call_user_func($this->dbhfnname, $this->db);
 	}
 
-	//Example of adding your own method to the core class
-	function gethtmlsafe($key) {
-		return htmlspecialchars($this->get($key));
+
+//===============================================
+// CRUD methods
+//===============================================
+
+
+//===============================================
+// Query methods
+//===============================================
+
+	// run a lookup query based on a field
+	function find($key= false, $value=false){
+		// TBA
+		die("find - Not implemented yet.");
 	}
 
+	// run a lookup query based on a field, returns first item
+	function findOne($key= false, $value=false){
+		// TBA
+		die("findOne - Not implemented yet.");
+	}
+
+
+//===============================================
+// Tadle methods
+//===============================================
 
 	function create_table($name, $fields, $db=false){
 		$dbh = $this->getdbh();
@@ -164,6 +185,15 @@ class Model extends KISS_Model  {
 		} else {
 			return false;
 		}
+	}
+
+//===============================================
+// Helper methods
+//===============================================
+
+	//Example of adding your own method to the core class
+	function gethtmlsafe($key) {
+		return htmlspecialchars($this->get($key));
 	}
 
 	// #115 generate a random UUID v4

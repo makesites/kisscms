@@ -96,6 +96,25 @@ class Model extends KISS_Model  {
 		return $this;
 	}
 
+	// merge the existing data of a key
+	function extend($key=false, $data=array()){
+		// prerequisite
+		if(!$key) return false;
+		// first get existing data
+		$value = $this->get( $key );
+		// get returns false only when it doesn't find a value?
+		//if( $value === false ) return;
+		// different condition for scalar?
+		if( !$value || is_scalar($value) ) {
+			$value = $data;
+		} else {
+			// array?
+			$value = array_merge( (array)$value, (array)$data );
+		}
+		// either way save back...
+		$this->set( $key, $value);
+	}
+
 	function retrieve_many($wherewhat='',$bindings='') {
 		$dbh=$this->getdbh();
 		if (is_scalar($bindings))

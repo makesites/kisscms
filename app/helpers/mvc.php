@@ -161,7 +161,7 @@ class Model extends KISS_Model  {
 		if (isset($this->rs[$key]))
 			return $this->rs[$key];
 		else
-			return false;
+			return null;
 	}
 
 	function getAll(){

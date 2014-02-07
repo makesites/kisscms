@@ -49,15 +49,21 @@ class KISS_Auth extends Controller {
 			// the service has found a valid login
 			// lookup info from the remote service
 			$me = $api->me();
-			try {
-				$result = $db->findOne("accounts", array($api->name, $me['id']) );
-				if( !empty( $result ) ) {
-					$id = $db->get("id");
-					$synced = true; // this should become a flag of the base Model class
-				}
-			} catch( Exception $e ){
-				// legacy api (remove soon)
+			$accounts = $db->get("accounts");
+			if( is_null( $accounts ) ){
+				// assume that api->id == id
 				$id = $me['id'];
+			} else {
+				try {
+					$result = $db->findOne("accounts", array($api->name, $me['id']) );
+					if( !empty( $result ) ) {
+						$id = $db->get("id");
+						$synced = true; // this should become a flag of the base Model class
+					}
+				} catch( Exception $e ){
+					// legacy api (remove soon)
+					$id = $me['id'];
+				}
 			}
 
 		} else if( !empty( $_COOKIE['user'] ) ) {

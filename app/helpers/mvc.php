@@ -126,7 +126,7 @@ class Model extends KISS_Model  {
 		// get returns false only when it doesn't find a value?
 		//if( $value === false ) return;
 		// different condition for scalar?
-		if( !$value || is_scalar($value) ) {
+		if( is_null($value) || is_scalar($value) ) {
 			$value = $data;
 		} else {
 			// array?
@@ -170,7 +170,7 @@ class Model extends KISS_Model  {
 		foreach($this->rs as $k=>$v){
 			$result = $this->get($k);
 			// don't add data that 's returned as 'false'
-			if( $result ) $array[$k] = ( is_string($result) ) ? stripslashes( $result ) : $result;
+			if( !is_null($result) ) $array[$k] = ( is_string($result) ) ? stripslashes( $result ) : $result;
 		}
 		return $array;
 	}

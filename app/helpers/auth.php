@@ -106,10 +106,10 @@ class KISS_Auth extends Controller {
 		}
 
 		// - record the time
-		$db->set("updated", timestamp() );
+		//$db->set("updated", timestamp() );
 		$db->extend("accounts", array( "facebook" => $this->getAPIdetails( $api->me() ) ) );
 		// STEP 4: SAVE back to the db
-		// - update the user model
+		// - update the user model (condition update only if oauth data has changed...)
 		$method = ( !isset($id) ) ? "create" : "update";
 		$db->{$method}();
 

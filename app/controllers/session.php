@@ -29,13 +29,15 @@ class Session extends REST_Service {
 		// the core of the data is the user object
 		$auth = ( !empty($_SESSION['user'] ) );
 		// filter session (fixed fields for now...)
-		if( $auth ) $this->data['user'] = $this->filter( $_SESSION['user'] );
-		// loop through the token data
-		if( !empty($_SESSION['oauth']) ){
-			$this->data['oauth'] = array();
-			foreach( $_SESSION['oauth'] as $service => $creds){
-				// save in an array if more than one...
-				$this->data["oauth"][$service] = $this->filter( $creds );
+		if( $auth ){
+			$this->data['user'] = $this->filter( $_SESSION['user'] );
+			// loop through the token data
+			if( !empty($_SESSION['oauth']) ){
+				$this->data['oauth'] = array();
+				foreach( $_SESSION['oauth'] as $service => $creds){
+					// save in an array if more than one...
+					$this->data["oauth"][$service] = $this->filter( $creds );
+				}
 			}
 		}
 		// set the auth flag
@@ -67,6 +69,7 @@ class Session extends REST_Service {
 	protected function delete( $params=array() ) {
 		// reset user session
 		unset( $_SESSION['user'] );
+		unset( $_SESSION['oauth'] );
 		// render
 		$this->read();
 	}

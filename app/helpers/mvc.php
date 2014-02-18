@@ -229,7 +229,7 @@ class Controller extends KISS_Controller {
 
 	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
 		// generic redirection for secure connections (assuming that ssl is on port 443)
-		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '.url( request_uri() ) );
+		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '. url( request_uri() ) );
 
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
@@ -242,7 +242,9 @@ class Controller extends KISS_Controller {
 
 		// #116 add site info in the client object
 		$GLOBALS['client']['site']['name'] = $GLOBALS['config']['main']['site_name'];
-		$GLOBALS['client']['site']['url'] = url();
+		$url = url();
+		// FIX: removing ending slash
+		$GLOBALS['client']['site']['url'] = ( substr( $url, -1) == "/" ) ? substr( $url, 0, -1) : $url;
 
 		parent::__construct($controller_path,$web_folder,$default_controller,$default_function);
 	}

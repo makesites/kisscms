@@ -45,7 +45,7 @@ class KISS_Auth extends Controller {
 			// it's been less than 2 min so just return the session model (to avoid latency from constant db/api requests)
 			if( $accessed && $accessed < 120 && !DEBUG ) return $_SESSION['user'];
 
-		} else if( $api && $api->login() ) {
+		} else if( $db && $api && $api->login() ) {
 			// the service has found a valid login
 			// lookup info from the remote service
 			$me = $api->me();
@@ -75,6 +75,8 @@ class KISS_Auth extends Controller {
 		// if no id -> assume the user is not logged in
 		// if $me['id'] exists it means an api connection has been made..
 		if( !isset( $id ) && empty($me['id']) ) return false;
+		// exit now if there is no db
+		if( !db ) return $id;
 
 		// STEP 2: Read the user model
 		// - check if there's a user in the DB
@@ -107,7 +109,7 @@ class KISS_Auth extends Controller {
 
 		// - record the time
 		//$db->set("updated", timestamp() );
-		$db->extend("accounts", array( "facebook" => $this->getAPIdetails( $api->me() ) ) );
+		if( $api ) $db->extend("accounts", array( $api->name => $this->getAPIdetails( $api->me() ) ) );
 		// STEP 4: SAVE back to the db
 		// - update the user model (condition update only if oauth data has changed...)
 		$method = ( !isset($id) ) ? "create" : "update";

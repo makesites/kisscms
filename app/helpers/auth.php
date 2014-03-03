@@ -59,6 +59,9 @@ class KISS_Auth extends Controller {
 					if( !empty( $result ) ) {
 						$id = $db->get("id");
 						$synced = true; // this should become a flag of the base Model class
+					} else {
+						// legacy api (remove soon)
+						$id = $me['id'];
 					}
 				} catch( Exception $e ){
 					// legacy api (remove soon)
@@ -71,12 +74,13 @@ class KISS_Auth extends Controller {
 			// lookup the client cookie (as a last resort)
 			$id = $_COOKIE['user'];
 		}
+
 		// Final exit for non members...
 		// if no id -> assume the user is not logged in
 		// if $me['id'] exists it means an api connection has been made..
 		if( !isset( $id ) && empty($me['id']) ) return false;
 		// exit now if there is no db
-		if( !db ) return $id;
+		//if( !db ) return $id;
 
 		// STEP 2: Read the user model
 		// - check if there's a user in the DB

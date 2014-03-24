@@ -263,6 +263,123 @@ class Minify extends UglifyJS {
 
 	}
 
+	function requireDebug( $dom=false, $file=false ){
+
+		$client = "";
+		$group = array();
+		$remove = array();
+		//
+		$group_names = array();
+		// make this a config option?
+		$baseUrl =  "assets/js/";
+
+		// FIX: create the dir if not available
+		//if( !is_dir( APP. "public/". $baseUrl ) ) mkdir(APP. "public/". $baseUrl, 0775, true);
+		//if( !is_dir( APP. "public/js/" ) ) mkdir(APP. "public/js/", 0775, true);
+
+
+		// filter the scripts
+		$scripts = $dom->getElementsByTagName('script');
+
+		// check the script attributes
+		foreach ($scripts as $script){
+			// check out for the supported script attributes
+			$data = array();
+			$id = $script->getAttribute('id');
+			$data['path'] = $script->getAttribute('data-path');
+			$data['deps'] = $script->getAttribute('data-deps');
+			$data['group'] = $script->getAttribute('data-group');
+			$data['order'] = (int) $script->getAttribute('data-order');
+			$data['encode'] = $script->getAttribute('data-encode');
+			$type = $script->getAttribute('data-type');
+			// remove domain name from src (if entered)
+			$src = str_replace( array( url(), cdn() ),"/", $script->getAttribute('src') );
+
+			// register types
+			$data['minify'] = false;
+			$data['require'] = strpos($type, "require") > -1 || !empty($data['path']);
+
+			// leave standard types alone
+			if( !$data['require'] ) continue;
+
+			// flags
+			// - Leave inline scripts in place
+			$inline = empty($src);
+
+			// remove if not the intended container
+			if( !$inline && $data['require'] ) $remove[] = $script;
+
+			if( $inline ) {
+				// #94 check dependencies
+				if( !empty( $data['deps'] ) ){
+					$deps = explode(",", $data['deps']);
+					$client .= "require(". json_encode( $deps ) .", function(){ ". $script->textContent ." });";
+				}
+				// no further processing required
+				continue;
+			}
+
+			if( !empty($data['path']) ){
+				$name = $data['path'];
+			} else {
+				//get the name from the script src
+				$name = str_replace( array(WEB_FOLDER.$baseUrl, url(), cdn() ),"", $src);
+				// remove the .js extension if not a full path and no alias set (require.js conditions :P)
+				if( substr($name, 0,1) !=  "/"  && empty($data['path']) ) $name = substr($name , 0, -3);
+			}
+			// there is no grouping if there's no minification :P
+			$group[$name][] = array( "src" => $src, "data" => $data );
+			/*
+			if( $data['minify'] && !empty($data['group']) ) {
+				$group[$data['group']][] = array( "src" => $src, "data" => $data );
+			} else if( $data['minify'] ) {
+			//} else if( $data['minify'] && !$data['require'] ) {
+				// group all files to be minified in one file (under the template name)
+				$group[$file][] = array( "src" => $src, "data" => $data );
+			} else {
+				$group[$name][] = array( "src" => $src, "data" => $data );
+			}
+			*/
+
+			// save group name
+			if( !empty( $data['group'] ) ) {
+				$group_names[$data['group']][] = $name;
+			}
+		}
+		// replace all deps that contain group names
+		foreach($group as $i => $g){
+			// inside group
+			foreach($g as $j => $s){
+			// inside script
+			if( empty( $s['data']['deps'] ) ) continue;
+			$deps = explode(",", $s['data']['deps']);
+			foreach( $group_names as $n => $libs ){
+				if( in_array( $n, $deps ) ){
+					$key = array_search($n, $deps);
+					$deps[ $key ] = implode(",", $libs);
+				}
+			}
+			$group[$i][$j]['data']['deps'] = implode(",", $deps);
+			}
+		}
+
+		// process requireJS
+		$dom = $this->requireJS( $group, $dom );
+
+		// remove all modified scripts
+		foreach($remove as $script){
+			$script->parentNode->removeChild($script);
+		}
+
+		$GLOBALS['client']["_src"] = $client;
+
+		return $dom;
+
+	}
+
+
+	//
+
 	function write() {
 
 		foreach($this->_srcs as $name=>$cache_file){

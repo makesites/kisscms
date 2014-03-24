@@ -113,6 +113,9 @@ class Template extends KISS_View {
 			$dom = $min->less($dom, $this->template);
 			$dom = $min->css($dom, $this->template);
 			$dom = $min->js($dom, $this->template);
+		} else if( $this->useRequire() ) {
+			// require is "on" in debug mode
+			$dom = $min->requireDebug($dom, $this->template);
 		}
 		// process require configuration
 		$this->createClient($dom);

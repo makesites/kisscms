@@ -77,14 +77,14 @@ class Page extends Model {
 		$results = $dbh->prepare($sql);
 		$results->execute();
 		$pages = $results->fetch(PDO::FETCH_ASSOC);
-		$GLOBALS['db_schema']['pages'] = array_keys( $pages );
+		$GLOBALS['db_schema']['pages'] = ( is_array($pages) ) ?  array_keys( $pages ) : array();
 	}
 
 	// add the column if necessary
 	if( !in_array($key, $GLOBALS['db_schema']['pages']) ){
 		$sql = "ALTER TABLE pages ADD COLUMN ". $key;
 		$results = $dbh->prepare($sql);
-		$results->execute();
+		if( $results ) $results->execute(); // there's a case where the column may already exist, in which case this will be false...
 		array_push( $GLOBALS['db_schema']['pages'], $key );
 	}
 

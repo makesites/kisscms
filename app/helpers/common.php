@@ -199,7 +199,7 @@ function url($file='', $cdn=false){
 
 	} else {
 		// check if this is a secure connection
-		$domain = ( $_SERVER['SERVER_PORT'] == "443" || (defined('SSL') && SSL) ) ? 'https://' : 'http://';
+		$domain = ( isSSL() ) ? 'https://' : 'http://';
 		// load the regular server address
 		$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
 		// add server port to the domain if not the default one
@@ -240,6 +240,18 @@ function cdn($file=''){
 		// fallback to the domain name
 		return url($file);
 	}
+}
+
+// checks various server config to see if
+function isSSL(){
+	// this is an enviromenal variable set manually
+	if(defined('SSL') && SSL) return true;
+	if( array_key_exists('HTTPS', $_SERVER) &&  $_SERVER['HTTPS'] == true ) return true;
+	if( array_key_exists('SERVER_PORT', $_SERVER) &&  $_SERVER['SERVER_PORT'] == "443" ) return true;
+	if( array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER) &&  substr( $_SERVER['HTTP_X_FORWARDED_PROTO'], 0, 5 ) == "https" ) return true;
+	if( array_key_exists('HTTP_X_FORWARDED_PORT', $_SERVER) &&  substr( $_SERVER['HTTP_X_FORWARDED_PORT'], 0, 3 ) == "443" ) return true;
+	// in all other cases return false
+	return false;
 }
 
 // return an html attribute for a value

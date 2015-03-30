@@ -201,7 +201,8 @@ function url($file='', $cdn=false){
 		// check if this is a secure connection
 		$domain = ( isSSL() ) ? 'https://' : 'http://';
 		// load the regular server address
-		$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
+		//$domain .= ( substr($_SERVER['SERVER_NAME'], -1) == "/" ) ? substr($_SERVER['SERVER_NAME'], 0, -1) : $_SERVER['SERVER_NAME'];
+		$domain .= ( substr($_SERVER['HTTP_HOST'], -1) == "/" ) ? substr($_SERVER['HTTP_HOST'], 0, -1) : $_SERVER['HTTP_HOST'];
 		// add server port to the domain if not the default one
 		/*if( $_SERVER['SERVER_PORT'] != "80" && $_SERVER['SERVER_PORT'] != "443" ){
 			$domain .= ":".$_SERVER['SERVER_PORT'];

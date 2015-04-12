@@ -227,7 +227,7 @@ class Controller extends KISS_Controller {
 
 	public $data;
 
-	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
+	function __construct( $controller_path='controllers/', $web_folder=WEB_FOLDER, $default_controller=DEFAULT_ROUTE, $default_function=DEFAULT_ACTION )  {
 		// generic redirection for secure connections (assuming that ssl is on port 443)
 		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '. url( request_uri() ) );
 

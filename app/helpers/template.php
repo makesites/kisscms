@@ -48,7 +48,9 @@ class Template extends KISS_View {
 	}
 
 	public static function head( $vars=false ){
+
 		$data = $GLOBALS['head'];
+
 		foreach($data as $name=>$html){
 			echo "$html\n";
 		}
@@ -91,8 +93,8 @@ class Template extends KISS_View {
 		$files = findFiles( $name.'.php' );
 
 		foreach($files as $view){
-			 $section = $this->getSection( $view );
-			 $data[$section] = View::do_fetch( $view, $this->vars);
+			$section = $this->getSection( $view );
+			$data[$section] = View::do_fetch( $view, $this->vars);
 		}
 		return $data;
 	}

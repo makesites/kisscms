@@ -367,12 +367,12 @@ class Controller extends KISS_Controller {
 
 	//Example of overriding a core class method with your own
 	function request_not_found() {
-		die(View::do_fetch(  getPath('views/errors/404.php') ));
+		die(View::do_fetch( getPath('views/errors/404.php') ));
 	}
 
 	function require_login() {
-	  if (!isset($_SESSION['admin']) && $_SERVER['REQUEST_URI'] != WEB_FOLDER.'admin/login')
-		$this->redirect('admin/login');
+		if (!isset($_SESSION['admin']) && $_SERVER['REQUEST_URI'] != WEB_FOLDER.'admin/login')
+			$this->redirect('admin/login');
 	}
 
 	function redirect($path, $window=false) {
@@ -474,9 +474,9 @@ class Controller extends KISS_Controller {
 		$GLOBALS['events'][$event][] = $class;
 	}
 
-	public static function trigger( $event=false, &$data=false ){
+	public static function trigger( $event=false, &$data=array() ){
 		// prerequisites
-		if( !$event || !$data ) return;
+		if( !$event ) return;
 		if( !array_key_exists('events', $GLOBALS) ) return;
 		if( !array_key_exists($event, $GLOBALS['events']) ) return;
 		//

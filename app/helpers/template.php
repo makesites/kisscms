@@ -14,11 +14,11 @@ class Template extends KISS_View {
 		$this->vars = array(
 			"body" => ""
 		);
+		$this->client = array();
 		$this->vars = array_merge($this->vars, $vars);
 
 		$this->hash = $this->getHash("", $vars);
 		$file = $this->getTemplate();
-		$this->client = array();
 
 		parent::__construct($file, $this->vars);
 	}
@@ -38,7 +38,8 @@ class Template extends KISS_View {
 		$GLOBALS['foot'] = $template->get("foot");
 
 		// compile the page with the existing data
-		$output = parent::do_fetch($template->file, $template->vars);
+		$output = $template->do_fetch($template->file, $template->vars);
+
 		// post-process (in debug with limited features)
 		$output = $template->process($output);
 		// output the final markup - clear whitespace (if not in debug mode)
@@ -76,6 +77,14 @@ class Template extends KISS_View {
 			echo "$html\n";
 		}
 	}
+
+	static function do_fetch($file='',$vars='') {
+		$view = parent::do_fetch($file,$vars);
+		// post-event
+		Event::trigger('template:parse', $view, $vars );
+		return $view;
+	}
+
 	/*
 	function display($data='', $names=''){
 		if (is_array($data))

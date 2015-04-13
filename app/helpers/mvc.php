@@ -489,7 +489,7 @@ class Controller extends KISS_Controller {
 		$classes = $GLOBALS['events'][$event];
 
 		// convention: remove prefix- from event to reveal action
-		$action = ( strpos($event, '-') ) ? substr( $event, strpos($event, '-')+1 ): $event;
+		$action = ( strpos($event, ':') ) ? substr( $event, strpos($event, ':')+1 ): $event;
 
 		foreach( $classes as $class ){
 			$class::$action( $data );

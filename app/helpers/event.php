@@ -18,14 +18,21 @@ class Event {
 		if( !$event ) return;
 		if( !array_key_exists('events', $GLOBALS) ) return;
 		if( !array_key_exists($event, $GLOBALS['events']) ) return;
-		//
+		// variables
+		$numargs = func_num_args();
 		$classes = $GLOBALS['events'][$event];
+		//$arg_list = func_get_args();
 
 		// convention: remove prefix- from event to reveal action
 		$action = ( strpos($event, ':') ) ? substr( $event, strpos($event, ':')+1 ): $event;
 
 		foreach( $classes as $class ){
-			$class::$action( $data );
+			// supporting second argument
+			if ($numargs == 3) {
+				$class::$action( $data, func_get_arg(2) );
+			}else {
+				$class::$action( $data );
+			}
 		}
 
 	}

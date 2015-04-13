@@ -13,7 +13,7 @@ class Event {
 		$GLOBALS['events'][$event][] = $class;
 	}
 
-	public static function trigger( $event=false, &$data=array() ){
+	public static function trigger( $event=false, &$vars=array() ){
 		// prerequisites
 		if( !$event ) return;
 		if( !array_key_exists('events', $GLOBALS) ) return;
@@ -29,9 +29,9 @@ class Event {
 		foreach( $classes as $class ){
 			// supporting second argument
 			if ($numargs == 3) {
-				$class::$action( $data, func_get_arg(2) );
-			}else {
-				$class::$action( $data );
+				$class::$action( $vars, func_get_arg(2) );
+			} else {
+				$class::$action( $vars );
 			}
 		}
 

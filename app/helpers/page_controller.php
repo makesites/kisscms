@@ -37,11 +37,14 @@ class Page_Controller extends KISS_Auth {
 		// see if we have found a page
 		if( $page->get('id') ){
 			// store the information of the page
+			/*
 			$data['id'] = $this->data['id'] = $page->get('id');
 			$data['title'] = stripslashes( $page->get('title') );
 			$data['content'] = stripslashes( $page->get('content') );
 			$data['tags'] = stripslashes( $page->get('tags') );
 			$data['date'] = strtotime( stripslashes( $page->get('date') ) );
+			*/
+			$data = $page->getAll();
 			// check if the page has been classified as a category
 			$this->category = ( strpos( $data['tags'], "category" ) > -1) ? true : false;
 

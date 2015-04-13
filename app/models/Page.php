@@ -26,8 +26,8 @@ class Page extends Model {
 
 	}
 
-	function retrieve() {
-		parent::create();
+	function retrieve( $id ) {
+		parent::retrieve( $id );
 		// post event
 		Event::trigger('page:read', $this->rs );
 	}

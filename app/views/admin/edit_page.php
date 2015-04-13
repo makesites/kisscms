@@ -27,7 +27,7 @@ $action = ( $status == "create" ) ? url("admin/update", true) : url("admin/updat
 	<p><?=url("$path")?></p>
 	<input type="hidden" name="path" value="<?=$path?>" />
 
-	<? Controller::trigger('admin-fields', $vars); ?>
+	<? Controller::trigger('admin:fields', $vars); ?>
 
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>

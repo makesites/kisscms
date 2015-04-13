@@ -3,27 +3,33 @@ class Page extends Model {
 
 	function __construct($id=false, $table='pages') {
 		// configuration
-	$this->pkname = 'id';
-	$this->tablename = $table;
-	// the model
-	$this->schema();
-	/*
-	$this->rs['id'] = '';
-	$this->rs['title'] = '';
-	$this->rs['content'] = '';
-	$this->rs['path'] = '';
-	$this->rs['date']= '';
-	$this->rs['tags']= '';
-	$this->rs['template']= '';
-	*/
-	// initiate parent constructor
-	parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
+		$this->pkname = 'id';
+		$this->tablename = $table;
+		// the model
+		$this->schema();
+		/*
+		$this->rs['id'] = '';
+		$this->rs['title'] = '';
+		$this->rs['content'] = '';
+		$this->rs['path'] = '';
+		$this->rs['date']= '';
+		$this->rs['tags']= '';
+		$this->rs['template']= '';
+		*/
+		// initiate parent constructor
+		parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
 		// retrieve the specific page (if available)
 		if ($id){
 			$this->retrieve($id);
-		$this->id = $id;
+			$this->id = $id;
+		}
+
 	}
 
+	function retrieve() {
+		parent::create();
+		// post event
+		Event::trigger('page:read', $this->rs );
 	}
 
 	function create() {

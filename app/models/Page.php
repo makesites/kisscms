@@ -94,7 +94,7 @@ class Page extends Model {
 	}
 
 	// add the column if necessary
-	if( !in_array($key, $GLOBALS['db_schema']['pages']) ){
+	if( array_key_exists("pages", $GLOBALS['db_schema']) && is_array($GLOBALS['db_schema']['pages']) && !in_array($key, $GLOBALS['db_schema']['pages']) ){
 		$sql = "ALTER TABLE pages ADD COLUMN ". $key;
 		$results = $dbh->prepare($sql);
 		if( $results ) $results->execute(); // there's a case where the column may already exist, in which case this will be false...

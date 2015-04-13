@@ -50,6 +50,12 @@ class Model extends KISS_Model  {
 		//return call_user_func($this->dbhfnname, $this->db);
 	}
 
+	function set($key, $val) {
+		// checking if key exists instead of value...
+		if ( array_key_exists($key, $this->rs) )
+			$this->rs[$key] = $val;
+		return $this;
+	}
 
 //===============================================
 // CRUD methods

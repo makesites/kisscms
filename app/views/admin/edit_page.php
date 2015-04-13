@@ -16,6 +16,8 @@ $action = ( $status == "create" ) ? url("admin/update", true) : url("admin/updat
 	<label for="content">Content</label>
 	<textarea id="content" name="content"><?=$content?></textarea>
 
+	<? Controller::trigger('admin:fields', $vars); ?>
+
 	<label for="tags">Tags</label>
 	<p>(Separate tags with commas)</p>
 	<input type="text" name="tags" id="tags" value="<?=$tags?>" />
@@ -26,8 +28,6 @@ $action = ( $status == "create" ) ? url("admin/update", true) : url("admin/updat
 	<label for="content">Page URL</label>
 	<p><?=url("$path")?></p>
 	<input type="hidden" name="path" value="<?=$path?>" />
-
-	<? Controller::trigger('admin:fields', $vars); ?>
 
 	<input type="submit" value="<?=$GLOBALS['language'][$status.'_button']?>" id="edit-button" class="button" />
 </form>

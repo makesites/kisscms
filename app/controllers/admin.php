@@ -152,7 +152,7 @@ class Admin extends Controller {
 		$this->data['template']= ADMIN_TEMPLATE;
 
 		// trigger event
-		Controller::trigger('admin-edit', $this->data );
+		Controller::trigger('admin:edit', $this->data );
 
 		// display the page
 		Template::output($this->data);
@@ -186,7 +186,7 @@ class Admin extends Controller {
 		$page=new Page($data['id']);
 
 		// trigger event
-		Controller::trigger('admin-save', $data );
+		Controller::trigger('admin:save', $data );
 
 		foreach( $data as $k => $v ){
 			$page->set($k, $v);

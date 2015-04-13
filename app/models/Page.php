@@ -43,6 +43,7 @@ class Page extends Model {
 	}
 
 	function schema(){
+		$this->rs = array();
 		if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
 		if( !isset( $GLOBALS['db_schema']['pages'] ) ) $GLOBALS['db_schema']['pages'] = array();
 
@@ -54,7 +55,7 @@ class Page extends Model {
 
 	function get_page_from_path( $uri ) {
 		$dbh= $this->getdbh();
-	$sql = 'SELECT * FROM "pages" WHERE "path"="'. $uri . '" LIMIT 1';
+		$sql = 'SELECT * FROM "pages" WHERE "path"="'. $uri . '" LIMIT 1';
 		$results = $dbh->prepare($sql);
 		//$results->bindValue(1,$username);
 		$results->execute();
@@ -63,6 +64,8 @@ class Page extends Model {
 			return false;
 		foreach ($page as $k => $v)
 			$this->set($k,$v);
+		// post event
+		Event::trigger('page:read', $this->rs );
 		return true;
 	}
 

@@ -151,6 +151,9 @@ class Admin extends Controller {
 		$this->data['body'][] = $data;
 		$this->data['template']= ADMIN_TEMPLATE;
 
+		// trigger event
+		Controller::trigger('admin-edit', $this->data );
+
 		// display the page
 		Template::output($this->data);
 	}
@@ -178,22 +181,23 @@ class Admin extends Controller {
 		$data = array_fill_keys($fields, "");
 		$data = array_merge($data, $params);
 
+		// filter data...
+
+		$page=new Page($data['id']);
+
+		// trigger event
+		Controller::trigger('admin-save', $data );
+
+		foreach( $data as $k => $v ){
+			$page->set($k, $v);
+		}
+
 		if( array_key_exists("id", $params) ){
 			// Update existing page
-			$page=new Page($data['id']);
-			$page->set('title', 	$data['title']);
-			$page->set('content', 	$data['content']);
-			$page->set('tags', 		$data['tags']);
-			$page->set('template', 	$data['template']);
 			$page->update();
 		} else {
 			// Create new page
-			$page=new Page();
-			$page->set('title', 	$data['title']);
-			$page->set('content', 	$data['content']);
-			$page->set('tags', 		$data['tags']);
-			$page->set('template', 	$data['template']);
-			$page->set('path', 		$data['path']);
+			//$page->set('path', 		$data['path']);
 			$page->create();
 		}
 

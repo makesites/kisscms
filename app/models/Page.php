@@ -6,13 +6,16 @@ class Page extends Model {
 	$this->pkname = 'id';
 	$this->tablename = $table;
 	// the model
+	$this->schema();
+	/*
 	$this->rs['id'] = '';
-		$this->rs['title'] = '';
-		$this->rs['content'] = '';
-		$this->rs['path'] = '';
-		$this->rs['date']= '';
-		$this->rs['tags']= '';
-		$this->rs['template']= '';
+	$this->rs['title'] = '';
+	$this->rs['content'] = '';
+	$this->rs['path'] = '';
+	$this->rs['date']= '';
+	$this->rs['tags']= '';
+	$this->rs['template']= '';
+	*/
 	// initiate parent constructor
 	parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
 		// retrieve the specific page (if available)
@@ -31,6 +34,16 @@ class Page extends Model {
 	function update() {
 		$this->rs['date']=date('Y-m-d H:i:s');
 		return parent::update();
+	}
+
+	function schema(){
+		if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
+		if( !isset( $GLOBALS['db_schema']['pages'] ) ) $GLOBALS['db_schema']['pages'] = array();
+
+		$schema = $GLOBALS['db_schema']['pages'];
+		foreach( $schema as $key ){
+			if( !array_key_exists($key, $this->rs) ) $this->rs[$key] = '';
+		}
 	}
 
 	function get_page_from_path( $uri ) {

@@ -16,7 +16,7 @@ $action = ( $status == "create" ) ? url("admin/update", true) : url("admin/updat
 	<label for="content">Content</label>
 	<textarea id="content" name="content"><?=$content?></textarea>
 
-	<? Controller::trigger('admin:fields', $vars); ?>
+	<? Event::trigger('admin:fields', $vars); ?>
 
 	<label for="tags">Tags</label>
 	<p>(Separate tags with commas)</p>

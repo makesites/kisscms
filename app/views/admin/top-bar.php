@@ -1,3 +1,6 @@
+<?php
+	if( isset($_page) ) extract( $_page );
+?>
 <div id="admin-topbar">
 	<h3><a href="http://kisscms.com/" title="Made with love...">KISSCMS</a></h3>
 	<ul>

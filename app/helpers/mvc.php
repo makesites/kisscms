@@ -415,6 +415,7 @@ class Controller extends KISS_Controller {
 			$this->data["body"] = array();
 			$this->data["body"][$class]["view"] = ($view) ? $view : getPath('views/'.$class.'/body.php');
 		}
+		Event::trigger('page:render', $file, $vars);
 		// display the page
 		Template::output($this->data);
 	}
@@ -505,6 +506,13 @@ class View extends KISS_View {
 	function __construct($file='',$vars='') {
 		$file =  getPath('views/'.$file);
 		return parent::__construct($file,$vars);
+	}
+
+	static function do_fetch($file='',$vars='') {
+		$view = parent::do_fetch($file,$vars);
+		// post-event
+		Event::trigger('view:parse', $view, $vars);
+		return $view;
 	}
 
 }

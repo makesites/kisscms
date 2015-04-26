@@ -14,6 +14,32 @@ class Model extends KISS_Model  {
 		$this->dbhfnname=$dbhfnname; //dbh function name
 		$this->QUOTE_STYLE=$quote_style;
 		$this->COMPRESS_ARRAY=$compress_array;
+		// post-construct init...
+		$this->init();
+	}
+
+//===============================================
+// Initialization
+//===============================================
+
+	protected function init() {
+		// conditions for local dbs
+		if( substr( $this->db, -6 ) === "sqlite" ){
+			// check if the pages table exists
+			$dbh = $this->getdbh();
+			$sql = "SELECT name FROM sqlite_master WHERE type='table'";
+			$results = $dbh->prepare($sql);
+			$results->execute();
+			$table = $results->fetch(PDO::FETCH_ASSOC);
+			// then check if the table exists
+			if(!is_array($table)){
+				$data = ( method_exists($this,'schema') ) ? $this->schema() : $this->rs; // support rs
+				$keys = implode(", ", array_keys( $data ));
+				// FIX: The id needs to be setup as autoincrement
+				$keys = str_replace("id,", "id INTEGER PRIMARY KEY ASC,", $keys);
+				$this->create_table( $this->tablename, $keys );
+			}
+		}
 	}
 
 //===============================================
@@ -111,12 +137,12 @@ class Model extends KISS_Model  {
 		// execute
 		$data = $this->retrieve_many( $query );
 		// return only the first - fix this by limiting the query
-		return $data[0];
+		return ( count($data) ) ? $data[0] : false;
 	}
 
 
 //===============================================
-// Tadle methods
+// Table methods
 //===============================================
 
 	function create_table($name, $fields, $db=false){

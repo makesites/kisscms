@@ -31,9 +31,9 @@ class Model extends KISS_Model  {
 				// Continue logic on a specific error code (14: unable to open database file)
 				$error = (string)$e->getCode();
 				if( $error == "14" ){
-								  // #79 report last error on SQLite fail
-								  print_r(error_get_last());
-								  // see if there is a data directory
+					// #79 report last error on SQLite fail
+					print_r(error_get_last());
+					// see if there is a data directory
 					if( !is_dir( DATA ) ){
 						// create the directory with write access
 						mkdir( DATA, 0775);
@@ -67,15 +67,51 @@ class Model extends KISS_Model  {
 //===============================================
 
 	// run a lookup query based on a field
-	function find($key= false, $value=false){
-		// TBA
-		die("find - Not implemented yet.");
+	function find($a= false, $b=false){
+		$query = "";
+		if( !$b && is_array( $a ) ){
+			foreach( $a as $key => $value ){
+				if( !empty($query) ) $query .=" AND ";
+				$query .= $key ."='". $value ."'";
+			}
+		} else if( !$b && is_scalar( $a ) ) {
+			//
+			$query .= $a;
+		} else if( !$b && !$a ) {
+			// prerequisite
+			return null;
+		} else {
+			// assume both are scalar...
+			$query .= $a ."='". $b ."'";
+		}
+		// execute
+		$data = $this->retrieve_many( $query );
+		return $data;
 	}
 
 	// run a lookup query based on a field, returns first item
-	function findOne($key= false, $value=false){
-		// TBA
-		die("findOne - Not implemented yet.");
+	function findOne($a= false, $b=false){
+		// same as find...
+		$query = "";
+		if( !$b && is_array( $a ) ){
+			foreach( $a as $key => $value ){
+				if( !empty($query) ) $query .=" AND ";
+				$query .= $key ."='". $value ."'";
+			}
+		} else if( !$b && is_scalar( $a ) ) {
+			//
+			$query .= $a;
+		} else if( !$b && !$a ) {
+			// prerequisite
+			return null;
+		} else {
+			// assume both are scalar...
+			$query .= $a ."='". $b ."'";
+		}
+		// execute
+		$data = $this->retrieve_many( $query );
+		// return only the first - fix this by limiting the query
+		return $data[0];
 	}
 
 
@@ -144,14 +180,15 @@ class Model extends KISS_Model  {
 
 	function retrieve_many($wherewhat='',$bindings='') {
 		$dbh=$this->getdbh();
+		$arr=array();
 		if (is_scalar($bindings))
 			$bindings=$bindings ? array($bindings) : array();
 		$sql = 'SELECT * FROM '.$this->tablename;
 		if ($wherewhat)
 			$sql .= ' WHERE '.$wherewhat;
 		$stmt = $dbh->prepare($sql);
+		if( !$stmt ) return $arr;
 		$stmt->execute($bindings);
-		$arr=array();
 		$class=get_class($this);
 		while ($rs = $stmt->fetch(PDO::FETCH_ASSOC)) {
 			$myclass = new $class($this->id, $this->tablename);

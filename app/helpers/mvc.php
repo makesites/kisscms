@@ -9,8 +9,8 @@ class Model extends KISS_Model  {
 
 	function __construct($db='pages.sqlite', $pkname='',$tablename='',$dbhfnname='getdbh',$quote_style='MYSQL',$compress_array=true) {
 		$this->db=$db; //Name of the database
-		$this->pkname=$pkname; //Name of auto-incremented Primary Key
-		$this->tablename=$tablename; //Corresponding table in database
+		if( !isset($this->pkname) ) $this->pkname=$pkname; //Name of auto-incremented Primary Key
+		if( !isset($this->tablename) ) $this->tablename=$tablename; //Corresponding table in database
 		$this->dbhfnname=$dbhfnname; //dbh function name
 		$this->QUOTE_STYLE=$quote_style;
 		$this->COMPRESS_ARRAY=$compress_array;
@@ -24,7 +24,7 @@ class Model extends KISS_Model  {
 
 	protected function init() {
 		// conditions for local dbs
-		if( substr( $this->db, -6 ) === "sqlite" ){
+		if( is_scalar($this->db) && substr( $this->db, -6 ) === "sqlite" ){
 			// check if the pages table exists
 			$dbh = $this->getdbh();
 			$sql = "SELECT name FROM sqlite_master WHERE type='table'";
@@ -33,7 +33,7 @@ class Model extends KISS_Model  {
 			$table = $results->fetch(PDO::FETCH_ASSOC);
 			// then check if the table exists
 			if(!is_array($table)){
-				$data = ( method_exists($this,'schema') ) ? $this->schema() : $this->rs; // support rs
+				$data = $this->schema();
 				$keys = implode(", ", array_keys( $data ));
 				// FIX: The id needs to be setup as autoincrement
 				$keys = str_replace("id,", "id INTEGER PRIMARY KEY ASC,", $keys);
@@ -74,6 +74,20 @@ class Model extends KISS_Model  {
 		}
 		return $GLOBALS[ $db_name ];
 		//return call_user_func($this->dbhfnname, $this->db);
+	}
+
+	function schema( $schema=array() ){
+		//
+		if( !isset($this->rs) ) $this->rs = array();
+		$this->rs = array_merge( $schema, $this->rs );
+		$name = ( isset($this->name) ) ? $this->name : strtolower( __CLASS__  );
+		// save schema in the global namespace
+		if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
+		if( !isset( $GLOBALS['db_schema'][$name] ) ) $GLOBALS['db_schema'][$name] = array();
+
+		$GLOBALS['db_schema'][$name] = $this->rs;
+
+		return $this->rs;
 	}
 
 	function set($key, $val) {

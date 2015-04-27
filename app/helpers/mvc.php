@@ -301,6 +301,14 @@ class Model extends KISS_Model  {
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
 		);
 	}
+
+	function CommonID() {
+		//
+		$now = strtotime("now");
+		$random = dechex( $now * rand(1000000, 9999999) );
+		return  $random . dechex( $now );
+	}
+
 }
 
 //===============================================================

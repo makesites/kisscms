@@ -32,11 +32,19 @@ class Event {
 		foreach( $classes as $class ){
 			// first check if we passed an object reference
 			if( is_a($class, ucwords($group)) ) {
+				// find method
+				if( method_exists($class, $action) ){
+					$method = $action;
+				} else if( method_exists($class, "on".ucwords($action)) ){
+					$method = "on".ucwords($action);
+				} else {
+					continue;
+				}
 				// supporting second argument
 				if ($numargs == 3) {
-					$class->$action( $vars, func_get_arg(2) );
+					$class->$method( $vars, func_get_arg(2) );
 				} else {
-					$class->$action( $vars );
+					$class->$method( $vars );
 				}
 			} else {
 				// static methods...

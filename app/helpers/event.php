@@ -1,5 +1,7 @@
 <?php
 
+if( !class_exists('Event') ){
+
 class Event {
 
 	/* Events */
@@ -25,13 +27,25 @@ class Event {
 
 		// convention: remove prefix- from event to reveal action
 		$action = ( strpos($event, ':') ) ? substr( $event, strpos($event, ':')+1 ): $event;
+		$group = str_replace(":".$action, "", $event); // what's left is the group...
 
 		foreach( $classes as $class ){
-			// supporting second argument
-			if ($numargs == 3) {
-				$class::$action( $vars, func_get_arg(2) );
+			// first check if we passed an object reference
+			if( is_a($class, ucwords($group)) ) {
+				// supporting second argument
+				if ($numargs == 3) {
+					$class->$action( $vars, func_get_arg(2) );
+				} else {
+					$class->$action( $vars );
+				}
 			} else {
-				$class::$action( $vars );
+				// static methods...
+				// supporting second argument
+				if ($numargs == 3) {
+					$class::$action( $vars, func_get_arg(2) );
+				} else {
+					$class::$action( $vars );
+				}
 			}
 		}
 
@@ -39,4 +53,5 @@ class Event {
 
 }
 
+}
 ?>

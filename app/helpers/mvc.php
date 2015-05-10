@@ -149,7 +149,7 @@ class Model extends KISS_Model  {
 			$query .= $a ."='". $b ."'";
 		}
 		// execute
-		$data = $this->retrieve_many( $query );
+		$data = $this->retrieve_many( $query ); // replace with retrieve_one?
 		// return only the first - fix this by limiting the query
 		return ( count($data) ) ? $data[0] : false;
 	}

@@ -24,12 +24,13 @@ class Page extends Model {
 	}
 
 	function create() {
-		$this->rs['created']=date('Y-m-d H:i:s');
+		$this->rs['created'] = time('now');
+		$this->rs['updated'] = time('now');
 		return parent::create();
 	}
 
 	function update() {
-		$this->rs['updated']=date('Y-m-d H:i:s');
+		$this->rs['updated'] = time('now');
 		return parent::update();
 	}
 
@@ -40,7 +41,7 @@ class Page extends Model {
 			'content' => '',
 			'path' => '',
 			'created' => '',
-			'updates' => '',
+			'updated' => '',
 			'tags' => '',
 			'template' => ''
 		);
@@ -133,7 +134,7 @@ class Page extends Model {
 		$newpage->create();
 
 	} else {
-		if($key)
+		if($key){
 			$mypage = new Page($id);
 			$value = $mypage->get("$key");
 			// allow empty strings to be returned
@@ -141,6 +142,7 @@ class Page extends Model {
 				$mypage->set("$key", "$value");
 				$mypage->update();
 			}
+		}
 	}
 
 	}

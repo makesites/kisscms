@@ -7,15 +7,6 @@ class Page extends Model {
 		$this->tablename = $table;
 		// the model
 		$this->schema();
-		/*
-		$this->rs['id'] = '';
-		$this->rs['title'] = '';
-		$this->rs['content'] = '';
-		$this->rs['path'] = '';
-		$this->rs['date']= '';
-		$this->rs['tags']= '';
-		$this->rs['template']= '';
-		*/
 		// initiate parent constructor
 		parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
 		// retrieve the specific page (if available)
@@ -33,17 +24,29 @@ class Page extends Model {
 	}
 
 	function create() {
-		$this->rs['date']=date('Y-m-d H:i:s');
+		$this->rs['created']=date('Y-m-d H:i:s');
 		return parent::create();
 	}
 
 	function update() {
-		$this->rs['date']=date('Y-m-d H:i:s');
+		$this->rs['updated']=date('Y-m-d H:i:s');
 		return parent::update();
 	}
 
 	function schema(){
-		$this->rs = array();
+		$model = array(
+			'id' => '',
+			'title' => '',
+			'content' => '',
+			'path' => '',
+			'created' => '',
+			'updates' => '',
+			'tags' => '',
+			'template' => ''
+		);
+		// merge with existing rs if it exists
+		$this->rs = ( isset($this->rs) ) ? array_merge( $model, $this->rs ) : $model;
+		// save schema in the global namespace
 		if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
 		if( !isset( $GLOBALS['db_schema']['pages'] ) ) $GLOBALS['db_schema']['pages'] = array();
 
@@ -51,6 +54,8 @@ class Page extends Model {
 		foreach( $schema as $key ){
 			if( !array_key_exists($key, $this->rs) ) $this->rs[$key] = '';
 		}
+
+		return $this->rs;
 	}
 
 	function get_page_from_path( $uri ) {
@@ -112,10 +117,13 @@ class Page extends Model {
 
 	// this last query is debatable...
 	$sql = "SELECT * FROM 'pages' WHERE id='$id'";
-		$results = $dbh->prepare($sql);
+	$results = $dbh->prepare($sql);
+	if( $results ){
 		$results->execute();
 		$pages = $results->fetch(PDO::FETCH_ASSOC);
-
+	} else {
+		$pages = false;
+	}
 	// just create the key
 	if( !$pages ) {
 		$newpage = new Page();

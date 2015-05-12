@@ -34,6 +34,8 @@ class Model extends KISS_Model  {
 			// then check if the table exists
 			if(!is_array($table)){
 				$data = $this->schema();
+				// exit now if there's not schema
+				if( !$data ) return;
 				$keys = implode(", ", array_keys( $data ));
 				// FIX: The id needs to be setup as autoincrement
 				$keys = str_replace("id,", "id INTEGER PRIMARY KEY ASC,", $keys);

@@ -104,7 +104,7 @@ class Minify extends UglifyJS {
 
 
 		// process minification
-		$group = $this->uglifyJS( $group );
+		$group = $this->compileJS( $group );
 		// process requireJS
 		$dom = $this->requireJS( $group, $dom );
 
@@ -177,7 +177,7 @@ class Minify extends UglifyJS {
 		}
 
 		// save css in file
-		$this->write();
+		$this->output();
 		// update the dom
 		$dom = $this->update( $dom );
 
@@ -248,7 +248,7 @@ class Minify extends UglifyJS {
 		}
 
 		// save compiled files
-		$this->write();
+		$this->output();
 
 		// remove any instances of the less lib
 		$scripts = $dom->getElementsByTagName('script');
@@ -380,7 +380,7 @@ class Minify extends UglifyJS {
 
 	//
 
-	function write() {
+	function output() {
 
 		foreach($this->_srcs as $name=>$cache_file){
 
@@ -474,7 +474,7 @@ class Minify extends UglifyJS {
 
 	}
 
-	function uglifyJS( $scripts ){
+	function compileJS( $scripts ){
 		// make this a config option?
 		$baseUrl =  "assets/js/";
 		$http = new Http();

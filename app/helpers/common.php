@@ -469,8 +469,10 @@ function timestamp(){
  */
 function get_time_difference( $start, $end )
 {
-	$uts['start']      =    strtotime( $start );
-	$uts['end']        =    strtotime( $end );
+	// FIX use timestamps instead of strings
+	$uts['start']      =    ( is_nan($start) ) ? strtotime( $start ) : time($start);
+	$uts['end']        =    ( is_nan($end) ) ? strtotime( $end ) : time($end);
+
 	if( $uts['start']!==-1 && $uts['end']!==-1 )
 	{
 		if( $uts['end'] >= $uts['start'] )

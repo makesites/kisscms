@@ -21,11 +21,12 @@ class Sitemap {
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
 				$url = $this->makeUrlString( $v );
 				$date = $this->makeIso8601TimeStamp( $v );
-				$frequency = $this->getFrequency( $v);
+				$frequency = $this->getFrequency( $v );
 				$priority = $this->getPriority( $v );
 				$items[] = array( 'url' =>  $url, 'date' => $date, 'frequency' => $frequency, 'priority' => $priority );
 			}
 		}
+
 		return $items;
 	}
 

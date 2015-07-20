@@ -94,12 +94,15 @@ class Copyright extends Section {
 	function __construct($view=false, $vars=false, $data=false){
 		parent::__construct($view,$vars);
 		if( array_key_exists('db_config', $GLOBALS) ){
-			// get site author
+			// get data (is a db query necessary?)
 			$dbh = $GLOBALS['db_config'];
-			$sql = 'SELECT value FROM "main" WHERE "key"="site_author"';
+			// get config
+			$sql = 'SELECT key,value FROM "main"';
 			$results = $dbh->query($sql);
+			// find related vars
 			while ($v = $results->fetch(PDO::FETCH_ASSOC)) {
-				$this->data['author'] = $v['value'];
+				if( $v['key'] == "site_author" ) $this->data['author'] = $v['value'];
+				if( $v['key'] == "site_author_url" ) $this->data['author_url'] = $v['value'];
 			}
 			// get year
 			$this->data['year'] = date("Y", time() );

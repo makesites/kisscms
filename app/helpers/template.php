@@ -12,7 +12,10 @@ class Template extends KISS_View {
 	function __construct( $vars=array() ) {
 		// defaults
 		$this->vars = array(
-			"body" => ""
+			"body" => "",
+			"_page" => array(
+				"view" => ""
+			)
 		);
 		$this->client = array();
 		$this->vars = array_merge($this->vars, $vars);

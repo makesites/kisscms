@@ -103,6 +103,25 @@ class Model extends KISS_Model  {
 // CRUD methods
 //===============================================
 
+	function read($pkvalue) {
+		$dbh=$this->getdbh();
+		$sql = 'SELECT * FROM '.$this->enquote($this->tablename).' WHERE '.$this->enquote($this->pkname).'=?';
+		$stmt = $dbh->prepare($sql);
+		// error control
+		if( !$stmt ) return $this;
+		$stmt->bindValue(1,(int)$pkvalue);
+		$stmt->execute();
+		$rs = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($rs){
+			foreach ($rs as $key => $val){
+				//if (isset($this->rs[$key]))
+				//$this->rs[$key] = is_scalar($this->rs[$key]) ? $val : unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val);
+				$this->rs[$key] = $val;
+			}
+		}
+		return $this;
+	}
+
 
 //===============================================
 // Query methods

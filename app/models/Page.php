@@ -18,24 +18,32 @@ class Page extends Model {
 	}
 
 	function retrieve( $id ) {
-		parent::retrieve( $id );
+		parent::read( $id );
 		// post event
 		Event::trigger('page:read', $this->rs );
 	}
 
 	function create() {
+		// clear all null keys
+		foreach( $this->rs as $k=>$v){
+			if( is_null($v) ) unset( $this->rs[$k] );
+		}
 		$this->rs['created'] = time('now');
 		$this->rs['updated'] = time('now');
 		return parent::create();
 	}
 
 	function update() {
+		// clear all null keys
+		foreach( $this->rs as $k=>$v){
+			if( is_null($v) ) unset( $this->rs[$k] );
+		}
 		$this->rs['updated'] = time('now');
 		return parent::update();
 	}
 
 	function schema(){
-		$model = array(
+		$schema = array(
 			'id' => '',
 			'title' => '',
 			'content' => '',
@@ -46,17 +54,19 @@ class Page extends Model {
 			'template' => ''
 		);
 		// merge with existing rs if it exists
-		$this->rs = ( isset($this->rs) ) ? array_merge( $model, $this->rs ) : $model;
+		$schema = ( isset($this->rs) ) ? array_merge( $schema, $this->rs ) : $schema;
+
+		foreach( $schema as $key => $value ){
+			if( !array_key_exists($key, $this->rs) ) $this->rs[$key] = null;
+		}
+
 		// save schema in the global namespace
 		if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
 		if( !isset( $GLOBALS['db_schema']['pages'] ) ) $GLOBALS['db_schema']['pages'] = array();
 
-		$schema = $GLOBALS['db_schema']['pages'];
-		foreach( $schema as $key ){
-			if( !array_key_exists($key, $this->rs) ) $this->rs[$key] = '';
-		}
+		$GLOBALS['db_schema']['pages'] = array_keys( $schema );
 
-		return $this->rs;
+		return $schema;
 	}
 
 	function get_page_from_path( $uri ) {
@@ -80,7 +90,7 @@ class Page extends Model {
 
 	// stop if variable already available
 	if( !isset( $GLOBALS['db_schema'] ) ) $GLOBALS['db_schema'] = array();
-	if(array_key_exists("pages", $GLOBALS['db_schema']) && in_array($key, $GLOBALS['db_schema']['pages'])) return;
+	//if(array_key_exists("pages", $GLOBALS['db_schema']) && in_array($key, $GLOBALS['db_schema']['pages'])) return;
 
 	$page = new Page();
 	$dbh= $page->getdbh();
@@ -136,9 +146,9 @@ class Page extends Model {
 	} else {
 		if($key){
 			$mypage = new Page($id);
-			$value = $mypage->get("$key");
+			$existing = $mypage->get("$key");
 			// allow empty strings to be returned
-			if( empty($value) && $value != "" ){
+			if( is_null($existing) ){
 				$mypage->set("$key", "$value");
 				$mypage->update();
 			}

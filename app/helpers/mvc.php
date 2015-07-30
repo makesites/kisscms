@@ -242,21 +242,27 @@ class Model extends KISS_Model  {
 	function retrieve_many($wherewhat='',$bindings='') {
 		$dbh=$this->getdbh();
 		$arr=array();
-		if (is_scalar($bindings))
+		if( is_scalar($bindings) ){
 			$bindings=$bindings ? array($bindings) : array();
+		}
 		$sql = 'SELECT * FROM '.$this->tablename;
-		if ($wherewhat)
+		if( $wherewhat ){
 			$sql .= ' WHERE '.$wherewhat;
+		}
 		$stmt = $dbh->prepare($sql);
 		if( !$stmt ) return $arr;
 		$stmt->execute($bindings);
 		$class=get_class($this);
-		while ($rs = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		while($rs = $stmt->fetch(PDO::FETCH_ASSOC)){
 			$myclass = new $class($this->id, $this->tablename);
-			foreach ($rs as $key => $val)
-				if (isset($myclass->rs[$key]))
-					$myclass->rs[$key] = is_scalar($myclass->rs[$key]) ? $val : unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val);
-				$arr[]= $myclass->rs;
+			$myschema = $myclass->schema();
+			foreach($rs as $key => $val){
+				if( isset($myclass->rs[$key]) || is_null($myclass->rs[$key]) ){
+					//$myclass->rs[$key] = is_scalar($myclass->rs[$key]) ? $val : unserialize($this->COMPRESS_ARRAY ? gzinflate($val) : $val);
+					$myclass->rs[$key] = is_scalar( $myschema[$key] ) ? $val : json_decode($val, true);
+				}
+			}
+			$arr[]= $myclass->rs;
 		}
 		return $arr;
 	}

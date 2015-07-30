@@ -24,7 +24,7 @@ class Page extends Model {
 	}
 
 	function create() {
-		// clear all null keys
+		// clear all null keys (use array_filter?)
 		foreach( $this->rs as $k=>$v){
 			if( is_null($v) ) unset( $this->rs[$k] );
 		}
@@ -35,7 +35,7 @@ class Page extends Model {
 	}
 
 	function update() {
-		// clear all null keys
+		// clear all null keys (use array_filter?)
 		foreach( $this->rs as $k=>$v){
 			if( is_null($v) ) unset( $this->rs[$k] );
 		}
@@ -57,7 +57,7 @@ class Page extends Model {
 		);
 
 		// merge with existing rs if it exists
-		$schema = ( isset($this->rs) ) ? array_merge( $schema, $this->rs ) : $schema;
+		$schema = ( isset($this->rs) ) ? array_merge( $schema, array_filter($this->rs) ) : $schema;
 
 		// get the existing columns
 		$dbh= $this->getdbh();

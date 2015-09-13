@@ -39,6 +39,8 @@ if(!defined("TEMPLATES")) define('TEMPLATES', $templates );
 
 if( defined("SHARED") ) putenv('TMPDIR=' . ini_get('upload_tmp_dir'));
 
+if( !defined("CIPHER") ) define('CIPHER', "KISSCMS");
+
 // set timezone (option?)
 date_default_timezone_set('UTC');
 

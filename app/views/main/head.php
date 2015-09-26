@@ -51,4 +51,3 @@ Object.extend = function(destination, source) {
 
 </script>
 
-<script type="text/javascript" src="<?=url('/js/libs/modernizr-2.0.6.min.js')?>"></script>

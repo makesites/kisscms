@@ -144,21 +144,22 @@ class Template extends KISS_View {
 
 	// Helpers
 	function getHash( $prefix="", $vars=array() ){
+		// OLD
 		// the hash is an expression of the variables compiled to render the template
 		// note that constantly updated values (like timestamps) should be avoided to allow the hash to be reproduced...
-		$string = serialize( $vars );
-		// ALTERNATE method
+		//$string = serialize( $vars );
+
+		// NEW method
 		// the hash is a combination of :
 		// - the request url
 		// - the request parameters
 		// - the session id
-		// - the user id (if available)
-		//$string = $_SERVER['REQUEST_URI'];
-		//$string .= serialize( $_REQUEST );
-		//$string .= session_id();
-		//if( isset($_SESSION['user']['id']) ) $string .= $_SESSION['user']['id'];
+		//
+		// use serialize( $_REQUEST ) instead?
+		$key = session_id() . json_encode($_REQUEST) . $_SERVER['REQUEST_URI'];
 		// generate a hash form the string
-		return $prefix . hash("md5", $string);
+		return $prefix . hash("md5", $key);
+
 	}
 	static function getCache($file ){
 		$cache = new Minify_Cache_File();

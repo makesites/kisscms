@@ -349,6 +349,15 @@ class Controller extends KISS_Controller {
 		// generic redirection for secure connections (assuming that ssl is on port 443)
 		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '. url( request_uri() ) );
 
+		// html cache on only in production
+		$cached = ( DEBUG ) ? false : $this->_pageCache();
+		if( !empty($cached) ){
+			echo $cached;
+			// exit now
+			exit;
+			//return;
+		}
+
 		// add the config in the data object
 		$this->data['config'] = $GLOBALS['config'];
 		// add admin flag
@@ -606,6 +615,17 @@ class Controller extends KISS_Controller {
 			header("Access-Control-Max-Age: 86400");    // cache for 1 day
 			header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
+	}
+
+	// Internal
+	function _pageCache(){
+		// compile md5 from: session id + request data + request uri
+		$key = md5( session_id() . json_encode($_REQUEST) . $_SERVER['REQUEST_URI'] );
+		// if a file with that id exists and it's relatively new, use it...
+		$id = "html/". $_SERVER['HTTP_HOST'] ."_". $key;
+		$cache = Template::getCache( $id );
+		// return cache if any...
+		return $cache;
 	}
 }
 

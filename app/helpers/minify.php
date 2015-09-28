@@ -154,7 +154,7 @@ class Minify extends UglifyJS {
 		foreach ($el as $group=>$styles){
 			// get the raw css
 			$css = "";
-			$md5 = "";
+			//$md5 = "";
 			foreach ($styles as $style){
 				$result = $http->execute( $style );
 				if( $result && !empty($result) ){
@@ -162,13 +162,14 @@ class Minify extends UglifyJS {
 				}
 			}
 			// get the signature
-			$md5 .= md5($css);
+			//$md5 .= md5($css);
 			// remove comments
 			$css = $this->removeCommentsCSS($css);
 			// strip whitspace
 			$css = $this->trimWhitespace($css);
 			$this->_content[$group] = $css;
-			$this->_srcs[$group] = $cache_path ."$group.$md5.min.css";
+			//$this->_srcs[$group] = $cache_path ."$group.$md5.min.css";
+			$this->_srcs[$group] = $cache_path ."$group.css";
 		}
 
 		// remove the 'old' link tags
@@ -217,7 +218,7 @@ class Minify extends UglifyJS {
 		foreach ($target as $tag){
 			// get the raw css
 			$css = "";
-			$md5 = "";
+			//$md5 = "";
 			$href = $tag->getAttribute('href');
 			// check if it's a local url
 			$local = (substr($href, 0, 4) !== "http");
@@ -230,13 +231,14 @@ class Minify extends UglifyJS {
 
 			$css = $less->compile( $result );
 			// get the signature
-			$md5 = md5($css);
+			//$md5 = md5($css);
 			// remove comments
 			$css = $this->removeCommentsCSS($css);
 			// strip whitspace
 			$css = $this->trimWhitespace($css);
 			$this->_content[] = $css;
-			$filename =  basename($href, ".less").".$md5.min.css";
+			//$filename =  basename($href, ".less").".$md5.min.css";
+			$filename =  basename($href, ".less").".css";
 			$this->_srcs[] = $cache_path . $filename;
 
 			// always leave the less link tags as markup - will be parced by the css()
@@ -482,7 +484,7 @@ class Minify extends UglifyJS {
 		// sort results
 		//ksort_recursive( $minify );
 		// record signature
-		$md5 = "";
+		//$md5 = "";
 		$cache_path = $this->cache->getPath() ."/$baseUrl";
 		// FIX: create the dir if not available
 		if( !is_dir( $cache_path ) ) mkdir($cache_path, 0775, true);
@@ -512,13 +514,15 @@ class Minify extends UglifyJS {
 				//$md5 .= md5_file($file);
 			}
 			// compress signatures of all files
-			$md5 = md5( $result );
+			//$md5 = md5( $result );
 			//contents of each group are saved in a tmp file
-			$tmp_file = $cache_path . "tmp.$md5.js";
+			//$tmp_file = $cache_path . "tmp.$md5.js";
+			$tmp_file = $cache_path . "tmp.js";
 			file_put_contents($tmp_file, $result);
 			// add tmp file
 			$min->add( $tmp_file );
-			$min->setFile( "$name.$md5.min" );
+			//$min->setFile( "$name.$md5.min" );
+			$min->setFile( "$name" );
 			if( !DEBUG){
 				$min->quiet()
 					->hideDebugInfo();
@@ -543,7 +547,7 @@ class Minify extends UglifyJS {
 			$min->write();
 
 			// add the signature in the group
-			$scripts[$name][]["data"]["md5"] = $md5;
+			//$scripts[$name][]["data"]["md5"] = $md5;
 
 		}
 
@@ -558,11 +562,12 @@ class Minify extends UglifyJS {
 			//$first = current($group);
 			$attr = $this->groupAttributes($group);
 			// signature of file/group
-			$md5 = ( !empty( $attr['data']['md5'] ) ) ? $attr['data']['md5'] : false;
+			//$md5 = ( !empty( $attr['data']['md5'] ) ) ? $attr['data']['md5'] : false;
 			// get file of the group
 			if( $attr['data']['minify'] ) {
 				$file = $GLOBALS['client']['require']['baseUrl'] . $name;
-				$file .= ( $md5 ) ? ".". $md5 .".min.js" : ".min.js";
+				//$file .= ( $md5 ) ? ".". $md5 .".min.js" : ".min.js";
+				$file .= ".js";
 				$file = cdn( $file );
 			} else {
 				$file = $attr["src"];
@@ -588,10 +593,9 @@ class Minify extends UglifyJS {
 				}
 
 				// if there is a signature we'll have to create a new path for the group
-				if ( $md5 ){
-					$GLOBALS['client']['require']['paths'][$name] =  substr( $file, 0, -3);
-
-				}
+				//if ( $md5 ){
+				//	$GLOBALS['client']['require']['paths'][$name] =  substr( $file, 0, -3);
+				//}
 
 				// push the name of the groups as the dependency
 				array_push( $GLOBALS['client']['require']['deps'], $name);

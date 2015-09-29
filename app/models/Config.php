@@ -31,6 +31,8 @@ class Config extends Model {
 		// we already know the key doesn't exist - just create it
 		$config = new Config(0, $table);
 		$config->set('key', "$key");
+		// FIX: special case for admin password (use cipher)
+		$value = ( $key == "admin_password" ) ? crypt($value, CIPHER) : $value;
 		$config->set('value', "$value");
 		$config->create();
 		// save in the global object

@@ -664,6 +664,27 @@ function decode($string="",$base=36,$key="KISSCMS") {
 	return $hash;
 }
 
+// get's the modified time of a url
+function urlmtime( $url = false ){
+	if( !$url ) return 0;
+	// variables
+	$last_modified = false;
+	// get the headers
+	$headers = get_headers($url);
+	if( !is_array($headers) ) return 0;
+	// find the 'last-modified' attribute
+	foreach( $headers as $header ){
+		if( strpos( strtolower($header), 'last-modified' ) !== false  ){
+			$col = strpos($header,':');
+			$last_modified = trim(substr($header,$col+1));
+			break;
+		}
+	}
+	if( !$last_modified ) return 0;
+	// convert to timestamp
+	$mtime = strtotime( $last_modified );
+	return $mtime;
+}
 /*
 function redirect($url,$alertmsg='') {
   if ($alertmsg)

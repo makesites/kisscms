@@ -267,11 +267,15 @@ class UglifyJS {
 
 	function _makeRequest() {
 		$data = $this->_getParams();
-		$referer = @$_SERVER["HTTP_REFERER"] or "";
+		//$referer = @$_SERVER["HTTP_REFERER"] or "";
+		$referer = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 		// variables
 		extract($this->_compiler);
 
-		$fp = fsockopen($host, $port) or die("Unable to open socket");;
+		$fp = fsockopen($host, $port);
+		if (!$fp) {
+			throw new Exception("Unable to open socket");
+		}
 
 		if ($fp) {
 			fputs($fp, "POST $path HTTP/1.1\r\n");

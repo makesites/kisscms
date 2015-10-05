@@ -129,7 +129,7 @@ class Minify extends UglifyJS {
 		$http->setMethod('GET');
 		// (re)set the source files
 		$this->_srcs = array();
-		$cache_path = $this->cache->getPath() ."/assets/css/";
+		$cache_path = $this->_getCacheDir() ."assets/css/";
 		// filter the scripts
 		$tags = $dom->getElementsByTagName('link');
 
@@ -198,10 +198,10 @@ class Minify extends UglifyJS {
 		$http = new Http();
 		$http->setMethod('GET');
 		// make this a config option?
-		$baseUrl =  "/assets/css/";
+		$baseUrl =  "assets/css/";
 		// (re)set the source files
 		$this->_srcs = array();
-		$cache_path = $this->cache->getPath() . $baseUrl;
+		$cache_path = $this->_getCacheDir() . $baseUrl;
 		// filter the scripts
 		$tags = $dom->getElementsByTagName('link');
 
@@ -423,10 +423,11 @@ class Minify extends UglifyJS {
 		//main dom containers
 		$head = $dom->getElementsByTagName("head")->item(0);
 		$require_main = $dom->getElementById("require-main");
+		$cache_dir = $this->_getCacheDir();
 
 		foreach($this->_srcs as $name=>$min_file){
 
-			$file = str_replace( $this->cache->getPath() ."/", "", $min_file);
+			$file = str_replace( $cache_dir, "", $min_file);
 			// backwards compatibility - remove old path
 			$file = str_replace(APP ."public/", "", $file);
 			$ext = substr( $file, strrpos($file, ".")+1 );
@@ -485,7 +486,7 @@ class Minify extends UglifyJS {
 		//ksort_recursive( $minify );
 		// record signature
 		//$md5 = "";
-		$cache_path = $this->cache->getPath() ."/$baseUrl";
+		$cache_path = $this->_getCacheDir() ."$baseUrl";
 		// FIX: create the dir if not available
 		if( !is_dir( $cache_path ) ) mkdir($cache_path, 0775, true);
 
@@ -649,7 +650,6 @@ class Minify extends UglifyJS {
 		return $attr;
 	}
 
-/*
 	function setFile( $name=false ) {
 		if($name) $this->_file = $name;
 		return $this;
@@ -658,7 +658,11 @@ class Minify extends UglifyJS {
 	function _getCacheFileName() {
 		return ( empty($this->_file) ) ? $this->_cache_dir . $this->_getHash() . ".js" : $this->_cache_dir . $this->_file. ".js";
 	}
-*/
+
+	function _getCacheDir() {
+		return $this->cache->getPath() ."/{$_SERVER['HTTP_HOST']}/";
+	}
+
 	function trimWhitespace( $string, $replace=" " ){
 		// replace multiple spaces with one
 		return preg_replace( '/\s+/', $replace, $string );

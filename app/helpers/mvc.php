@@ -622,7 +622,7 @@ class Controller extends KISS_Controller {
 		// compile md5 from: session id + request data + request uri
 		$key = md5( session_id() . json_encode($_REQUEST) . $_SERVER['REQUEST_URI'] );
 		// if a file with that id exists and it's relatively new, use it...
-		$id = "html/". $_SERVER['HTTP_HOST'] ."_". $key;
+		$id = "{$_SERVER['HTTP_HOST']}/html/". $key;
 		$cache = Template::getCache( $id );
 		// return cache if any...
 		return $cache;

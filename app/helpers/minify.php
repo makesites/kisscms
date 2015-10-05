@@ -494,6 +494,7 @@ class Minify extends UglifyJS {
 		foreach( $scripts as $name=>$group ){
 			$first = current($group);
 			$result = "";
+			$timestamp = 0;
 			// go to next group if minify flag is not true
 			if( !$first["data"]['minify'] ) continue;
 			$min = new UglifyJS();
@@ -509,16 +510,21 @@ class Minify extends UglifyJS {
 				$local = (substr($href, 0, 4) !== "http" || substr($href, 0, 2) !== "//" );
 				if( $local ) $href = url( $href );
 				$result .= $http->execute( $href );
+				// get modified time
+				$mtime = urlmtime($href);
+				// compare with newest file in the group
+				if( $timestamp < $mtime ) $timestamp = $mtime;
 				//$src = str_replace( array(url(), cdn() ),"", $script["src"] );
 				// remove leading slash
 				//$src = ltrim($src,'/');
 				//$md5 .= md5_file($file);
 			}
 			// compress signatures of all files
-			//$md5 = md5( $result );
+			$md5 = md5( $result );
+			// set timestamp
+			$min->timestamp( $timestamp );
 			//contents of each group are saved in a tmp file
-			//$tmp_file = $cache_path . "tmp.$md5.js";
-			$tmp_file = $cache_path . "tmp.js";
+			$tmp_file = $cache_path . "tmp.$md5.js";
 			file_put_contents($tmp_file, $result);
 			// add tmp file
 			$min->add( $tmp_file );
@@ -546,7 +552,7 @@ class Minify extends UglifyJS {
 			}
 
 			$min->write();
-
+			$min->clear();
 			// add the signature in the group
 			//$scripts[$name][]["data"]["md5"] = $md5;
 

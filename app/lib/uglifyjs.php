@@ -16,6 +16,7 @@ class UglifyJS {
 	var $_debug = true;
 	var $_cache_dir = "";
 	var $_code_url_prefix = "";
+	var $_timestamp = 0;
 	var $_compiler = array(
 		"host" => "marijnhaverbeke.nl",
 		"port" => "80",
@@ -186,6 +187,21 @@ class UglifyJS {
 		}
 	}
 
+	// removes source files (usually after compilation)
+	function clear(){
+		foreach ($this->_srcs as $i => $src) {
+			unlink($src);
+			unset($this->_srcs[$i]);
+		}
+	}
+
+	// set a timestamp to compare the compiling against
+	function timestamp( $time = null ){
+		// prerequisite
+		if( !is_int ( $time ) ) return;
+		$this->_timestamp =  $time;
+	}
+
 	// ----- Privates -----
 
 	function _isRecompileNeeded($cache_file) {
@@ -194,12 +210,15 @@ class UglifyJS {
 
 		$cache_mtime = filemtime($cache_file);
 
-		// If the source files are newer than the cache file, recompile.
+		// #1 If a specific time is set, use that as a reference
+		if ( !empty( $this->_timestamp ) ) return ( $this->_timestamp > $cache_mtime );
+
+		// #2 If the source files are newer than the cache file, recompile.
 		foreach ($this->_srcs as $src) {
 			if (filemtime($src) > $cache_mtime) return true;
 		}
 
-		// If this script calling the compiler is newer than the cache file,
+		// #3 If this script calling the compiler is newer than the cache file,
 		// recompile.  Note, this might not be accurate if the file doing the
 		// compilation is loaded via an include().
 		if (filemtime($_SERVER["SCRIPT_FILENAME"]) > $cache_mtime) return true;

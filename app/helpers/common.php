@@ -499,6 +499,26 @@ function get_time_difference( $start, $end )
 	return( false );
 }
 
+// setup config options and (optionally) merge with remote config file
+function config($type=false, $config=array()){
+	//prerequisite(s)
+	if( !$type ) return;
+	// variables
+	$data = array();
+
+	// optionally lookup in external path
+	if( defined('CONFIG') ){
+		// load external file
+		$data = ( file_exists(CONFIG . $type .".json") ) ? json_decode( file_get_contents(CONFIG . $type .".json"), true) : array();
+	}
+
+	foreach($config as $k => $v){
+		// loaded config had priority
+		$value = ( array_key_exists($k, $data) ) ? $data[$k] : $v;
+		Config::register($type, $k, $value);
+	}
+}
+
 /********************************
  * Retro-support of get_called_class()
  * Tested and works in PHP 5.2.4

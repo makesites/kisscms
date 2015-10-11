@@ -53,7 +53,10 @@ class Model extends KISS_Model  {
 		if (!isset($GLOBALS[ $db_name ])) {
 
 			try {
-				$GLOBALS[ $db_name ] = new PDO('sqlite:'. DATA . $this->db);
+				$db = new PDO('sqlite:'. DATA . $this->db);
+				// FIX: disable sync to improve performance
+				$db->exec("pragma synchronous = off;");
+				$GLOBALS[ $db_name ] = $db;
 				//$GLOBALS['dbh'] = new PDO('mysql:host=localhost;dbname=dbname', 'username', 'password');
 			} catch (PDOException $e) {
 				// Continue logic on a specific error code (14: unable to open database file)

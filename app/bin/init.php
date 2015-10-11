@@ -32,10 +32,31 @@ if( !is_dir($templates) && defined("BASE") ){
 }
 if(!defined("TEMPLATES")) define('TEMPLATES', $templates );
 
+//===============================================
+// Dependencies
+//===============================================
+requireAll( "lib" );
+// by default load the mvc.php first - which should only be one!
+requireAll( "helpers", false, array("mvc.php") );
+
+
+//===============================================
+// Static Route(s)
+//===============================================
+$url = parse_url( $_SERVER['REQUEST_URI'] );
+// first check if this is a "static" asset
+if ($output = isStatic($url['path']) ) {
+	echo getFile( $output );
+	exit;
+}
+
 
 //===============================================
 // ENVIRONMENT VARIABLES
 //===============================================
+
+set_error_handler("custom_error");
+set_exception_handler("uncaught_exception_handler");
 
 if( defined("SHARED") ) putenv('TMPDIR=' . ini_get('upload_tmp_dir'));
 
@@ -60,17 +81,14 @@ if(!defined("DEBUG")) define('DEBUG', false);
 // Includes
 //===============================================
 // follows this order:
-//- libs,helpers,models in the app folder
-//- libs,helpers,models in the base folder
+//- models in the app folder
+//- models in the base folder
 //- files in this dir
 //- plugins init.php in the app/base folder
 //- plugins init.php in the plugins folder
 
 lookUpDirs();
 
-requireAll( "lib" );
-// by default load the mvc.php first - which should only be one!
-requireAll( "helpers", false, array("mvc.php") );
 // load all the models (dependent on helpers)
 requireAll( "models" );
 // load all initializations
@@ -87,6 +105,7 @@ $GLOBALS['config'] = $config->getConfig();
 // load config and other initiators (dependent on helpers)
 requireAll( "bin", array("init.php") );
 
+
 //===============================================
 // Session
 //===============================================
@@ -94,16 +113,13 @@ session_start();
 
 
 //===============================================
-// Routes
-//===============================================
-$url = parse_url( $_SERVER['REQUEST_URI'] );
-// first check if this is a "static" asset
-if ($output = isStatic($url['path']) ) {
-	echo getFile( $output );
-	exit;
-} else {
-	$controller = findController($url['path']);
-}
+// Start the controller
+//===============================================s
+
+$controller = findController($url['path']);
+$output = new $controller( 'controllers/', WEB_FOLDER, DEFAULT_ROUTE, DEFAULT_ACTION);
+
+
 
 
 //===============================================
@@ -402,14 +418,5 @@ function custom_error($errno, $message, $file, $line){
 	return true;
 
 }
-
-set_error_handler("custom_error");
-set_exception_handler("uncaught_exception_handler");
-
-//===============================================
-// Srart the controller
-//===============================================s
-
-$output = new $controller( 'controllers/', WEB_FOLDER, DEFAULT_ROUTE, DEFAULT_ACTION);
 
 ?>

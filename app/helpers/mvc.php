@@ -53,7 +53,9 @@ class Model extends KISS_Model  {
 		if (!isset($GLOBALS[ $db_name ])) {
 
 			try {
-				$db = new PDO('sqlite:'. DATA . $this->db);
+				$db = new PDO('sqlite:'. DATA . $this->db, null, null, array(
+					PDO::ATTR_PERSISTENT => true
+				));
 				// FIX: disable sync to improve performance
 				$db->exec("pragma synchronous = off;");
 				$GLOBALS[ $db_name ] = $db;

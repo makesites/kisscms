@@ -66,18 +66,26 @@ class Template extends KISS_View {
 		foreach($data as $part){
 			if( $view && !isset($part['status']) ){
 				View::do_dump( getPath('views/main/body-'. $view .'.php'), $part);
-			}elseif( array_key_exists('view', $part) ){
+			} elseif( array_key_exists('view', $part) ){
 				View::do_dump( $part['view'], $part);
-			}else{
+			} else {
 				View::do_dump( getPath('views/main/body.php'), $part);
 			}
 		}
 	}
 
 	public static function foot($vars=false){
-		$data = $GLOBALS['foot'];
-		foreach($data as $name=>$html){
+		$views = $GLOBALS['foot'];
+		// FIX: render main foot last
+		if( array_key_exists('main', $views) ){
+			$main = $views['main'];
+			unset($views['main']);
+		}
+		foreach($views as $name=>$html){
 			echo "$html\n";
+		}
+		if( isset($main) ){
+			echo $main ."\n";
 		}
 	}
 

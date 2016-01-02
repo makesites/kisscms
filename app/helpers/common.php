@@ -232,11 +232,15 @@ function cdn($file=''){
 	$uri = uri($file);
 	// first check if we have already defined a CDN
 	if (defined("CDN")){
+		// add protocol
+		$protocol = ( isSSL() ) ? 'https://' : 'http://';
 		// remove trailing slash, if any
-		$url = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		$domain = ( substr(CDN, -1) == "/" ) ? substr(CDN, 0, -1) : CDN;
+		// remove protocol from cdn address
+		$domain = ( substr($domain, 0, 4) == "http" ) ? str_replace(array("http://", "https://"), "", $domain) : $domain;
 		// #108 remove www from cdn address (if set by SERVER_NAME)
-		$url = str_replace("www.",'',$url);
-		return $url . $uri;
+		$domain = str_replace("www.",'',$domain);
+		return $protocol . $domain . $uri;
 	} else {
 		// fallback to the domain name
 		return url($file);

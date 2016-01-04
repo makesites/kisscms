@@ -68,6 +68,11 @@ function isStatic( $file ) {
 			}
 		}
 	}
+	//check the cache (less than an hour old)
+	$cache = new Minify_Cache_File();
+	//if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
+	if( $cache->isValid("/{$_SERVER['HTTP_HOST']}/$file", 0) ) return $cache->tmp() ."/{$_SERVER['HTTP_HOST']}/". $file;
+
 	// check in the base public folders
 	if( defined("BASE") ){
 		if ( file_exists( BASE."public/".$file ) ) {
@@ -108,10 +113,6 @@ function isStatic( $file ) {
 			return $target;
 		}
 	}
-	//lastly check the cache (less than an hour old)
-	$cache = new Minify_Cache_File();
-	//if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
-	if( $cache->isValid("/{$_SERVER['HTTP_HOST']}/$file", 0) ) return $cache->tmp() ."/{$_SERVER['HTTP_HOST']}/". $file;
 
 	// return false if there are no results
 	return false;

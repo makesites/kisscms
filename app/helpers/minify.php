@@ -245,7 +245,7 @@ class Minify extends UglifyJS {
 			// change the attributes to css
 			$tag->setAttribute("rel", "stylesheet");
 			// change the link to its compiled version
-			$tag->setAttribute("href", $baseUrl . $filename);
+			$tag->setAttribute("href", cdn($baseUrl . $filename) );
 
 		}
 

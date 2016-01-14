@@ -61,7 +61,8 @@ class Admin extends Controller {
 	function config( $params=array() ) {
 		// if saving...
 		if( $_SERVER['REQUEST_METHOD'] == "POST" ){
-
+		// flag
+		$changed = false;
 		// loop through all the other data and reorganise them properly
 		foreach($params as $k=>$v){
 			// exit if the values is empty (but not false)?
@@ -83,11 +84,15 @@ class Admin extends Controller {
 				//$config->pkname = 'key';
 				$config->set('key', $key);
 				$config->set('value', $value);
-				$config->update();
 				// update memory
 				$GLOBALS["config"][$table][$key] = $value;
+				// set flag
+				$changed = true;
 			}
-
+		}
+		// update model once
+		if( $changed ) {
+			$config->update();
 		}
 		// generate the humans.txt file
 		$humans = $this->humansText();

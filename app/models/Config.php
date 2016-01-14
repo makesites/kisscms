@@ -86,5 +86,18 @@ class Config extends Model {
 		// possibly do something with $result here
 		}
 	}
+
+	// Shim for backward compatibility (no id)
+	function update(){
+		if( $this->rs['id'] == 0 ){
+			// remove zero id
+			unset($this->rs['id']);
+			// use keys instead
+			$this->pkname = "key";
+		}
+		// continue
+		parent::update();
+	}
+
 }
 ?>

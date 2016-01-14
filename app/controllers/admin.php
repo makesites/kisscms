@@ -25,7 +25,8 @@ class Admin extends Controller {
 		// check user input
 		if( isset($_POST['admin_username']) && $_POST['admin_password']){
 			$username=trim($_POST['admin_username']);
-			$password=crypt($_POST['admin_password'], CIPHER);
+			$cipher = (is_null(CIPHER)) ? $_POST['admin_password'] : CIPHER;
+			$password=crypt($_POST['admin_password'], $cipher);
 			// check for the entered data
 			// #25 - leaving legacy password check for backwards compatibility (to be deprecated)
 			if( $username == $db_username && ( $password == $db_password || $_POST['admin_password'] == $db_password ) ){
@@ -71,7 +72,8 @@ class Admin extends Controller {
 			$table = $name[0];
 			$key = $name[1];
 			//#25 - encrypting 'password' fields
-			$value = ( $key == "admin_password" ) ? crypt( $v, CIPHER ) : $v;
+			$cipher = (is_null(CIPHER)) ? $v : CIPHER;
+			$value = ( $key == "admin_password" ) ? crypt( $v, $cipher ) : $v;
 
 			// only save the data that has changed
 			if( $GLOBALS["config"][$table][$key] != $value ){

@@ -60,7 +60,7 @@ set_exception_handler("uncaught_exception_handler");
 
 if( defined("SHARED") ) putenv('TMPDIR=' . ini_get('upload_tmp_dir'));
 
-if( !defined("CIPHER") ) define('CIPHER', "KISSCMS");
+if( !defined("CIPHER") ) define('CIPHER', NULL);
 
 // set timezone (option?)
 date_default_timezone_set('UTC');

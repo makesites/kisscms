@@ -144,8 +144,8 @@ class Template extends KISS_View {
 
 		$output = $dom->saveHTML();
 
-		// output the final markup - clear whitespace
-		return  ( DEBUG ) ? $output : $this->trimWhitespace( $output );
+		// output the final markup - minify if not in debug
+		return  ( DEBUG ) ? $output : $min->html( $output );
 
 	}
 

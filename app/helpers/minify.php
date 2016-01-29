@@ -265,6 +265,15 @@ class Minify extends UglifyJS {
 
 	}
 
+	function html( $markup ){
+		// remove whitspace
+		$markup = $this->_trimHTMLWhitespace( $markup );
+		// remove comments
+		$markup = $this->_trimHTMLComments( $markup );
+	}
+
+	// Helpers
+
 	function requireDebug( $dom=false, $file=false ){
 
 		$client = "";
@@ -683,6 +692,19 @@ class Minify extends UglifyJS {
 
 		return $string;
 	}
+
+	// HTML methods
+
+	function _trimHTMLWhitespace( $string ){
+		// replace multiple spaces with one (except textarea)
+		return preg_replace( '/(?:\s+(?![^<]*<\/(textarea|pre)>))/', ' ', $string );
+	}
+
+	function _trimHTMLComments( $string ){
+		// remove comments
+		return preg_replace( '/<!--(.*?)-->/', ' ', $string );
+	}
+
 	// deprecate...
 	function updateDom($tag, $dom){
 		// switch based on the type of tag (script,link)
@@ -701,12 +723,15 @@ class Minify extends UglifyJS {
 		return $dom;
 	}
 
+	// Cache methods
+
 	function getCache($path ){
 		$cache = new Minify_Cache_File();
 		// check if the file is less than an hour old
 		//return ( $cache->isValid($path, time("now")-3600) ) ? $cache->fetch($path) : false;
 		return $cache->fetch($path);
 	}
+
 	function setCache($path, $content){
 		$cache = new Minify_Cache_File();
 		$cache->store($path, $content);

@@ -270,6 +270,8 @@ class Minify extends UglifyJS {
 		$markup = $this->_trimHTMLWhitespace( $markup );
 		// remove comments
 		$markup = $this->_trimHTMLComments( $markup );
+		// return minified markup
+		return $markup;
 	}
 
 	// Helpers

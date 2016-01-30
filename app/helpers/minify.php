@@ -164,9 +164,9 @@ class Minify extends UglifyJS {
 			// get the signature
 			//$md5 .= md5($css);
 			// remove comments
-			$css = $this->removeCommentsCSS($css);
+			$css = $this->_trimCSSComments($css);
 			// strip whitspace
-			$css = $this->trimWhitespace($css);
+			$css = $this->_trimCSSWhitespace($css);
 			$this->_content[$group] = $css;
 			//$this->_srcs[$group] = $cache_path ."$group.$md5.min.css";
 			$this->_srcs[$group] = $cache_path ."$group.css";
@@ -233,9 +233,9 @@ class Minify extends UglifyJS {
 			// get the signature
 			//$md5 = md5($css);
 			// remove comments
-			$css = $this->removeCommentsCSS($css);
+			$css = $this->_trimCSSComments($css);
 			// strip whitspace
-			$css = $this->trimWhitespace($css);
+			$css = $this->_trimCSSWhitespace($css);
 			$this->_content[] = $css;
 			//$filename =  basename($href, ".less").".$md5.min.css";
 			$filename =  basename($href, ".less").".css";
@@ -680,12 +680,14 @@ class Minify extends UglifyJS {
 		return $this->cache->getPath() ."/{$_SERVER['HTTP_HOST']}/";
 	}
 
-	function trimWhitespace( $string, $replace=" " ){
+	// CSS methods
+
+	function _trimCSSWhitespace( $string, $replace=" " ){
 		// replace multiple spaces with one
 		return preg_replace( '/\s+/', $replace, $string );
 	}
 
-	function removeCommentsCSS( $string ){
+	function _trimCSSComments( $string ){
 		$regex = array(
 			"!/\*.*?\*/!s"=>'',
 			"/\n\s*\n/"=>"\n"

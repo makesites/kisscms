@@ -9,6 +9,8 @@ class Page extends Model {
 		parent::__construct('pages.sqlite',  $this->pkname, $this->tablename); //primary key = id; tablename = pages
 		// the model
 		$this->schema();
+		// data container
+		if( !isset($this->rs) ) $this->rs = array();
 		// retrieve the specific page (if available)
 		if ($id){
 			$this->retrieve($id);
@@ -43,7 +45,7 @@ class Page extends Model {
 		return parent::update();
 	}
 
-	function schema(){
+	function schema( $schema=array() ){
 
 		$schema = array(
 			'id' => '',

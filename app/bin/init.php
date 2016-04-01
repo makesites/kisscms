@@ -37,7 +37,7 @@ if(!defined("TEMPLATES")) define('TEMPLATES', $templates );
 //===============================================
 requireAll( "lib" );
 // by default load the mvc.php first - which should only be one!
-requireAll( "helpers", false, array("mvc.php") );
+requireAll( "helpers", false, array("mvc.php", "section.php") );
 
 
 //===============================================
@@ -189,8 +189,8 @@ function requireAll($folder='', $exclude=array(), $priority=array()){
 	// all the files in the priority list
 	if( is_array($priority) ){
 		foreach($priority as $file){
-			$priorities = (array)glob("$folder/$file",GLOB_BRACE);
 			if(!$priorities) $priorities = array();
+			$priorities = array_merge( $priorities, (array)glob("$folder/$file",GLOB_BRACE) );
 			if( defined("APP") ){
 				$search = glob(APP."$folder/$file",GLOB_BRACE);
 				if($search) $priorities = array_merge( $priorities, (array)$search );

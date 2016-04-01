@@ -260,7 +260,7 @@ class Template extends KISS_View {
 		}
 		// if in debug, remove any scripts in the require.js paths
 		$scripts = ( !empty($this->client['require']['paths']) );
-		if(DEBUG && $scripts) {
+		if( (DEBUG || !$this->useRequire() ) && $scripts ){
 			// add the scripts in the require list as script tags
 			$head = $dom->getElementsByTagName("head")->item(0);
 
@@ -280,8 +280,9 @@ class Template extends KISS_View {
 		}
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
-		$client .= 'require.config( KISSCMS["require"] );';
-
+		if( $this->useRequire() ){
+			$client .= 'require.config( KISSCMS["require"] );';
+		}
 		$client = $this->trimWhitespace($client);
 		// #87 not caching client vars as a file
 		/*

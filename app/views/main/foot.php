@@ -5,5 +5,5 @@
 
 <script id="require-main" type="text/javascript" data-main="<?=url("/client")?>" src="<?=url("/js/libs/require.js")?>"  defer="defer"></script>
 <?php } else { ?>
-<script type="text/javascript" src="<?=url("/client")?>"></script>
+<script type="text/javascript" src="<?=url("/client.js")?>"></script>
 <?php } ?>

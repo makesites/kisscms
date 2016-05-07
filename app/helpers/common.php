@@ -694,6 +694,7 @@ function urlmtime( $url = false ){
 	if( !$url ) return 0;
 	// variables
 	$last_modified = false;
+	/* OLD metod:
 	// get the headers
 	$headers = get_headers($url);
 	if( !is_array($headers) ) return 0;
@@ -705,6 +706,20 @@ function urlmtime( $url = false ){
 			break;
 		}
 	}
+	*/
+	$parsed_url = parse_url($url);
+	$path = $parsed_url['path'];
+
+	if ($path[0] == "/") {
+		$filename = $_SERVER['DOCUMENT_ROOT'] . $path;
+	} else {
+		$filename = $path;
+	}
+
+	if (file_exists($filename)) {
+		$last_modified = date('YmdHis', filemtime($filename));
+	}
+
 	if( !$last_modified ) return 0;
 	// convert to timestamp
 	$mtime = strtotime( $last_modified );

@@ -281,7 +281,7 @@ class Template extends KISS_View {
 		// render the global client vars
 		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
 		if( $this->useRequire() ){
-			$client .= 'if( require ) require.config( KISSCMS["require"] );';
+			$client .= 'if(typeof require != "undefined") require.config( KISSCMS["require"] );';
 		}
 		$client = $this->trimWhitespace($client);
 		// #87 not caching client vars as a file

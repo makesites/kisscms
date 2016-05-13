@@ -529,6 +529,9 @@ class Controller extends KISS_Controller {
 		//$this->data["body"][$class]["view"] = ($view) ? getPath('views/'.$class.'/'. $view .'.php') : getPath('views/'.$class.'/body.php');
 		// get the actual path of the view
 		$view = getPath('views/'.$class.'/'. $view .'.php');
+		// FIX: ultimate fallback
+		if( !$view ) $view = getPath('views/main/body.php');
+		//
 		if( array_key_exists("body" , $this->data ) ){
 			foreach( $this->data["body"] as $k => $v ){
 				if( !is_array($v) ) $v = array();

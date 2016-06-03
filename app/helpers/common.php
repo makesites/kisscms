@@ -32,8 +32,11 @@ function findController($url) {
 		if( !defined("CONTROLLER") ) define("CONTROLLER", $controller);
 		// include the controller file
 		require( $controllerfile );
-		// return the controller name with the first letter uppercase
-		return ucfirst( $controller );
+		// NEW: CamelCase controller (plus remove special characters)
+		$controller = str_replace(" ", "", ucwords( preg_replace("/\.|\-/", " ", $controller) ) );
+		// OLD: return the controller name with the first letter uppercase
+		//ucfirst( $controller )
+		return $controller;
 	}
 }
 

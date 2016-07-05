@@ -27,12 +27,16 @@ class Template extends KISS_View {
 	}
 
 	public static function output($vars=''){
+		// variables
 		$template = new Template($vars);
-		// first thing, check if there's a cached version of the template
+		$cache = null;
 		$id = "{$_SERVER['HTTP_HOST']}/html/". $template->hash;
-		$cache = self::getCache( $id );
+		// get available cache (if applicable)
+		if( $template->canCache() )
+			// first thing, check if there's a cached version of the template
+			$cache = self::getCache( $id );
 		//$cache = false;
-		if($cache && !DEBUG) { echo $cache; return; }
+		if( !is_null($cache) && !DEBUG) { echo $cache; return; }
 		// continue processing
 		$template->setupClient();
 		//
@@ -184,7 +188,11 @@ class Template extends KISS_View {
 		$cache = new Minify_Cache_File();
 		$cache->store($file, $data);
 	}
-
+	function canCache(){
+		// currently only admin urls are excluded, in the future this may be extensible
+		$valid = ( strpos($_SERVER['REQUEST_URI'], "/admin/") !== 0 );
+		return $valid;
+	}
 
 	function getTemplate(){
 		// support for mobile template

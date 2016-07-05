@@ -46,6 +46,17 @@ requireAll( "helpers", false, array("mvc.php", "section.php") );
 $url = parse_url( $_SERVER['REQUEST_URI'] );
 // first check if this is a "static" asset
 if ($output = isStatic($url['path']) ) {
+	// add headers
+	if ( isset($_SERVER['HTTP_ORIGIN']) ) {
+		header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+		header("Access-Control-Allow-Credentials: true");
+	} else {
+		header("Access-Control-Allow-Origin: *");
+	}
+	header("Access-Control-Allow-Headers: X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-PINGOTHER");
+	header("Access-Control-Max-Age: 86400");	// cache for 1 day
+	header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+	//
 	echo getFile( $output );
 	exit;
 }

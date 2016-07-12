@@ -36,7 +36,7 @@ class Template extends KISS_View {
 			// first thing, check if there's a cached version of the template
 			$cache = self::getCache( $id );
 		//$cache = false;
-		if( !is_null($cache) && !DEBUG) { echo $cache; return; }
+		if( !empty($cache) && !DEBUG) { echo $cache; return; }
 		// continue processing
 		$template->setupClient();
 		//

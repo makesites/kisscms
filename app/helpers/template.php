@@ -163,12 +163,14 @@ class Template extends KISS_View {
 
 		// NEW method
 		// the hash is a combination of :
+		// - the protocol
 		// - the request url
 		// - the request parameters
 		// - the session id
 		//
+		$protocol = ( isSSL() ) ? "secure": "public";
 		// use serialize( $_REQUEST ) instead?
-		$key = session_id() . json_encode($_REQUEST) . $_SERVER['REQUEST_URI'];
+		$key = session_id() . json_encode($_REQUEST) . $protocol . $_SERVER['REQUEST_URI'];
 		// generate a hash form the string
 		return $prefix . hash("md5", $key);
 

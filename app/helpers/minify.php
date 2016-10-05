@@ -192,6 +192,7 @@ class Minify extends UglifyJS {
 		// if in debug no need to change anything
 		if( DEBUG ) return $dom;
 
+		$timestamp = strtotime("now");
 		$el = array();
 		$target = array();
 		$less = new lessc;
@@ -245,7 +246,7 @@ class Minify extends UglifyJS {
 			// change the attributes to css
 			$tag->setAttribute("rel", "stylesheet");
 			// change the link to its compiled version
-			$tag->setAttribute("href", cdn($baseUrl . $filename) );
+			$tag->setAttribute("href", cdn($baseUrl . $filename ."?t=". $timestamp) );
 
 		}
 
@@ -431,6 +432,7 @@ class Minify extends UglifyJS {
 	// update the DOM
 	function update( $dom ){
 
+		$timestamp = strtotime("now");
 		//main dom containers
 		$head = $dom->getElementsByTagName("head")->item(0);
 		$require_main = $dom->getElementById("require-main");
@@ -451,13 +453,13 @@ class Minify extends UglifyJS {
 					if( is_null($container) ){
 						$tag = $dom->createElement('link');
 						$tag->setAttribute("type", "text/css");
-						$tag->setAttribute("href", cdn($file));
+						$tag->setAttribute("href", cdn($file ."?t=". $timestamp));
 						$tag->setAttribute("rel", "stylesheet");
 						$tag->setAttribute("media", "screen");
 						// append at the end of the head section
 						$head->appendChild($tag);
 					} else {
-						$container->setAttribute("href", cdn($file));
+						$container->setAttribute("href", cdn($file ."?t=". $timestamp));
 						// remove data* attributes
 						$container->removeAttribute("data-group");
 						$container->removeAttribute("data-type");
@@ -469,10 +471,10 @@ class Minify extends UglifyJS {
 					if( is_null($container) ){
 						$tag = $dom->createElement('script');
 						$tag->setAttribute("type", "text/javascript");
-						$tag->setAttribute("src", cdn($file));
+						$tag->setAttribute("src", cdn($file ."?t=". $timestamp));
 						$tag->setAttribute("defer", "defer");
 					} else {
-						$container->setAttribute("src", cdn($file));
+						$container->setAttribute("src", cdn($file ."?t=". $timestamp));
 						// remove data* attributes
 						$container->removeAttribute("data-group");
 						$container->removeAttribute("data-type");

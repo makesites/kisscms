@@ -360,8 +360,9 @@ class KISS_Model  {
 		return $arr;
 	}
 
-	function select($selectwhat='*',$wherewhat='',$bindings='',$pdo_fetch_mode=PDO::FETCH_ASSOC) {
+	function select($selectwhat='*',$wherewhat='',$bindings='') {
 		$dbh=$this->getdbh();
+		$pdo_fetch_mode=PDO::FETCH_ASSOC; // condition to use a global var?
 		if (is_scalar($bindings))
 			$bindings=$bindings ? array($bindings) : array();
 		$sql = 'SELECT '.$selectwhat.' FROM '.$this->tablename;

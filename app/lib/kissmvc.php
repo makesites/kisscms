@@ -230,7 +230,7 @@ class KISS_Model  {
 
 	//Inserts record into database with a new auto-incremented primary key
 	//If the primary key is empty, then the PK column should have been set to auto increment
-	function create() {
+	function create($key, $params=array()) {
 		$dbh=$this->getdbh();
 		$pkname=$this->pkname;
 		$s1=$s2='';

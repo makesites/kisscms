@@ -137,7 +137,7 @@ class REST_Service extends Controller {
 	}
 
 
-	function render() {
+	function render( $view=false ) {
 
 		// set the right header
 		if (isset($_SERVER['HTTP_ACCEPT']) &&

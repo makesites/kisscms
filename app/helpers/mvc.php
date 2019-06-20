@@ -3,6 +3,9 @@
 //===============================================================
 // Model/ORM
 //===============================================================
+
+if (!class_exists('Model')){
+
 class Model extends KISS_Model  {
 
 	public $db;
@@ -341,8 +344,9 @@ class Model extends KISS_Model  {
 		return  $random . dechex( $now );
 	}
 
-}
+}}
 
+if (!class_exists('Controller')){
 //===============================================================
 // Controller
 //===============================================================
@@ -474,6 +478,24 @@ class Controller extends KISS_Controller {
 				$remove[] = $p[0];
 			}
 		}
+		// exclude query vars
+		if( !empty($request['query'])
+				&& array_key_exists('site', $GLOBALS["config"])
+				&& !empty($GLOBALS["config"]['site']['exclude_params']) ){
+			$exclude_params = $GLOBALS["config"]['site']['exclude_params'];
+			// make sure exclude_params is an array
+			if( is_scalar($exclude_params) ) $exclude_params = explode("|", $exclude_params);
+			$q=0;
+			foreach($request['query'] as $query){
+				// skip every other query pair...
+				if($q%2 !== 0) continue;
+				$q++;
+				if( !in_array($query, $exclude_params) ) continue;
+				// remove both query key and value
+				$remove[] = $query;
+				$remove[] = $request['query'][$q];
+			}
+		}
 
 		// lastly convert the params in pairs
 		$params = $this->normalize_params( $request, $remove );
@@ -485,8 +507,16 @@ class Controller extends KISS_Controller {
 
 		// calculate the path - possibly this can be merged with parse_http_request()
 		$path = preg_replace('#^'.addslashes(WEB_FOLDER).'#', '', $_SERVER['REQUEST_URI']);
+		// remove any params from the query
+		if( isset($exclude_params) ){
+			foreach( $exclude_params as $param ){
+				$path = preg_replace( '/'.$param.'=[A-Za-z0-9_-]*'.'/', '', $path);
+			}
+		}
 		// check if we have a trailing slash (and remove it)
 		$path = ( substr($path, -1) == "/" ) ? substr($path, 0, -1) : $path;
+		// check if we have a question mark with nothing following it (and remove it)
+		$path = ( substr($path, -1) == "?" ) ? substr($path, 0, -1) : $path;
 		// save the path for later use by controllers and helpers
 		$GLOBALS['path'] = $this->data['path'] = $path;
 		// save a reference to the endpoint
@@ -635,8 +665,10 @@ class Controller extends KISS_Controller {
 		// return cache if any...
 		return $cache;
 	}
-}
 
+}}
+
+if (!class_exists('View')){
 //===============================================================
 // View
 //===============================================================
@@ -655,6 +687,6 @@ class View extends KISS_View {
 		return $view;
 	}
 
-}
+}}
 
 ?>

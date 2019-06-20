@@ -25,6 +25,9 @@ if( class_exists('Config') && method_exists(new Config(),'register')){
 
 	Config::register("admin", "uglify_service", "http://uglify.makesit.es/");
 
+	Config::register("site", "exclude_params", "fbclid");
+
+
 	// Definitions
 	define('DEFAULT_ROUTE', $GLOBALS['config']['main']['default_route']);
 	define('DEFAULT_ACTION', $GLOBALS['config']['main']['default_action']);

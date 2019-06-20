@@ -3,8 +3,8 @@
 /**
  * HTTP Class
  *
- * This is a wrapper HTTP class that uses either cURL or fsockopen to 
- * harvest resources from web. This can be used with scripts that need 
+ * This is a wrapper HTTP class that uses either cURL or fsockopen to
+ * harvest resources from web. This can be used with scripts that need
  * a way to communicate with various APIs who support REST.
  *
  * @author      Md Emran Hasan <phpfour@gmail.com>
@@ -12,7 +12,7 @@
  * @copyright   2007-2008 Md Emran Hasan
  * @link        http://www.phpfour.com/lib/http
  * @since       Version 0.1.1
- * 
+ *
  * Modifications:
  * - Replaced eregi() method with preg_match_all
  * - Disabled the CURLOPT_FOLLOWLOCATION flag
@@ -26,189 +26,189 @@ class Http
      * @var string
      */
     var $target;
-    
+
     /**
      * Contains the target host
      *
      * @var string
      */
     var $host;
-    
+
     /**
      * Contains the target port
      *
      * @var integer
      */
     var $port;
-    
+
     /**
      * Contains the target path
      *
      * @var string
      */
     var $path;
-    
+
     /**
      * Contains the target schema
      *
      * @var string
      */
     var $schema;
-    
+
     /**
      * Contains the http method (GET or POST)
      *
      * @var string
      */
     var $method;
-    
+
     /**
      * Contains the parameters for request
      *
      * @var array
      */
     var $params;
-    
+
     /**
      * Contains the cookies for request
      *
      * @var array
      */
     var $cookies;
-    
+
     /**
      * Contains the cookies retrieved from response
      *
      * @var array
      */
     var $_cookies;
-    
+
     /**
      * Number of seconds to timeout
      *
      * @var integer
      */
     var $timeout;
-    
+
     /**
      * Whether to use cURL or not
      *
      * @var boolean
      */
     var $useCurl;
-    
+
     /**
      * Contains the referrer URL
      *
      * @var string
      */
     var $referrer;
-    
+
     /**
      * Contains the User agent string
      *
      * @var string
      */
     var $userAgent;
-    
+
     /**
      * Contains the cookie path (to be used with cURL)
      *
      * @var string
      */
     var $cookiePath;
-    
+
     /**
      * Whether to use cookie at all
      *
      * @var boolean
      */
     var $useCookie;
-    
+
     /**
      * Whether to store cookie for subsequent requests
      *
      * @var boolean
      */
     var $saveCookie;
-    
+
     /**
      * Contains the Username (for authentication)
      *
      * @var string
      */
     var $username;
-    
+
     /**
      * Contains the Password (for authentication)
      *
      * @var string
      */
     var $password;
-    
+
     /**
      * Contains the fetched web source
      *
      * @var string
      */
     var $result;
-    
+
     /**
-     * Contains the last headers 
+     * Contains the last headers
      *
      * @var string
      */
     var $headers;
-    
+
     /**
      * Contains the last call's http status code
      *
      * @var string
      */
     var $status;
-    
+
     /**
      * Whether to follow http redirect or not
      *
      * @var boolean
      */
     var $redirect;
-    
+
     /**
      * The maximum number of redirect to follow
      *
      * @var integer
      */
     var $maxRedirect;
-    
+
     /**
      * The current number of redirects
      *
      * @var integer
      */
     var $curRedirect;
-    
+
     /**
      * Contains any error occurred
      *
      * @var string
      */
     var $error;
-    
+
     /**
      * Store the next token
      *
      * @var string
      */
     var $nextToken;
-    
+
     /**
      * Whether to keep debug messages
      *
      * @var boolean
      */
     var $debug;
-    
+
     /**
      * Stores the debug messages
      *
@@ -216,25 +216,25 @@ class Http
      * @todo will keep debug messages
      */
     var $debugMsg;
-    
+
     /**
      * Constructor for initializing the class with default values.
-     * 
-     * @return void  
+     *
+     * @return void
      */
-    function Http()
+    function __construct()
     {
-        $this->clear();    
+        $this->clear();
     }
-    
+
     /**
      * Initialize preferences
-     * 
-     * This function will take an associative array of config values and 
-     * will initialize the class variables using them. 
-     * 
+     *
+     * This function will take an associative array of config values and
+     * will initialize the class variables using them.
+     *
      * Example use:
-     * 
+     *
      * <pre>
      * $httpConfig['method']     = 'GET';
      * $httpConfig['target']     = 'http://www.somedomain.com/index.html';
@@ -242,14 +242,14 @@ class Http
      * $httpConfig['user_agent'] = 'My Crawler';
      * $httpConfig['timeout']    = '30';
      * $httpConfig['params']     = array('var1' => 'testvalue', 'var2' => 'somevalue');
-     * 
+     *
      * $http = new Http();
      * $http->initialize($httpConfig);
      * </pre>
      *
      * @param array Config values as associative array
      * @return void
-     */    
+     */
     function initialize($config = array())
     {
         $this->clear();
@@ -258,7 +258,7 @@ class Http
             if (isset($this->$key))
             {
                 $method = 'set' . ucfirst(str_replace('_', '', $key));
-                
+
                 if (method_exists($this, $method))
                 {
                     $this->$method($val);
@@ -266,16 +266,16 @@ class Http
                 else
                 {
                     $this->$key = $val;
-                }            
+                }
             }
         }
     }
-    
+
     /**
      * Clear Everything
-     * 
+     *
      * Clears all the properties of the class and sets the object to
-     * the beginning state. Very handy if you are doing subsequent calls 
+     * the beginning state. Very handy if you are doing subsequent calls
      * with different data.
      *
      * @return void
@@ -293,8 +293,8 @@ class Http
         $this->headers      = array();
         $this->cookies      = array();
         $this->_cookies     = array();
-        
-        // Set the config details        
+
+        // Set the config details
         $this->debug        = FALSE;
         $this->error        = '';
         $this->status       = 0;
@@ -304,7 +304,7 @@ class Http
         $this->username     = '';
         $this->password     = '';
         $this->redirect     = TRUE;
-        
+
         // Set the cookie and agent defaults
         $this->nextToken    = '';
         $this->useCookie    = TRUE;
@@ -313,7 +313,7 @@ class Http
         $this->cookiePath   = 'cookie.txt';
         $this->userAgent    = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.6) Gecko/20070725 Firefox/2.0.0.9';
     }
-    
+
     /**
      * Set target URL
      *
@@ -325,9 +325,9 @@ class Http
         if ($url)
         {
             $this->target = $url;
-        }   
+        }
     }
-    
+
     /**
      * Set http method
      *
@@ -339,9 +339,9 @@ class Http
         if ($method == 'GET' || $method == 'POST')
         {
             $this->method = $method;
-        }   
+        }
     }
-    
+
     /**
      * Set referrer URL
      *
@@ -353,9 +353,9 @@ class Http
         if ($referrer)
         {
             $this->referrer = $referrer;
-        }   
+        }
     }
-    
+
     /**
      * Set User agent string
      *
@@ -367,9 +367,9 @@ class Http
         if ($agent)
         {
             $this->userAgent = $agent;
-        }   
+        }
     }
-    
+
     /**
      * Set timeout of execution
      *
@@ -381,9 +381,9 @@ class Http
         if ($seconds > 0)
         {
             $this->timeout = $seconds;
-        }   
+        }
     }
-    
+
     /**
      * Set cookie path (cURL only)
      *
@@ -395,9 +395,9 @@ class Http
         if ($path)
         {
             $this->cookiePath = $path;
-        }   
+        }
     }
-    
+
     /**
      * Set request parameters
      *
@@ -409,9 +409,9 @@ class Http
         if (is_array($dataArray))
         {
             $this->params = array_merge($this->params, $dataArray);
-        }   
+        }
     }
-    
+
     /**
      * Set basic http authentication realm
      *
@@ -427,7 +427,7 @@ class Http
             $this->password = $password;
         }
     }
-    
+
     /**
      * Set maximum number of redirection to follow
      *
@@ -441,7 +441,7 @@ class Http
             $this->maxRedirect = $value;
         }
     }
-    
+
     /**
      * Add request parameters
      *
@@ -454,9 +454,9 @@ class Http
         if (!empty($name) && !empty($value))
         {
             $this->params[$name] = $value;
-        }   
+        }
     }
-    
+
     /**
      * Add a cookie to the request
      *
@@ -469,9 +469,9 @@ class Http
         if (!empty($name) && !empty($value))
         {
             $this->cookies[$name] = $value;
-        }   
+        }
     }
-    
+
     /**
      * Whether to use cURL or not
      *
@@ -483,9 +483,9 @@ class Http
         if (is_bool($value))
         {
             $this->useCurl = $value;
-        }   
+        }
     }
-    
+
     /**
      * Whether to use cookies or not
      *
@@ -497,9 +497,9 @@ class Http
         if (is_bool($value))
         {
             $this->useCookie = $value;
-        }   
+        }
     }
-    
+
     /**
      * Whether to save persistent cookies in subsequent calls
      *
@@ -511,9 +511,9 @@ class Http
         if (is_bool($value))
         {
             $this->saveCookie = $value;
-        }   
+        }
     }
-    
+
     /**
      * Whether to follow HTTP redirects
      *
@@ -525,9 +525,9 @@ class Http
         if (is_bool($value))
         {
             $this->redirect = $value;
-        }   
+        }
     }
-    
+
     /**
      * Get execution result body
      *
@@ -537,7 +537,7 @@ class Http
     {
         return $this->result;
     }
-    
+
     /**
      * Get execution result headers
      *
@@ -557,7 +557,7 @@ class Http
     {
         return $this->status;
     }
-        
+
     /**
      * Get last execution error
      *
@@ -570,52 +570,52 @@ class Http
 
     /**
      * Execute a HTTP request
-     * 
+     *
      * Executes the http fetch using all the set properties. Intellegently
      * switch to fsockopen if cURL is not present. And be smart to follow
      * redirects (if asked so).
-     * 
+     *
      * @param string URL of the target page (optional)
      * @param string URL of the referrer page (optional)
      * @param string The http method (GET or POST) (optional)
      * @param array Parameter array for GET or POST (optional)
      * @return string Response body of the target page
-     */    
+     */
     function execute($target = '', $referrer = '', $method = '', $data = array())
     {
         // Populate the properties
         $this->target = ($target) ? $target : $this->target;
         $this->method = ($method) ? $method : $this->method;
-        
+
         $this->referrer = ($referrer) ? $referrer : $this->referrer;
-        
+
         // Add the new params
-        if (is_array($data) && count($data) > 0) 
+        if (is_array($data) && count($data) > 0)
         {
             $this->params = array_merge($this->params, $data);
         }
-        
+
         // Process data, if presented
         if(is_array($this->params) && count($this->params) > 0)
         {
             // Get a blank slate
             $tempString = array();
-            
+
             // Convert data array into a query string (ie animal=dog&sport=baseball)
-            foreach ($this->params as $key => $value) 
+            foreach ($this->params as $key => $value)
             {
                 if(strlen(trim($value))>0)
                 {
                     $tempString[] = $key . "=" . urlencode($value);
                 }
             }
-            
+
             $queryString = join('&', $tempString);
         }
-        
+
         // If cURL is not installed, we'll force fscokopen
         $this->useCurl = $this->useCurl && in_array('curl', get_loaded_extensions());
-        
+
         // GET method configuration
         if($this->method == 'GET')
         {
@@ -624,10 +624,10 @@ class Http
                 $this->target = $this->target . "?" . $queryString;
             }
         }
-        
+
         // Parse target URL
         $urlParsed = parse_url($this->target);
-        
+
         // Handle SSL connection request
         if ($urlParsed['scheme'] == 'https')
         {
@@ -639,43 +639,43 @@ class Http
             $this->host = $urlParsed['host'];
             $this->port = ($this->port != 0) ? $this->port : 80;
         }
-        
+
         // Finalize the target path
         $this->path   = (isset($urlParsed['path']) ? $urlParsed['path'] : '/') . (isset($urlParsed['query']) ? '?' . $urlParsed['query'] : '');
         $this->schema = $urlParsed['scheme'];
-        
+
         // Pass the requred cookies
         $this->_passCookies();
-        
+
         // Process cookies, if requested
         if(is_array($this->cookies) && count($this->cookies) > 0)
         {
             // Get a blank slate
             $tempString   = array();
-            
+
             // Convert cookiesa array into a query string (ie animal=dog&sport=baseball)
-            foreach ($this->cookies as $key => $value) 
+            foreach ($this->cookies as $key => $value)
             {
                 if(strlen(trim($value)) > 0)
                 {
                     $tempString[] = $key . "=" . urlencode($value);
                 }
             }
-            
+
             $cookieString = join('&', $tempString);
         }
-        
+
         // Do we need to use cURL
         if ($this->useCurl)
         {
             // Initialize PHP cURL handle
             $ch = curl_init();
-    
+
             // GET method configuration
             if($this->method == 'GET')
             {
-                curl_setopt ($ch, CURLOPT_HTTPGET, TRUE); 
-                curl_setopt ($ch, CURLOPT_POST, FALSE); 
+                curl_setopt ($ch, CURLOPT_HTTPGET, TRUE);
+                curl_setopt ($ch, CURLOPT_POST, FALSE);
             }
             // POST method configuration
             else
@@ -684,54 +684,54 @@ class Http
                 {
                     curl_setopt ($ch, CURLOPT_POSTFIELDS, $queryString);
                 }
-                
-                curl_setopt ($ch, CURLOPT_POST, TRUE); 
-                curl_setopt ($ch, CURLOPT_HTTPGET, FALSE); 
+
+                curl_setopt ($ch, CURLOPT_POST, TRUE);
+                curl_setopt ($ch, CURLOPT_HTTPGET, FALSE);
             }
-            
+
             // Basic Authentication configuration
             if ($this->username && $this->password)
             {
                 curl_setopt($ch, CURLOPT_USERPWD, $this->username . ':' . $this->password);
             }
-            
+
             // Custom cookie configuration
             if($this->useCookie && isset($cookieString))
             {
                 curl_setopt ($ch, CURLOPT_COOKIE, $cookieString);
             }
-            
+
             curl_setopt($ch, CURLOPT_HEADER,         TRUE);                 // No need of headers
             curl_setopt($ch, CURLOPT_NOBODY,         FALSE);                // Return body
-                
+
             curl_setopt($ch, CURLOPT_COOKIEJAR,      $this->cookiePath);    // Cookie management.
             curl_setopt($ch, CURLOPT_TIMEOUT,        $this->timeout);       // Timeout
             curl_setopt($ch, CURLOPT_USERAGENT,      $this->userAgent);     // Webbot name
             curl_setopt($ch, CURLOPT_URL,            $this->target);        // Target site
             curl_setopt($ch, CURLOPT_REFERER,        $this->referrer);      // Referer value
-            
+
             curl_setopt($ch, CURLOPT_VERBOSE,        FALSE);                // Minimize logs
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);                // No certificate
             //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $this->redirect);      // Follow redirects
             curl_setopt($ch, CURLOPT_MAXREDIRS,      $this->maxRedirect);   // Limit redirections to four
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);                 // Return in string
-            
+
             // Get the target contents
             $content = curl_exec($ch);
             $contentArray = explode("\r\n\r\n", $content);
-            
-            // Get the request info 
+
+            // Get the request info
             $status  = curl_getinfo($ch);
-            
+
             // Store the contents
-            $this->result = $contentArray[count($contentArray) - 1]; 
+            $this->result = $contentArray[count($contentArray) - 1];
 
             // Parse the headers
             $this->_parseHeaders($contentArray[count($contentArray) - 2]);
-                        
+
             // Store the error (is any)
             $this->_setError(curl_error($ch));
-            
+
             // Close PHP cURL handle
             curl_close($ch);
         }
@@ -739,7 +739,7 @@ class Http
         {
             // Get a file pointer
             $filePointer = fsockopen($this->host, $this->port, $errorNumber, $errorString, $this->timeout);
-       
+
             // We have an error if pointer is not there
             if (!$filePointer)
             {
@@ -752,7 +752,7 @@ class Http
             $requestHeader .= "Host: " . $urlParsed['host'] . "\r\n";
             $requestHeader .= "User-Agent: " . $this->userAgent . "\r\n";
             $requestHeader .= "Content-Type: application/x-www-form-urlencoded\r\n";
-            
+
             // Specify the custom cookies
             if ($this->useCookie && $cookieString != '')
             {
@@ -764,30 +764,30 @@ class Http
             {
                 $requestHeader.= "Content-Length: " . strlen($queryString) . "\r\n";
             }
-            
+
             // Specify the referrer
             if ($this->referrer != '')
             {
                 $requestHeader.= "Referer: " . $this->referrer . "\r\n";
             }
-            
+
             // Specify http authentication (basic)
             if ($this->username && $this->password)
             {
                 $requestHeader.= "Authorization: Basic " . base64_encode($this->username . ':' . $this->password) . "\r\n";
             }
-       
+
             $requestHeader.= "Connection: close\r\n\r\n";
-       
+
             // POST method configuration
             if ($this->method == "POST")
             {
                 $requestHeader .= $queryString;
-            }           
+            }
 
             // We're ready to launch
             fwrite($filePointer, $requestHeader);
-       
+
             // Clean the slate
             $responseHeader = '';
             $responseContent = '';
@@ -798,10 +798,10 @@ class Http
                 $responseHeader .= fread($filePointer, 1);
             }
             while (!preg_match('/\\r\\n\\r\\n$/', $responseHeader));
-            
+
             // Parse the headers
             $this->_parseHeaders($responseHeader);
-            
+
             // Do we have a 301/302 redirect ?
             if (($this->status == '301' || $this->status == '302') && $this->redirect == TRUE)
             {
@@ -809,26 +809,26 @@ class Http
                 {
                     // Let's find out the new redirect URL
                     $newUrlParsed = parse_url($this->headers['location']);
-                    
+
                     if ($newUrlParsed['host'])
                     {
-                        $newTarget = $this->headers['location'];    
+                        $newTarget = $this->headers['location'];
                     }
                     else
                     {
                         $newTarget = $this->schema . '://' . $this->host . '/' . $this->headers['location'];
                     }
-                    
+
                     // Reset some of the properties
                     $this->port   = 0;
                     $this->status = 0;
                     $this->params = array();
                     $this->method = 'GET';
                     $this->referrer = $this->target;
-                    
+
                     // Increase the redirect counter
                     $this->curRedirect++;
-                    
+
                     // Let's go, go, go !
                     $this->result = $this->execute($newTarget);
                 }
@@ -855,7 +855,7 @@ class Http
                     {
                         $responseContentChunk = '';
                         $readLength = 0;
-                       
+
                         while ($readLength < $chunkLength)
                         {
                             $responseContentChunk .= fread($filePointer, $chunkLength - $readLength);
@@ -863,24 +863,24 @@ class Http
                         }
 
                         $responseContent .= $responseContentChunk;
-                        fgets($filePointer);  
+                        fgets($filePointer);
                     }
                 }
-                
+
                 // Store the target contents
                 $this->result = chop($responseContent);
             }
         }
-        
+
         // There it is! We have it!! Return to base !!!
         return $this->result;
     }
-    
+
     /**
      * Parse Headers (internal)
-     * 
-     * Parse the response headers and store them for finding the resposne 
-     * status, redirection location, cookies, etc. 
+     *
+     * Parse the response headers and store them for finding the resposne
+     * status, redirection location, cookies, etc.
      *
      * @param string Raw header response
      * @return void
@@ -890,10 +890,10 @@ class Http
     {
         // Break up the headers
         $headers = explode("\r\n", $responseHeader);
-        
+
         // Clear the header array
         $this->_clearHeaders();
-        
+
         // Get resposne status
         if($this->status == 0)
         {
@@ -903,19 +903,19 @@ class Http
                 $this->_setError('Unexpected HTTP response status');
                 return FALSE;
             }
-            
+
             // Gotcha!
             $this->status = $matches[1];
             array_shift($headers);
         }
-        
+
         // Prepare all the other headers
         foreach ($headers as $header)
         {
             // Get name and value
             $headerName  = strtolower($this->_tokenize($header, ':'));
             $headerValue = trim(chop($this->_tokenize("\r\n")));
-            
+
             // If its already there, then add as an array. Otherwise, just keep there
             if(isset($this->headers[$headerName]))
             {
@@ -923,7 +923,7 @@ class Http
                 {
                     $this->headers[$headerName] = array($this->headers[$headerName]);
                 }
-                    
+
                 $this->headers[$headerName][] = $headerValue;
             }
             else
@@ -931,14 +931,14 @@ class Http
                 $this->headers[$headerName] = $headerValue;
             }
         }
-            
-        // Save cookies if asked 
+
+        // Save cookies if asked
         if ($this->saveCookie && isset($this->headers['set-cookie']))
         {
             $this->_parseCookie();
         }
     }
-    
+
     /**
      * Clear the headers array (internal)
      *
@@ -949,10 +949,10 @@ class Http
     {
         $this->headers = array();
     }
-    
+
     /**
      * Parse Cookies (internal)
-     * 
+     *
      * Parse the set-cookie headers from response and add them for inclusion.
      *
      * @return void
@@ -975,19 +975,19 @@ class Http
         {
             $cookieName  = trim($this->_tokenize($cookieHeaders[$cookie], "="));
             $cookieValue = $this->_tokenize(";");
-            
+
             $urlParsed   = parse_url($this->target);
-            
+
             $domain      = $urlParsed['host'];
             $secure      = '0';
-            
+
             $path        = "/";
             $expires     = "";
-            
+
             while(($name = trim(urldecode($this->_tokenize("=")))) != "")
             {
                 $value = urldecode($this->_tokenize(";"));
-                
+
                 switch($name)
                 {
                     case "path"     : $path     = $value; break;
@@ -995,16 +995,16 @@ class Http
                     case "secure"   : $secure   = ($value != '') ? '1' : '0'; break;
                 }
             }
-            
+
             $this->_setCookie($cookieName, $cookieValue, $expires, $path , $domain, $secure);
         }
     }
-    
+
     /**
      * Set cookie (internal)
-     * 
-     * Populate the internal _cookies array for future inclusion in 
-     * subsequent requests. This actually validates and then populates 
+     *
+     * Populate the internal _cookies array for future inclusion in
+     * subsequent requests. This actually validates and then populates
      * the object properties with a dimensional entry for cookie.
      *
      * @param string Cookie name
@@ -1027,24 +1027,24 @@ class Http
         {
             return($this->_setError("$path is not a valid path for setting cookie $name."));
         }
-            
+
         if($domain == "" || !strpos($domain, ".", $domain[0] == "." ? 1 : 0))
         {
             return($this->_setError("$domain is not a valid domain for setting cookie $name."));
         }
-        
+
         $domain = strtolower($domain);
-        
+
         if(!strcmp($domain[0], "."))
         {
             $domain = substr($domain, 1);
         }
-            
+
         $name  = $this->_encodeCookie($name, true);
         $value = $this->_encodeCookie($value, false);
-        
+
         $secure = intval($secure);
-        
+
         $this->_cookies[] = array( "name"      =>  $name,
                                    "value"     =>  $value,
                                    "domain"    =>  $domain,
@@ -1053,7 +1053,7 @@ class Http
                                    "secure"    =>  $secure
                                  );
     }
-    
+
     /**
      * Encode cookie name/value (internal)
      *
@@ -1066,11 +1066,11 @@ class Http
     {
         return($name ? str_replace("=", "%25", $value) : str_replace(";", "%3B", $value));
     }
-    
+
     /**
      * Pass Cookies (internal)
-     * 
-     * Get the cookies which are valid for the current request. Checks 
+     *
+     * Get the cookies which are valid for the current request. Checks
      * domain and path to decide the return.
      *
      * @return void
@@ -1082,34 +1082,34 @@ class Http
         {
             $urlParsed = parse_url($this->target);
             $tempCookies = array();
-            
+
             foreach($this->_cookies as $cookie)
             {
                 if ($this->_domainMatch($urlParsed['host'], $cookie['domain']) && (0 === strpos($urlParsed['path'], $cookie['path']))
-                    && (empty($cookie['secure']) || $urlParsed['protocol'] == 'https')) 
+                    && (empty($cookie['secure']) || $urlParsed['protocol'] == 'https'))
                 {
                     $tempCookies[$cookie['name']][strlen($cookie['path'])] = $cookie['value'];
                 }
             }
-            
+
             // cookies with longer paths go first
-            foreach ($tempCookies as $name => $values) 
+            foreach ($tempCookies as $name => $values)
             {
                 krsort($values);
-                foreach ($values as $value) 
+                foreach ($values as $value)
                 {
                     $this->addCookie($name, $value);
                 }
             }
         }
     }
-    
+
     /**
     * Checks if cookie domain matches a request host (internal)
-    * 
+    *
     * Cookie domain can begin with a dot, it also must contain at least
     * two dots.
-    * 
+    *
     * @param string Request host
     * @param string Cookie domain
     * @return bool Match success
@@ -1117,25 +1117,25 @@ class Http
     */
     function _domainMatch($requestHost, $cookieDomain)
     {
-        if ('.' != $cookieDomain{0}) 
+        if ('.' != $cookieDomain{0})
         {
             return $requestHost == $cookieDomain;
-        } 
-        elseif (substr_count($cookieDomain, '.') < 2) 
+        }
+        elseif (substr_count($cookieDomain, '.') < 2)
         {
             return false;
-        } 
-        else 
+        }
+        else
         {
             return substr('.'. $requestHost, - strlen($cookieDomain)) == $cookieDomain;
         }
     }
-    
+
     /**
      * Tokenize String (internal)
-     * 
-     * Tokenize string for various internal usage. Omit the second parameter 
-     * to tokenize the previous string that was provided in the prior call to 
+     *
+     * Tokenize string for various internal usage. Omit the second parameter
+     * to tokenize the previous string that was provided in the prior call to
      * the function.
      *
      * @param string The string to tokenize
@@ -1150,7 +1150,7 @@ class Http
             $separator = $string;
             $string = $this->nextToken;
         }
-        
+
         for($character = 0; $character < strlen($separator); $character++)
         {
             if(gettype($position = strpos($string, $separator[$character])) == "integer")
@@ -1158,7 +1158,7 @@ class Http
                 $found = (isset($found) ? min($found, $position) : $position);
             }
         }
-        
+
         if(isset($found))
         {
             $this->nextToken = substr($string, $found + 1);
@@ -1170,7 +1170,7 @@ class Http
             return($string);
         }
     }
-    
+
     /**
      * Set error message (internal)
      *

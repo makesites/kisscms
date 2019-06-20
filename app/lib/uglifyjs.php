@@ -23,7 +23,7 @@ class UglifyJS {
 		"path" => "/uglifyjs"
 	);
 
-	function UglifyJS() { }
+	function __construct() { }
 
 	/**
 	 * Adds a source file to the list of files to compile. Files will be

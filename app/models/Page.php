@@ -25,7 +25,7 @@ class Page extends Model {
 		Event::trigger('page:read', $this->rs );
 	}
 
-	function create( $key, $params=array() ) {
+	function create( $key="", $params=array() ) {
 		// clear all null keys (use array_filter?)
 		foreach( $this->rs as $k=>$v){
 			if( is_null($v) ) unset( $this->rs[$k] );

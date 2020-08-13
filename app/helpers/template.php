@@ -169,12 +169,14 @@ class Template extends KISS_View {
 		// - the session id
 		//
 		$protocol = ( isSSL() ) ? "secure": "public";
+		// FIX: reject cache for changed user state
+		$user = ( array_key_exists('user', $_SESSION ) && isset($_SESSION['user']['id']) ) ? $_SESSION['user']['id'] : 0;
 		// use serialize( $_REQUEST ) instead?
-		$key = session_id() . json_encode($_REQUEST) . $protocol . $_SERVER['REQUEST_URI'];
+		$key = session_id() . $user. json_encode($_REQUEST) . $protocol . $_SERVER['REQUEST_URI'];
 		// generate a hash form the string
 		return $prefix . hash("md5", $key);
-
 	}
+
 	static function getCache($file ){
 		$cache = new Minify_Cache_File();
 		$dir = dirname( $file );

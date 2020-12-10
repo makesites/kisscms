@@ -31,8 +31,8 @@ class Page extends Model {
 			if( is_null($v) ) unset( $this->rs[$k] );
 		}
 		// timestamp
-		$this->rs['created'] = time('now');
-		$this->rs['updated'] = time('now');
+		$this->rs['created'] = time();
+		$this->rs['updated'] = time();
 		return parent::create();
 	}
 
@@ -41,7 +41,7 @@ class Page extends Model {
 		foreach( $this->rs as $k=>$v){
 			if( is_null($v) ) unset( $this->rs[$k] );
 		}
-		$this->rs['updated'] = time('now');
+		$this->rs['updated'] = time();
 		return parent::update();
 	}
 

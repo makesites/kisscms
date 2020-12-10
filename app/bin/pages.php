@@ -11,8 +11,8 @@ if( class_exists('Page') && method_exists(new Page(),'register')){
 	Page::register("1", "path", "");
 	Page::register("1", "tags", "");
 	Page::register("1", "template", $GLOBALS['config']['main']['default_template']);
-	Page::register("1", "created", time('now') );
-	Page::register("1", "updated", time('now') );
+	Page::register("1", "created", time() );
+	Page::register("1", "updated", time() );
 }
 
 ?>

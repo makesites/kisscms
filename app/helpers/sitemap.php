@@ -50,8 +50,8 @@ class Sitemap {
 
 	function getFrequency( $item ) {
 
-		$now = time('now');
-		$last_update = $item['updated'];
+		$now = time();
+		$last_update = $item['updated'] || 0;
 		// a precaution due to server timezone differences
 		if( $last_update >= $now )
 		{

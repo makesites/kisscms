@@ -73,7 +73,7 @@ function isStatic( $file ) {
 	}
 	//check the cache (less than an hour old)
 	$cache = new Minify_Cache_File();
-	//if( $cache->isValid($file, time("now")-3600) ) return $cache->tmp() ."/". $file;
+	//if( $cache->isValid($file, time()-3600) ) return $cache->tmp() ."/". $file;
 	if( $cache->isValid("/{$_SERVER['HTTP_HOST']}/$file", 0) ) return $cache->tmp() ."/{$_SERVER['HTTP_HOST']}/". $file;
 
 	// check in the base public folders
@@ -478,8 +478,8 @@ function timestamp(){
 function get_time_difference( $start, $end )
 {
 	// FIX use timestamps instead of strings
-	$uts['start']      =    ( is_nan($start) ) ? strtotime( $start ) : time($start);
-	$uts['end']        =    ( is_nan($end) ) ? strtotime( $end ) : time($end);
+	$uts['start']      =    ( is_nan($start) ) ? strtotime( $start ) : intval($start);
+	$uts['end']        =    ( is_nan($end) ) ? strtotime( $end ) : intval($end);
 
 	if( $uts['start']!==-1 && $uts['end']!==-1 )
 	{

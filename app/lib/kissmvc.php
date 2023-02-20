@@ -34,6 +34,7 @@ class KISS_Controller {
 	public $default_controller='main';
 	public $default_function='index';
 	public $request_uri_parts=array();
+	public $_endpoint;
 
 	function __construct($controller_path,$web_folder,$default_controller,$default_function)  {
 		$this->controller_path=$controller_path;

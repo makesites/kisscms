@@ -353,7 +353,8 @@ if (!class_exists('Controller')){
 class Controller extends KISS_Controller {
 
 	public $data;
-
+	public $_endpoint;
+	
 	function __construct( $controller_path='controllers/', $web_folder=WEB_FOLDER, $default_controller=DEFAULT_ROUTE, $default_function=DEFAULT_ACTION )  {
 		// generic redirection for secure connections (assuming that ssl is on port 443)
 		if( defined('SSL') && SSL && $_SERVER['SERVER_PORT'] != "443" ) header('Location: '. url( request_uri() ) );
@@ -524,6 +525,7 @@ class Controller extends KISS_Controller {
 
 		// call the method
 		$this->$function($params);
+
 		return $this;
 	}
 

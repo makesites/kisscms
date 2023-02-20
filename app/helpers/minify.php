@@ -1,9 +1,16 @@
 <?php
 
+//$object = new ReflectionObject(new Minify());
+//$filename = $object->getFilename();
+//var_dump( $filename );
+
+if( !class_exists("Minify") ){ 
+
 class Minify extends UglifyJS {
 
 	protected $_content = array();
 	protected $_dom;
+	protected $cache;
 
 	function __construct() {
 		// class objects
@@ -742,6 +749,8 @@ class Minify extends UglifyJS {
 		$cache = new Minify_Cache_File();
 		$cache->store($path, $content);
 	}
+
+}
 
 }
 

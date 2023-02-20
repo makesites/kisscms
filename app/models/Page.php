@@ -74,10 +74,27 @@ class Page extends Model {
 					if( !array_key_exists($key, $schema) ) $schema[$key] = "";
 				}
 			}
+		} else {
+			// create table 
+			$keys = implode(", ", array_keys( $schema ) );
+			// FIX: The id needs to be setup as autoincrement
+			$keys = str_replace("id,", "id INTEGER PRIMARY KEY ASC,", $keys);
+			$page->create_table("pages", $keys );
 		}
 
 		foreach( $schema as $key => $value ){
 			if( !array_key_exists($key, $this->rs) ) $this->rs[$key] = null;
+			// add the column if necessary		
+			$sql = "SELECT COUNT(*) AS OK FROM pragma_table_info('pages') WHERE name='$key'";
+			$results = $dbh->prepare( $sql );
+			$results->execute();
+			$column = $results->fetch(PDO::FETCH_ASSOC);
+			// 
+			if( $column["OK"] == 0 ){
+				$sql = "ALTER TABLE pages ADD COLUMN ". $key;
+				$results = $dbh->prepare($sql);
+				if( $results ) $results->execute(); 
+			}
 		}
 
 		// save schema in the global namespace
@@ -121,7 +138,7 @@ class Page extends Model {
 	$results->execute();
 	$table = $results->fetch(PDO::FETCH_ASSOC);
 
-	// then check if the table exists
+	// [DEPRECATED] then check if the table exists
 	if(!is_array($table)){
 		$keys = implode(", ", $columns);
 		// FIX: The id needs to be setup as autoincrement
@@ -129,13 +146,19 @@ class Page extends Model {
 		$page->create_table("pages", $keys );
 		//$page->create_table("pages", "id INTEGER PRIMARY KEY ASC, title, content, path, date, tags, template");
 	}
+	
+	// [DEPRECATED] add the column if necessary
+	$sql = "SELECT COUNT(*) AS OK FROM pragma_table_info('pages') WHERE name='$key'";
+	$results = $dbh->prepare($sql);
+	$results->execute();
+	$column = $results->fetch(PDO::FETCH_ASSOC);
 
-	// add the column if necessary
-	if( array_key_exists("pages", $GLOBALS['db_schema']) && is_array($columns) && !in_array($key, $columns) ){
+	// if( array_key_exists("pages", $GLOBALS['db_schema']) && is_array($columns) && !in_array($key, $columns) ){
+	if( $column["OK"] == 0 ){
 		$sql = "ALTER TABLE pages ADD COLUMN ". $key;
 		$results = $dbh->prepare($sql);
 		if( $results ) $results->execute(); // there's a case where the column may already exist, in which case this will be false...
-		array_push( $columns, $key );
+		array_push( $columns, $key ); // obsolete?
 	}
 
 	// get existing page (again?)

@@ -29,15 +29,15 @@ if( class_exists('Config') && method_exists(new Config(),'register')){
 
 
 	// Definitions
-	define('DEFAULT_ROUTE', $GLOBALS['config']['main']['default_route']);
-	define('DEFAULT_ACTION', $GLOBALS['config']['main']['default_action']);
+	if( !defined('DEFAULT_ROUTE') ) define('DEFAULT_ROUTE', $GLOBALS['config']['main']['default_route']);
+	if( !defined('DEFAULT_ACTION') ) define('DEFAULT_ACTION', $GLOBALS['config']['main']['default_action']);
 
-	define('DEFAULT_TEMPLATE', $GLOBALS['config']['main']['default_template']);
-	define("ADMIN_TEMPLATE", "admin.php");
-	define("LISTINGS_TEMPLATE", "listings.php");
+	if( !defined('DEFAULT_TEMPLATE') ) define('DEFAULT_TEMPLATE', $GLOBALS['config']['main']['default_template']);
+	if( !defined('ADMIN_TEMPLATE') ) define("ADMIN_TEMPLATE", "admin.php");
+	if( !defined('LISTINGS_TEMPLATE') ) define("LISTINGS_TEMPLATE", "listings.php");
 
 
-	define('DB_PAGES', $GLOBALS['config']['main']['db_pages']);
+	if( !defined('DB_PAGES') ) define('DB_PAGES', $GLOBALS['config']['main']['db_pages']);
 }
 
 //===============================================

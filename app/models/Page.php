@@ -87,6 +87,7 @@ class Page extends Model {
 			// add the column if necessary		
 			$sql = "SELECT COUNT(*) AS OK FROM pragma_table_info('pages') WHERE name='$key'";
 			$results = $dbh->prepare( $sql );
+			if( !$results ) continue;
 			$results->execute();
 			$column = $results->fetch(PDO::FETCH_ASSOC);
 			// 
@@ -150,15 +151,17 @@ class Page extends Model {
 	// [DEPRECATED] add the column if necessary
 	$sql = "SELECT COUNT(*) AS OK FROM pragma_table_info('pages') WHERE name='$key'";
 	$results = $dbh->prepare($sql);
-	$results->execute();
-	$column = $results->fetch(PDO::FETCH_ASSOC);
+	if( $results ){
+		$results->execute();
+		$column = $results->fetch(PDO::FETCH_ASSOC);
 
-	// if( array_key_exists("pages", $GLOBALS['db_schema']) && is_array($columns) && !in_array($key, $columns) ){
-	if( $column["OK"] == 0 ){
-		$sql = "ALTER TABLE pages ADD COLUMN ". $key;
-		$results = $dbh->prepare($sql);
-		if( $results ) $results->execute(); // there's a case where the column may already exist, in which case this will be false...
-		array_push( $columns, $key ); // obsolete?
+		// if( array_key_exists("pages", $GLOBALS['db_schema']) && is_array($columns) && !in_array($key, $columns) ){
+		if( $column["OK"] == 0 ){
+			$sql = "ALTER TABLE pages ADD COLUMN ". $key;
+			$results = $dbh->prepare($sql);
+			if( $results ) $results->execute(); // there's a case where the column may already exist, in which case this will be false...
+			array_push( $columns, $key ); // obsolete?
+		}
 	}
 
 	// get existing page (again?)

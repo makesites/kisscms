@@ -1565,14 +1565,12 @@ class lessc {
 			case 'raw_color':
 				$c = array("color", 0, 0, 0);
 				$colorStr = substr($value[1], 1);
-				$num = hexdec($colorStr);
-				$width = strlen($colorStr) == 3 ? 16 : 256;
+				$length = strlen($colorStr);
+				$width = $length == 3 ? 1 : 2;
 
 				for ($i = 3; $i > 0; $i--) { // 3 2 1
-					$t = $num % $width;
-					$num /= $width;
-
-					$c[$i] = $t * (256/$width) + $t * floor(16/$width);
+					$t = ($i-1) * $width;
+					$c[$i] = hexdec($length == 6 ? substr($colorStr, $t, $width) : ($length == 3 ? str_repeat(substr($colorStr, 0, 1), 2) : 0));
 				}
 
 				return $c;

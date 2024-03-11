@@ -4,7 +4,7 @@
 //$filename = $object->getFilename();
 //var_dump( $filename );
 
-if( !class_exists("Minify") ){ 
+if( !class_exists("Minify") ){
 
 class Minify extends UglifyJS {
 
@@ -524,6 +524,8 @@ class Minify extends UglifyJS {
 			$encode = $first["data"]["encode"];
 			// loop through the group and add the files
 			foreach( $group as $script ){
+				// go to next file if src is empty
+				if( empty($script["src"]) ) continue;
 				// the move the domain from the script (if available)
 				// check if it's a local url
 				$href = $script["src"];

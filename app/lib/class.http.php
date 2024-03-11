@@ -712,7 +712,7 @@ class Http
 
             curl_setopt($ch, CURLOPT_VERBOSE,        FALSE);                // Minimize logs
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);                // No certificate
-            //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $this->redirect);      // Follow redirects
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $this->redirect);      // Follow redirects
             curl_setopt($ch, CURLOPT_MAXREDIRS,      $this->maxRedirect);   // Limit redirections to four
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);                 // Return in string
 

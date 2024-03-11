@@ -754,7 +754,7 @@ class Http
             $requestHeader .= "Content-Type: application/x-www-form-urlencoded\r\n";
 
             // Specify the custom cookies
-            if ($this->useCookie && $cookieString != '')
+            if ($this->useCookie && !empty($cookieString) )
             {
                 $requestHeader.= "Cookie: " . $cookieString . "\r\n";
             }
@@ -802,6 +802,8 @@ class Http
             // Parse the headers
             $this->_parseHeaders($responseHeader);
 
+            // FIX: status may be array
+            if( is_array($this->status) ) $this->status = $this->status[0];
             // Do we have a 301/302 redirect ?
             if (($this->status == '301' || $this->status == '302') && $this->redirect == TRUE)
             {
@@ -841,7 +843,7 @@ class Http
             else
             {
                 // Nope...so lets get the rest of the contents (non-chunked)
-                if ($this->headers['transfer-encoding'] != 'chunked')
+                if (array_key_exists('transfer-encoding', $this->headers) && $this->headers['transfer-encoding'] != 'chunked')
                 {
                     while (!feof($filePointer))
                     {

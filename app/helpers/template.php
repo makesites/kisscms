@@ -264,10 +264,10 @@ class Template extends KISS_View {
 	}
 
 	function createClient( $dom ){
-		$client = "";
+		$client = 'if(typeof Object.extend == "undefined") Object.extend = Object.assign;if(!KISSCMS) var KISSCMS = {};';
 		// see if there is any "loose" source in the client
 		if( !empty($GLOBALS['client']["_src"]) ) {
-			$client = $GLOBALS['client']["_src"];
+			$client .= $GLOBALS['client']["_src"];
 			unset($GLOBALS['client']["_src"]);
 		}
 		// if in debug, remove any scripts in the require.js paths
@@ -291,7 +291,7 @@ class Template extends KISS_View {
 
 		}
 		// render the global client vars
-		$client .= 'Object.extend(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
+		$client .= 'Object.assign(KISSCMS, '. json_encode_escaped( $GLOBALS['client'] ) .');';
 		if( $this->useRequire() ){
 			$client .= 'if(typeof require != "undefined") require.config( KISSCMS["require"] );';
 		}

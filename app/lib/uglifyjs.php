@@ -7,6 +7,8 @@
  * Distributed through [Makesites.org](http://makesites.org/)
  * Released under the [Apache License v2.0](http://makesites.org/licenses/APACHE-2.0)
  */
+
+#[\AllowDynamicProperties]
 class UglifyJS {
 
 	var $_srcs = array();
